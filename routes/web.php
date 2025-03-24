@@ -15,7 +15,6 @@ Route::get('/dashboard', function () {
 })->name('dashboard');
 
 
-Route::get('/upload', [UploadController::class, 'index'])->name('upload.index');
 Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
 
 

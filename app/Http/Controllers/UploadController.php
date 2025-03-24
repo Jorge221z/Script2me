@@ -12,10 +12,11 @@ class UploadController extends Controller
     {
         $request -> validate([
             'files' => 'required|array', //lo pasamos como array para poder subir varios archivos a la vez //
-            'files.*' => 'required|file|mimes:c,cpp,h,cs,java,kt,kts,swift,go,rs,dart,py,rb,pl,php,ts,tsx,html,htm,css,scss,sass,less,js,jsx,vue,svelte,sql,db,sqlite,sqlite3,mdb,accdb,json,xml,yaml,yml,toml,ini,env,sh,bat,ps1,blade.php,twig,ejs,pug,md,ipynb,r,mat,asm,f90,f95,txt'
+            'files.*' => 'required|file|max:2048|mimes:c,cpp,h,cs,java,kt,kts,swift,go,rs,dart,py,rb,pl,php,ts,tsx,html,htm,css,scss,sass,less,js,jsx,vue,svelte,sql,db,sqlite,sqlite3,mdb,accdb,json,xml,yaml,yml,toml,ini,env,sh,bat,ps1,blade.php,twig,ejs,pug,md,ipynb,r,mat,asm,f90,f95,txt'
         ],[
             'files.required' => 'Upload at least one file',
             'files.*.file' => 'Each element must be a valid file',
+            'files.*.max' => 'Files must not exceed 2MB ',
             'files.*.mimes' => 'The file extension is not supported'
         ]);
 
