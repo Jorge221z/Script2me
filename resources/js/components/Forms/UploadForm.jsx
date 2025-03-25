@@ -3,15 +3,42 @@ import { router, useForm } from "@inertiajs/react";
 const UploadForm = () => {
     const { data, setData, post, errors } = useForm({files: []});
 
-    const handleFiles = (e) => {
-        setData("files", Array.from(e.target.files)); //guardamos los archivos que se esten manejando//
-    }
+
+    const handleFileChange = (e) => {
+        const newFiles = Array.from(e.target.files);
+        setData('files', [...data.files, ...newFiles]); //para que inertia sepa que se ha cambiado el estado//
+    };
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+
+        const newFiles = Array.from(e.dataTransfer.files);
+        setData('files', [...data.files, ...newFiles]); //acumulacion de archivos
+    };
 
     const handleSubmit = (e) => { //comportamiento que tendra el formulario una vez se envie//
         e.preventDefault();
         if (data.files.length === 0) return;
 
-        post('/upload', data, { forceFormData: true});
+        const formData = new FormData();
+        if (Array.isArray(data.files)) {
+            data.files.forEach((file) => {
+                formData.append('files[]', file);
+            });
+        } else {
+            console.error("data.files no es un array:", data.files);
+        }
+
+
+        post('/upload', formData, {
+            onSuccess: () => setData('files', []),
+            onError: (errors) => console.error(errors)
+        });
     };
 
 
@@ -21,7 +48,9 @@ const UploadForm = () => {
                 <label htmlFor="file-upload" className="block text-gray-700 text-sm font-bold mb-2">
                     Drag or select your files
                 </label>
-                <div className="flex items-center justify-center w-full">
+                <div className="flex items-center justify-center w-full"
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}>
                     <label
                         htmlFor="file-upload"
                         className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
@@ -51,7 +80,7 @@ const UploadForm = () => {
                             type="file"
                             name="files"
                             multiple
-                            onChange={handleFiles}
+                            onChange={handleFileChange}
                             className="hidden"
                         />
                     </label>

@@ -15,7 +15,8 @@ Route::get('/dashboard', function () {
 })->name('dashboard');
 
 
-Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
+Route::match(['get', 'post'], '/upload', [UploadController::class, 'store'])->name('upload.store');
+
 
 
 
