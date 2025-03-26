@@ -4,42 +4,59 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Validator;
 
 class UploadController extends Controller
 {
 
     public function store(Request $request)
     {
-        $request -> validate([
-            'files' => 'required|array', //lo pasamos como array para poder subir varios archivos a la vez //
-            'files.*' => 'required','file','max:2048',
-            function ($attribute, $value, $fail) {
-                $extension = strtolower($value->getClientOriginalExtension());
-                $allowedExtensions = ['c', 'cpp', 'h', 'cs', 'java', 'kt', 'kts', 'swift', 'go', 'rs', 'dart', 'py', 'rb', 'pl', 'php', 'ts', 'tsx', 'html', 'htm', 'css', 'scss', 'sass', 'less', 'js', 'jsx', 'vue', 'svelte', 'sql', 'db', 'sqlite', 'sqlite3', 'mdb', 'accdb', 'json', 'xml', 'yaml', 'yml', 'toml', 'ini', 'env', 'sh', 'bat', 'ps1', 'twig', 'ejs', 'pug', 'md', 'ipynb', 'r', 'mat', 'asm', 'f90', 'f95', 'txt'];
+        $allowedExtensions = ['c', 'cpp', 'h', 'cs', 'java', 'kt', 'kts', 'swift', 'go', 'rs', 'dart', 'py', 'rb', 'pl', 'php', 'ts', 'tsx', 'html', 'htm', 'css', 'scss', 'sass', 'less', 'js', 'jsx', 'vue', 'svelte', 'sql', 'db', 'sqlite', 'sqlite3', 'mdb', 'accdb', 'json', 'xml', 'yaml', 'yml', 'toml', 'ini', 'env', 'sh', 'bat', 'ps1', 'twig', 'ejs', 'pug', 'md', 'ipynb', 'r', 'mat', 'asm', 'f90', 'f95', 'txt'];
 
+    $validator = Validator::make($request->all(), [
+        'files' => 'required|array|min:1',
+        'files.*' => [
+            'required',
+            'file',
+            'max:2048',
+            function ($attribute, $value, $fail) use ($allowedExtensions) {
+                $extension = strtolower($value->getClientOriginalExtension());
                 if (!in_array($extension, $allowedExtensions)) {
-                    $fail('La extensión del archivo no está soportada.');
+                    $fail("La extensión .$extension no está permitida.");
                 }
             }
-        ],[
-            'files.required' => 'Upload at least one file',
-            'files.*.file' => 'Each element must be a valid file',
-            'files.*.max' => 'Files must not exceed 2MB ',
-            'files.*.mimes' => 'The file extension is not supported :values',
-            'files.min' => 'Debes subir al menos un archivo',
-        ]);
+        ]
+    ], [
+        'files.required' => 'Debes subir al menos un archivo',
+        'files.*.file' => 'Cada elemento debe ser un archivo válido',
+        'files.*.max' => 'Los archivos no deben exceder 2MB',
+        'files.min' => 'Debes subir al menos un archivo'
+    ]);
 
-        $contents = []; //almacenara el contenido de los archivos
-        $names = []; //almacenara los nombres completos de los archivos(con la extension tambien) //
+    if ($validator->fails()) {
+        return back()->withErrors($validator);
+    }
 
-        foreach($request->file('files') as $file) { //obtenemos todos los archivos del campo files del formulario//
-                $contents[] = file_get_contents($file->path());
-                $names[] = $file->getClientOriginalName();
-                //despues de leer el contenido, almacenamos //
-                $file->store('uploads', 'public'); //usamos el sistema de almacenamiento de Laravel //
+    $contents = [];
+    $names = [];
+
+    foreach ($request->file('files') as $file) {
+        try {
+            // Almacenar primero
+            $file->store('uploads', 'public');
+
+            // Leer contenido después de almacenar (más seguro)
+            $contents[] = file_get_contents($file->getRealPath());
+            $names[] = $file->getClientOriginalName();
+        } catch (\Exception $e) {
+            return back()->withErrors(['files' => 'Error al procesar: '.$file->getClientOriginalName()]);
         }
+    }
 
-        return Inertia::render('dashboard', ['contents' => $contents, 'names' => $names, 'success' => 'Upload completed succesfully']);
+        return Inertia::render('dashboard',
+        ['contents' => $contents,
+        'names' => $names,
+        'success' => 'Upload completed succesfully']);
     }
 
 }

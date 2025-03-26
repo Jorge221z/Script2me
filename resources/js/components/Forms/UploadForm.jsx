@@ -1,16 +1,42 @@
 import { router, useForm } from "@inertiajs/react";
 import { HashLoader } from 'react-spinners';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const UploadForm = () => {
     const { data, setData, post, errors } = useForm({files: []});
 
     const [loading, setLoading] = useState(false);
-    const [showSpinner, setShowSpinner] = useState(false);
+    const [localErrors, setLocalErrors] = useState([]);
+    const allowedExtensions = ['c', 'cpp', 'h', 'cs', 'java', 'kt', 'kts', 'swift', 'go', 'rs', 'dart', 'py', 'rb', 'pl', 'php', 'ts', 'tsx', 'html', 'htm', 'css', 'scss', 'sass', 'less', 'js', 'jsx', 'vue', 'svelte', 'sql', 'db', 'sqlite', 'sqlite3', 'mdb', 'accdb', 'json', 'xml', 'yaml', 'yml', 'toml', 'ini', 'env', 'sh', 'bat', 'ps1', 'twig', 'ejs', 'pug', 'md', 'ipynb', 'r', 'mat', 'asm', 'f90', 'f95', 'txt'];
+
+    useEffect(() => { //limpiar errores cuando se cambian los archivos //
+        setLocalErrors([]);
+    }, [data.files]);
+
+    const validateFiles = (files) => {
+        const newErrors = [];
+        const MAX_SIZE_MB = 2;
+                                //validamos en el cliente(es redundante con el back pero mejora la seguridad)//
+        files.forEach(file => {
+            const ext = file.name.split('.').pop().toLowerCase(); //obtener la extension del archivo independientemente de si la extension esta en mayusculas o minusculas//
+
+            if (!allowedExtensions.includes(ext)) { //validar si la extension del archivo esta en allowedExtensions //
+                newErrors.push(`Extensión .${ext} no permitida`);
+            }
+
+            if (file.size > MAX_SIZE_MB * 1024 * 1024) { //validar si el tamaño del archivo es mayor a 2MB//
+                newErrors.push(`${file.name} excede los ${MAX_SIZE_MB}MB`);
+            }
+        });
+        setLocalErrors(newErrors);
+        return newErrors.length === 0;
+    };
 
     const handleFileChange = (e) => {
         const newFiles = Array.from(e.target.files);
-        setData('files', [...data.files, ...newFiles]); //para que inertia sepa que se ha cambiado el estado//
+        if (validateFiles(newFiles)) {
+            setData('files', [...data.files, ...newFiles]); // para que inertia sepa que se ha cambiado el estado
+        }
     };
 
     const handleDragOver = (e) => {
@@ -25,32 +51,34 @@ const UploadForm = () => {
         setData('files', [...data.files, ...newFiles]); //acumulacion de archivos
     };
 
-    const handleSubmit = (e) => { //comportamiento que tendra el formulario una vez se envie//
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setShowSpinner(true);
-        if (data.files.length === 0) return;
 
-        this.timer = setTimeout(() => {
-        const formData = new FormData();
-        if (Array.isArray(data.files)) {
-            data.files.forEach((file) => {
-                formData.append('files[]', file);
-            });
-        } else {
+        if (!validateFiles(data.files) || data.files.length === 0) {
             setLoading(false);
-            setShowSpinner(false);
-            console.error("data.files no es un array:", data.files);
+            return;  //si fallan las validaciones, no se envia la peticion//
         }
 
+        const formData = new FormData();
+        data.files.forEach(file => formData.append('files[]', file));
 
-        post('/upload', formData, {
-            onSuccess: () => setData('files', []),
-            onError: (errors) => console.error(errors)
-        });
-        setLoading(false);
-        setShowSpinner(false);
-        }, 1500);
+        try {
+             post('/upload', formData, {
+                onSuccess: () => reset(),
+                onError: (err) => {
+                    // Manejar errores del backend
+                    if (err?.errors?.files) {
+                        setLocalErrors([err.errors.files]);
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error de red:', error);
+            setLocalErrors(['Error de conexión con el servidor']);
+        } finally {
+            setTimeout(() => setLoading(false), 1500); // Mínimo 1.5s de feedback visual
+        }
     };
 
 
@@ -97,13 +125,23 @@ const UploadForm = () => {
                         />
                     </label>
                 </div>
-                {errors.files && (
-                    <span className="text-red-500 text-sm mt-2">{errors.files}</span>
-                )}
+                <div className="error-container">
+                {localErrors.map((error, index) => (
+                     <div key={index} className="text-red-500 text-sm mb-2">
+                            {error}
+                     </div>
+                 ))}
+                 {errors?.files && (
+                     <div className="text-red-500 text-sm">
+                           {errors.files}
+                     </div>
+                    )}
+                </div>
+
             </div>
             <button
                 type="submit"
-                disabled={data.files.length === 0 || loading}
+                disabled={data.files.length === 0 || loading || localErrors.length > 0}
                 className={`w-full px-4 py-2 text-white font-bold rounded-lg transition duration-300 ${
                     data.files.length === 0
                         ? "bg-gray-400 cursor-not-allowed"
@@ -111,7 +149,7 @@ const UploadForm = () => {
                 }`}
 
             >
-                {showSpinner ? (
+                {loading ? (
                     <div className="flex items-center justify-center">
                     <HashLoader color="#ffffff" size={35} style={{ transform: "translateX(-95px)" }} />
                     <span>Uploading...</span>
