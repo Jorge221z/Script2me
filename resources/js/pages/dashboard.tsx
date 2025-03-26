@@ -4,6 +4,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import UploadForm from '../components/Forms/UploadForm';
 
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Upload your files',

@@ -1,8 +1,12 @@
 import { router, useForm } from "@inertiajs/react";
+import { HashLoader } from 'react-spinners';
+import { useState } from "react";
 
 const UploadForm = () => {
     const { data, setData, post, errors } = useForm({files: []});
 
+    const [loading, setLoading] = useState(false);
+    const [showSpinner, setShowSpinner] = useState(false);
 
     const handleFileChange = (e) => {
         const newFiles = Array.from(e.target.files);
@@ -23,14 +27,19 @@ const UploadForm = () => {
 
     const handleSubmit = (e) => { //comportamiento que tendra el formulario una vez se envie//
         e.preventDefault();
+        setLoading(true);
+        setShowSpinner(true);
         if (data.files.length === 0) return;
 
+        this.timer = setTimeout(() => {
         const formData = new FormData();
         if (Array.isArray(data.files)) {
             data.files.forEach((file) => {
                 formData.append('files[]', file);
             });
         } else {
+            setLoading(false);
+            setShowSpinner(false);
             console.error("data.files no es un array:", data.files);
         }
 
@@ -39,6 +48,9 @@ const UploadForm = () => {
             onSuccess: () => setData('files', []),
             onError: (errors) => console.error(errors)
         });
+        setLoading(false);
+        setShowSpinner(false);
+        }, 1500);
     };
 
 
@@ -91,14 +103,23 @@ const UploadForm = () => {
             </div>
             <button
                 type="submit"
-                disabled={data.files.length === 0}
+                disabled={data.files.length === 0 || loading}
                 className={`w-full px-4 py-2 text-white font-bold rounded-lg transition duration-300 ${
                     data.files.length === 0
                         ? "bg-gray-400 cursor-not-allowed"
                         : "bg-blue-500 hover:bg-blue-600"
                 }`}
+
             >
-                Upload files
+                {showSpinner ? (
+                    <div className="flex items-center justify-center">
+                    <HashLoader color="#ffffff" size={35} style={{ transform: "translateX(-95px)" }} />
+                    <span>Uploading...</span>
+                  </div>
+
+                ) : (
+                    'Upload files'
+                )}
             </button>
         </form>
     );
