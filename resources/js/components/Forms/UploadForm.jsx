@@ -1,35 +1,113 @@
-import { router, useForm } from "@inertiajs/react";
+import { useForm } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
+import { FiFile, FiX } from 'react-icons/fi';
 import { HashLoader } from 'react-spinners';
-import { useState, useEffect } from "react";
+
+const FilePreview = ({ file, onRemove }) => {
+    const getFileIcon = (extension) => {
+        // Futuro: personalizar icono en funcion de la extension //
+        return <FiFile className="mr-2 h-5 w-5 text-gray-600" />;
+    };
+
+    return (
+        <div className="mb-2 flex items-center justify-between rounded-lg bg-gray-50 p-2 transition-colors hover:bg-gray-100">
+            <div className="flex items-center">
+                {getFileIcon(file.name.split('.').pop())}
+                <span className="max-w-[200px] truncate text-sm text-gray-700">{file.name}</span>
+            </div>
+            <button type="button" onClick={() => onRemove(file)} className="text-gray-400 transition-colors hover:text-red-500">
+                <FiX className="h-4 w-4" />
+            </button>
+        </div>
+    );
+};
 
 const UploadForm = () => {
-    const { data, setData, post, errors } = useForm({files: []});
+    const { data, setData, post, errors } = useForm({ files: [] });
 
     const [loading, setLoading] = useState(false);
     const [localErrors, setLocalErrors] = useState([]);
-    const allowedExtensions = ['c', 'cpp', 'h', 'cs', 'java', 'kt', 'kts', 'swift', 'go', 'rs', 'dart', 'py', 'rb', 'pl', 'php', 'ts', 'tsx', 'html', 'htm', 'css', 'scss', 'sass', 'less', 'js', 'jsx', 'vue', 'svelte', 'sql', 'db', 'sqlite', 'sqlite3', 'mdb', 'accdb', 'json', 'xml', 'yaml', 'yml', 'toml', 'ini', 'env', 'sh', 'bat', 'ps1', 'twig', 'ejs', 'pug', 'md', 'ipynb', 'r', 'mat', 'asm', 'f90', 'f95', 'txt'];
+    const allowedExtensions = [
+        'c',
+        'cpp',
+        'h',
+        'cs',
+        'java',
+        'kt',
+        'kts',
+        'swift',
+        'go',
+        'rs',
+        'dart',
+        'py',
+        'rb',
+        'pl',
+        'php',
+        'ts',
+        'tsx',
+        'html',
+        'htm',
+        'css',
+        'scss',
+        'sass',
+        'less',
+        'js',
+        'jsx',
+        'vue',
+        'svelte',
+        'sql',
+        'db',
+        'sqlite',
+        'sqlite3',
+        'mdb',
+        'accdb',
+        'json',
+        'xml',
+        'yaml',
+        'yml',
+        'toml',
+        'ini',
+        'env',
+        'sh',
+        'bat',
+        'ps1',
+        'twig',
+        'ejs',
+        'pug',
+        'md',
+        'ipynb',
+        'r',
+        'mat',
+        'asm',
+        'f90',
+        'f95',
+        'txt',
+    ];
 
-    useEffect(() => { //limpiar errores cuando se cambian los archivos //
+    useEffect(() => {
+        //limpiar errores cuando se cambian los archivos //
         setLocalErrors([]);
     }, [data.files]);
 
     const validateFiles = (files) => {
-        const newErrors = [];
+        const errors = [];
         const MAX_SIZE_MB = 2;
-                                //validamos en el cliente(es redundante con el back pero mejora la seguridad)//
-        files.forEach(file => {
-            const ext = file.name.split('.').pop().toLowerCase(); //obtener la extension del archivo independientemente de si la extension esta en mayusculas o minusculas//
 
-            if (!allowedExtensions.includes(ext)) { //validar si la extension del archivo esta en allowedExtensions //
-                newErrors.push(`Extensión .${ext} no permitida`);
+        files.forEach(file => {
+            const ext = file.name.split('.').pop().toLowerCase();
+
+            // Validación de extensión
+            if (!allowedExtensions.includes(ext)) {
+                errors.push(`❌ Archivo bloqueado: ${file.name} (Extensión .${ext} no permitida)`);
             }
 
-            if (file.size > MAX_SIZE_MB * 1024 * 1024) { //validar si el tamaño del archivo es mayor a 2MB//
-                newErrors.push(`${file.name} excede los ${MAX_SIZE_MB}MB`);
+            // Validación de tamaño
+            if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+                errors.push(`❌ Archivo demasiado grande: ${file.name} (Máximo ${MAX_SIZE_MB}MB)`);
             }
         });
-        setLocalErrors(newErrors);
-        return newErrors.length === 0;
+
+        return errors;
     };
 
     const handleFileChange = (e) => {
@@ -46,59 +124,89 @@ const UploadForm = () => {
 
     const handleDrop = (e) => {
         e.preventDefault();
-
         const newFiles = Array.from(e.dataTransfer.files);
-        setData('files', [...data.files, ...newFiles]); //acumulacion de archivos
+        // Filtrar archivos válidos ANTES de actualizar el estado
+        const validFiles = newFiles.filter((file) => {
+            const ext = file.name.split('.').pop().toLowerCase();
+            return allowedExtensions.includes(ext) && file.size <= 2 * 1024 * 1024;
+        });
+        setData('files', [...data.files, ...newFiles]);
+    };
+
+    const handleRemoveFile = (fileToRemove) => {
+        setData(
+            'files',
+            data.files.filter((file) => file.name !== fileToRemove.name || file.lastModified !== fileToRemove.lastModified),
+        );
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
 
-        if (!validateFiles(data.files) || data.files.length === 0) {
-            setLoading(false);
+        // 1. Validación antes de cualquier acción
+        const validationErrors = validateFiles(data.files);
+        if (validationErrors.length > 0 || data.files.length === 0) {
+            setLocalErrors(validationErrors);
             return;
         }
 
-        const formData = new FormData();
-        data.files.forEach(file => formData.append('files[]', file));
+        // 2. Copia de seguridad de archivos válidos
+        const validFiles = [...data.files];
 
-        setTimeout(async () => {
-            try {
-                await post('/upload', formData, {
-                    onSuccess: () => reset(),
-                    onError: (err) => {
-                        if (err?.errors?.files) {
-                            setLocalErrors([err.errors.files]);
-                        }
-                    }
-                });
-            } catch (error) {
-                console.error('Error de red:', error);
-                setLocalErrors(['Error de conexión con el servidor']);
-            } finally {
-                setLoading(false);
-            }
-        }, 1600);
+        // 3. Limpiar UI y activar spinner
+        setData('files', []);
+        setLoading(true);
+
+        try {
+            // 4. Esperar 1s mínimo para feedback visual
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // 5. Enviar solo archivos pre-validados
+            const formData = new FormData();
+            validFiles.forEach(file => formData.append('files[]', file));
+
+             post('/upload', formData, {
+                onError: (err) => {
+                    // 6. Recuperar archivos si hay error del servidor
+                    setData('files', validFiles);
+                    setLocalErrors([err.message]);
+                }
+            });
+
+        } catch (error) {
+            console.error('Error de red:', error);
+            setLocalErrors(['Error de conexión']);
+            setData('files', validFiles); // Restaurar archivos
+        } finally {
+            setLoading(false);
+        }
     };
 
-
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center p-6 bg-gray-900 dark:bg-white text-white dark:text-gray-800 rounded-lg shadow-md dark:shadow-lg w-full max-w-2xl mx-auto">
-            <div className="w-full mb-4">
-                <label htmlFor="file-upload" className="block text-gray-300 dark:text-gray-700 text-sm font-bold mb-2">
+        <form
+            onSubmit={handleSubmit}
+            className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center rounded-lg bg-gray-900 p-6 text-white shadow-md dark:bg-white dark:text-gray-800 dark:shadow-lg"
+        >
+            <div className="mb-4 w-full">
+                <label htmlFor="file-upload" className="mb-2 block text-sm font-bold text-gray-300 dark:text-gray-700">
                     Drag or select your files
                 </label>
-                <div className="flex items-center justify-center w-full"
+                <div
+                    className={`border-2 border-dashed ${
+                        data.files.length > 0
+                            ? 'border-blue-400 bg-blue-900/20 dark:border-blue-200 dark:bg-blue-50'
+                            : 'border-gray-600 bg-gray-800/50 dark:border-gray-300 dark:bg-gray-50'
+                    }`}
                     onDragOver={handleDragOver}
-                    onDrop={handleDrop}>
+                    onDrop={handleDrop}
+                >
                     <label
                         htmlFor="file-upload"
-                        className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-600 dark:border-gray-300 rounded-lg cursor-pointer bg-gray-800 dark:bg-gray-50 hover:bg-gray-600 dark:hover:bg-gray-100"
+                        className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-600 bg-gray-800 hover:bg-gray-600 dark:border-gray-300 dark:bg-gray-50 dark:hover:bg-gray-100"
                     >
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                             <svg
-                                className="w-8 h-8 mb-3 text-gray-400"
+                                className="mb-3 h-8 w-8 text-gray-400"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -116,46 +224,47 @@ const UploadForm = () => {
                             </p>
                             <p className="text-xs text-gray-300 dark:text-gray-500">Supports: .c, .java, .py, etc.</p>
                         </div>
-                        <input
-                            id="file-upload"
-                            type="file"
-                            name="files"
-                            multiple
-                            onChange={handleFileChange}
-                            className="hidden"
-                        />
+                        <input id="file-upload" type="file" name="files" multiple onChange={handleFileChange} className="hidden" />
                     </label>
                 </div>
-                <div className="error-container">
-                {localErrors.map((error, index) => (
-                     <div key={index} className="text-red-500 text-sm mb-2">
-                            {error}
-                     </div>
-                 ))}
-                 {errors?.files && (
-                     <div className="text-red-500 text-sm">
-                           {errors.files}
-                     </div>
+                <div className="mt-4">
+                    {data.files.length > 0 && (
+                        <div className="border-t pt-4">
+                            <h4 className="mb-2 text-sm font-medium text-gray-500">Archivos seleccionados ({data.files.length})</h4>
+                            <div className="max-h-[200px] overflow-y-auto">
+                                {data.files.map((file, index) => (
+                                    <FilePreview
+                                        key={`${file.name}-${file.lastModified}`}
+                                        file={file}
+                                        onRemove={handleRemoveFile}
+                                        className="transition-all duration-200 ease-in-out ..."
+                                    />
+                                ))}
+                            </div>
+                        </div>
                     )}
                 </div>
-
+                <div className="mt-4 space-y-2">
+                    {localErrors.map((error, index) => (
+                        <div key={index} className="text-sm text-red-400 dark:text-red-600">
+                            ⚠️ {error}
+                        </div>
+                    ))}
+                    {errors?.files && <div className="text-sm text-red-400 dark:text-red-600">⚠️ {errors.files}</div>}
+                </div>
             </div>
             <button
                 type="submit"
                 disabled={data.files.length === 0 || loading || localErrors.length > 0}
-                className={`w-full px-4 py-2 text-white font-bold rounded-lg transition duration-300 ${
-                    data.files.length === 0
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-blue-500 hover:bg-blue-600"
+                className={`w-full rounded-lg px-4 py-2 font-bold text-white transition duration-300 ${
+                    data.files.length === 0 ? 'cursor-not-allowed bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'
                 }`}
-
             >
                 {loading ? (
                     <div className="flex items-center justify-center">
-                    <HashLoader color="#ffffff" size={35} style={{ transform: "translateX(-95px)" }} />
-                    <span>Uploading...</span>
-                  </div>
-
+                        <HashLoader color="#00ffb9" size={35} style={{ transform: 'translateX(-95px)' }} />
+                        <span>Uploading...</span>
+                    </div>
                 ) : (
                     'Upload files'
                 )}
@@ -163,6 +272,5 @@ const UploadForm = () => {
         </form>
     );
 };
-
 
 export default UploadForm;
