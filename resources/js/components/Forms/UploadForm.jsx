@@ -57,35 +57,36 @@ const UploadForm = () => {
 
         if (!validateFiles(data.files) || data.files.length === 0) {
             setLoading(false);
-            return;  //si fallan las validaciones, no se envia la peticion//
+            return;
         }
 
         const formData = new FormData();
         data.files.forEach(file => formData.append('files[]', file));
 
-        try {
-             post('/upload', formData, {
-                onSuccess: () => reset(),
-                onError: (err) => {
-                    // Manejar errores del backend
-                    if (err?.errors?.files) {
-                        setLocalErrors([err.errors.files]);
+        setTimeout(async () => {
+            try {
+                await post('/upload', formData, {
+                    onSuccess: () => reset(),
+                    onError: (err) => {
+                        if (err?.errors?.files) {
+                            setLocalErrors([err.errors.files]);
+                        }
                     }
-                }
-            });
-        } catch (error) {
-            console.error('Error de red:', error);
-            setLocalErrors(['Error de conexión con el servidor']);
-        } finally {
-            setTimeout(() => setLoading(false), 1500); // Mínimo 1.5s de feedback visual
-        }
+                });
+            } catch (error) {
+                console.error('Error de red:', error);
+                setLocalErrors(['Error de conexión con el servidor']);
+            } finally {
+                setLoading(false);
+            }
+        }, 1600);
     };
 
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center p-6 bg-white rounded-lg shadow-md max-w-md mx-auto">
+        <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center p-6 bg-gray-900 dark:bg-white text-white dark:text-gray-800 rounded-lg shadow-md dark:shadow-lg w-full max-w-2xl mx-auto">
             <div className="w-full mb-4">
-                <label htmlFor="file-upload" className="block text-gray-700 text-sm font-bold mb-2">
+                <label htmlFor="file-upload" className="block text-gray-300 dark:text-gray-700 text-sm font-bold mb-2">
                     Drag or select your files
                 </label>
                 <div className="flex items-center justify-center w-full"
@@ -93,7 +94,7 @@ const UploadForm = () => {
                     onDrop={handleDrop}>
                     <label
                         htmlFor="file-upload"
-                        className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+                        className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-600 dark:border-gray-300 rounded-lg cursor-pointer bg-gray-800 dark:bg-gray-50 hover:bg-gray-600 dark:hover:bg-gray-100"
                     >
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                             <svg
@@ -110,10 +111,10 @@ const UploadForm = () => {
                                     d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
                                 />
                             </svg>
-                            <p className="mb-2 text-sm text-gray-500">
+                            <p className="mb-2 text-sm text-gray-300 dark:text-gray-500">
                                 <span className="font-semibold">Click to upload</span> or drag and drop
                             </p>
-                            <p className="text-xs text-gray-500">Supports: .c, .java, .py, etc.</p>
+                            <p className="text-xs text-gray-300 dark:text-gray-500">Supports: .c, .java, .py, etc.</p>
                         </div>
                         <input
                             id="file-upload"

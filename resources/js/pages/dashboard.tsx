@@ -29,17 +29,9 @@ export default function Dashboard() {
                         {success}
                     </div>
                 )}
-                <div className="border-sidebar-border/70 dark:border-sidebar-border relative rounded-xl border p-4">
-                    {/* Explicación interactiva */}
-                    <div className="mb-4 text-sm text-gray-600">
-                        Arrastra o selecciona archivos para subirlos. Verás su contenido debajo. Soportamos múltiples formatos{' '}
-                        <span className="relative group">
-                            <span className="text-blue-500 cursor-pointer rounded-xl">i</span>
-                            <div className="absolute hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 z-10">
-                                <p>Extensiones soportadas: txt, js, php, c, cpp, java, py, rb, html, css, y más.</p>
-                            </div>
-                        </span>
-                    </div>
+               <div className="border-sidebar-border/70 dark:border-sidebar-border relative rounded-xl">
+                    {/* poner aqui, a la izquierda del formulario, alguna info de la pagina o tipos sorpotados */}
+
                     {/* Formulario */}
                     <UploadForm />
                 </div>
