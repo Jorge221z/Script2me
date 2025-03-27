@@ -5,21 +5,10 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 // Cambiar la ruta principal para redirigir directamente al dashboard
-Route::get('/', function () {
-    return Inertia::render('dashboard');
-})->name('dashboard');
-
-// Hacer que el dashboard sea accesible sin autenticación usando Inertia
-Route::get('/dashboard', function () {
-    return Inertia::render('dashboard');
-})->name('dashboard');
-
-
-Route::match(['get', 'post'], '/upload', [UploadController::class, 'store'])->name('upload.store');
-
-
-
-
+Route::redirect('/', '/dashboard')->name('home');
+Route::get('/dashboard', [UploadController::class, 'index'])->name('dashboard');
+Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
+Route::post('/clear-session', [UploadController::class, 'clearSession'])->name('clear.session');
 
 
 require __DIR__.'/settings.php';
