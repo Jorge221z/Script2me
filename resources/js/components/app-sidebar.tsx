@@ -53,10 +53,9 @@ export function AppSidebar() {
                         <SidebarMenuButton
                             size="lg"
                             asChild
-                             // Añadir margen superior si está comprimida
                         >
-                            <Link href="/dashboard" prefetch className={state === 'collapsed' ? 'mt-12 flex justify-center' : ''}>
-                                <AppLogo  />
+                            <Link href="/dashboard" prefetch className={state === 'collapsed' ? 'mt-8 flex justify-center' : ''}>
+                                <AppLogo />
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -64,7 +63,9 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <div className={state === 'collapsed' ? 'mt-8' : 'mt-4'}>
+                    <NavMain items={mainNavItems} />
+                </div>
             </SidebarContent>
 
             <SidebarFooter>

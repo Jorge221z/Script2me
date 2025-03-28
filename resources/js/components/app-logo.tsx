@@ -1,10 +1,11 @@
 import { useSidebar } from '@/components/ui/sidebar';
+import { PanelLeftIcon } from "lucide-react"
 
 export default function AppLogo() {
-    const { state } = useSidebar();
+    const { state, toggleSidebar } = useSidebar(); // Agregar toggleSidebar
 
     // Ajustar el tamaño del contenedor según el estado
-    const containerSize = state === 'expanded' ? 'size-16' : 'size-11'; // 96px expandido, 64px colapsado
+    const containerSize = state === 'expanded' ? 'size-16' : 'size-13';
 
     return (
         <div className="flex items-center">
@@ -21,8 +22,14 @@ export default function AppLogo() {
                     overflow-visible
                     p-0
                     mb-4
+                    mt-1
                     transition-all
                 `}
+                onClick={() => {
+                    if (state === 'collapsed') {
+                        toggleSidebar(); // Expandir la barra si está comprimida
+                    }
+                }}
             >
                 <img
                     src="/images/logo.png"
