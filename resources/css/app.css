@@ -59,6 +59,22 @@
     --color-sidebar-ring: var(--sidebar-ring);
 }
 
+[data-sidebar="sidebar"] {
+    color: #00bb89 !important;
+}
+
+[data-sidebar="sidebar"] svg {
+    color: #00bb89 !important;
+}
+
+/* Para los elementos internos en la vista móvil */
+[data-sidebar="sidebar"] > div {
+    color: #00bb89 !important;
+}
+
+[data-sidebar="sidebar"] > div svg {
+    color: #00bb89 !important;
+}
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
