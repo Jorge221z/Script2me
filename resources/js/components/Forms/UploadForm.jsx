@@ -262,6 +262,7 @@ const UploadForm = () => {
             </div>
             <button
                 type="submit"
+                onClick={() => setTimeout(() => setData({ ...data, files: [] }), 1700)}
                 disabled={data.files.length === 0 || loading || !hasValidFiles || processing}
                 className={`w-full rounded-lg px-4 py-2 font-bold text-white transition duration-300 ${
                     data.files.length === 0 || !hasValidFiles || processing ? 'cursor-not-allowed bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'
@@ -269,7 +270,7 @@ const UploadForm = () => {
             >
                 {loading || processing ? (
                     <div className="flex items-center justify-center">
-                        <HashLoader color="#00ffb9" size={25} />
+                        <HashLoader color="#00ffb9" size={35} style={{ transform: 'translateX(-95px)' }} />
                         <span className="ml-2">Uploading...</span>
                     </div>
                 ) : (
