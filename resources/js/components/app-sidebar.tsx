@@ -1,6 +1,6 @@
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
 import { useTheme } from '@/hooks/use-theme';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
@@ -17,6 +17,7 @@ const mainNavItems: NavItem[] = [
 
 export function AppSidebar() {
     const { theme, toggleTheme } = useTheme();
+    const { state } = useSidebar(); // Obtener el estado de la sidebar
 
     // Handler para el evento onClick
     const handleThemeToggle = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -46,12 +47,16 @@ export function AppSidebar() {
 
     return (
         <Sidebar collapsible="icon" variant="inset" className="side">
-            <SidebarHeader>
+            <SidebarHeader className='p-2'>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
-                            <Link href="/dashboard" prefetch>
-                                <AppLogo />
+                        <SidebarMenuButton
+                            size="lg"
+                            asChild
+                             // Añadir margen superior si está comprimida
+                        >
+                            <Link href="/dashboard" prefetch className={state === 'collapsed' ? 'mt-12 flex justify-center' : ''}>
+                                <AppLogo  />
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
