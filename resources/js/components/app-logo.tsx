@@ -1,5 +1,5 @@
 import { useSidebar } from '@/components/ui/sidebar';
-import { PanelLeftIcon } from "lucide-react"
+
 
 export default function AppLogo() {
     const { state, toggleSidebar } = useSidebar(); // Agregar toggleSidebar
