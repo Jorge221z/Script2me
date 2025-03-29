@@ -84,6 +84,14 @@
 .side [data-sidebar="sidebar"] > div {
     background: #171717 !important;
 }
+
+.custom-bg-color {
+    background-color: #00d89f !important;
+}
+
+.custom-bg-color:hover {
+    background-color: #00bb89 !important;
+}
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still

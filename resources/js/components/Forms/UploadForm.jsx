@@ -2,6 +2,7 @@ import { useForm } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { FiAlertCircle, FiFile, FiX } from 'react-icons/fi';
 import { HashLoader } from 'react-spinners';
+import '../../../css/app.css';
 
 const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
     const getFileIcon = (extension) => {
@@ -264,13 +265,13 @@ const UploadForm = () => {
                 type="submit"
                 onClick={() => setTimeout(() => setData({ ...data, files: [] }), 1700)}
                 disabled={data.files.length === 0 || loading || !hasValidFiles || processing}
-                className={`w-full rounded-lg px-4 py-2 font-bold text-white transition duration-300 ${
-                    data.files.length === 0 || !hasValidFiles || processing ? 'cursor-not-allowed bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'
+                className={`w-full rounded-lg px-4 py-2 font-bold text-white text-xl transition duration-300 ${
+                    data.files.length === 0 || !hasValidFiles || processing ? 'cursor-not-allowed bg-gray-400' : 'custom-bg-color custom-bg-color-hover'
                 }`}
             >
                 {loading || processing ? (
                     <div className="flex items-center justify-center">
-                        <HashLoader color="#00ffb9" size={35} style={{ transform: 'translateX(-95px)' }} />
+                        <HashLoader color="white" size={35} style={{ transform: 'translateX(-95px)' }} />
                         <span className="ml-2">Uploading...</span>
                     </div>
                 ) : (
