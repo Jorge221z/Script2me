@@ -60,17 +60,18 @@
 }
 
 [data-sidebar="sidebar"] {
-    color: #00bb89 !important;
+    color: #00ffbb !important;
 }
 
 [data-sidebar="sidebar"] svg {
-    color: #00bb89 !important;
+    color: #00ffbb !important;
 }
 
 /* Para los elementos internos en la vista móvil */
 [data-sidebar="sidebar"] > div {
-    color: #00bb89 !important;
+    color: #00ffbb !important;
 }
+
 
 [data-sidebar="sidebar"] > div svg {
     color: #00bb89 !important;
@@ -82,7 +83,6 @@
 
 .side [data-sidebar="sidebar"] > div {
     background: #171717 !important;
-
 }
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
@@ -181,4 +181,5 @@
     body {
         @apply bg-background text-foreground;
     }
+
 }
