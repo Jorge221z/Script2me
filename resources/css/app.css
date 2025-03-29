@@ -60,7 +60,7 @@
 }
 
 [data-sidebar="sidebar"] {
-    color: #00ffbb !important;
+    color: #dcdcdc !important;
 }
 
 [data-sidebar="sidebar"] svg {
@@ -68,7 +68,7 @@
 }
 
 /* Para los elementos internos en la vista móvil */
-[data-sidebar="sidebar"] > div {
+[data-sidebar="sidebar"] > div:first-child {
     color: #00ffbb !important;
 }
 

@@ -17,7 +17,7 @@ import AppLogoIcon from './app-logo-icon';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Code to AI prompts',
         href: '/dashboard',
         icon: LayoutGrid,
     },

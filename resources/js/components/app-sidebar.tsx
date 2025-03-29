@@ -4,14 +4,14 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { useTheme } from '@/hooks/use-theme';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Moon, Sun } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Moon, Sun, Home } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Home',
         href: '/dashboard',
-        icon: LayoutGrid,
+        icon: Home,
     },
 ];
 

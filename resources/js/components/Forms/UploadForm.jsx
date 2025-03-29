@@ -278,7 +278,7 @@ const UploadForm = () => {
         >
             <div className="mb-4 w-full">
                 <label htmlFor="file-upload" data-tooltip-id="info-tooltip" className="mb-2 block text-sm font-bold text-gray-400 dark:text-gray-700">
-                    Drag or select your files<a className="ml-3 cursor-pointer">ℹ️</a>
+                    Drag or select your files<a className="ml-3 cursor-pointer text-lg">ℹ️</a>
                 </label>
                 <FormTooltip allowedExtensions={allowedExtensions} />
 
@@ -297,10 +297,10 @@ const UploadForm = () => {
                     >
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                             <svg
-                                className="mb-3 h-8 w-8 text-gray-400"
+                                className="mb-3 h-8 w-8 text-emerald-500"
                                 fill="none"
                                 stroke="currentColor"
-                                viewBox="0 0 24 24"
+                                viewBox="0 0 22 22"
                                 xmlns="http://www.w3.org/2000/svg"
                             >
                                 <path
@@ -310,10 +310,10 @@ const UploadForm = () => {
                                     d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
                                 />
                             </svg>
-                            <p className="mb-2 text-sm text-gray-300 dark:text-gray-500">
+                            <p className="mb-2 text-sm text-gray-300 dark:text-gray-800">
                                 <span className="font-semibold">Click to upload</span> or drag and drop
                             </p>
-                            <p className="text-xs text-gray-300 dark:text-gray-500">Supports: .c, .java, .py, etc.</p>
+                            <p className="text-xs text-gray-300 dark:text-gray-800">Supports: .c, .java, .py, etc.</p>
                         </div>
                         <input id="file-upload" type="file" name="files" multiple onChange={handleFileChange} className="hidden" />
                     </label>
