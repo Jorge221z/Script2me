@@ -38,7 +38,62 @@ const UploadForm = () => {
     const [localErrors, setLocalErrors] = useState([]);
     const [invalidFiles, setInvalidFiles] = useState([]);
     const [fileErrors, setFileErrors] = useState({});
-    const allowedExtensions = ['c', 'cpp', 'h', 'cs', 'java', 'kt', 'kts', 'swift', 'go', 'rs', 'dart', 'py', 'rb', 'pl', 'php', 'ts', 'tsx', 'html', 'htm', 'css', 'scss', 'sass', 'less', 'js', 'jsx', 'vue', 'svelte', 'sql', 'db', 'sqlite', 'sqlite3', 'mdb', 'accdb', 'json', 'xml', 'yaml', 'yml', 'toml', 'ini', 'env', 'sh', 'bat', 'ps1', 'twig', 'ejs', 'pug', 'md', 'ipynb', 'r', 'mat', 'asm', 'f90', 'f95', 'txt'];
+    const allowedExtensions = [
+        'c',
+        'cpp',
+        'h',
+        'cs',
+        'java',
+        'kt',
+        'kts',
+        'swift',
+        'go',
+        'rs',
+        'dart',
+        'py',
+        'rb',
+        'pl',
+        'php',
+        'ts',
+        'tsx',
+        'html',
+        'htm',
+        'css',
+        'scss',
+        'sass',
+        'less',
+        'js',
+        'jsx',
+        'vue',
+        'svelte',
+        'sql',
+        'db',
+        'sqlite',
+        'sqlite3',
+        'mdb',
+        'accdb',
+        'json',
+        'xml',
+        'yaml',
+        'yml',
+        'toml',
+        'ini',
+        'env',
+        'sh',
+        'bat',
+        'ps1',
+        'twig',
+        'ejs',
+        'pug',
+        'md',
+        'ipynb',
+        'r',
+        'mat',
+        'asm',
+        'f90',
+        'f95',
+        'txt',
+    ];
 
     useEffect(() => {
         // Limpiar errores generales cuando se cambian los archivos
@@ -187,25 +242,28 @@ const UploadForm = () => {
     return (
         <form
             onSubmit={handleSubmit}
-            className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center rounded-lg bg-gray-900 p-6 text-white shadow-md dark:bg-white dark:text-gray-800 dark:shadow-lg"
+            className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center rounded-lg bg-gray-950 p-6 text-white shadow-md dark:bg-white dark:text-gray-950 dark:shadow-lg"
         >
             <div className="mb-4 w-full">
-                <label htmlFor="file-upload" className="mb-2 block text-sm font-bold text-gray-300 dark:text-gray-700">
+                <label htmlFor="file-upload" className="mb-2 block text-sm font-bold text-gray-400 dark:text-gray-700">
                     Drag or select your files
                 </label>
                 <div
                     className={`border-2 border-dashed ${
                         data.files.length > 0
-                            ? 'border-blue-400 bg-blue-900/20 dark:border-blue-200 dark:bg-blue-50'
-                            : 'border-gray-600 bg-gray-800/50 dark:border-gray-300 dark:bg-gray-50'
+                            ? 'border-emerald-600 bg-emerald-900/20 dark:border-emerald-300 dark:bg-gray-50'
+                            : 'border-emerald-400 bg-gray-800/50 dark:border-emerald-300 dark:bg-gray-50'
                     }`}
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
                 >
                     <label
                         htmlFor="file-upload"
-                        className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-0 bg-transparent hover:bg-gray-700/50 dark:hover:bg-gray-200/50"
+                        className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-0 bg-transparent hover:bg-gray-800/50 dark:hover:bg-gray-300/50"
                     >
+
+
+
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                             <svg
                                 className="mb-3 h-8 w-8 text-gray-400"
@@ -233,13 +291,13 @@ const UploadForm = () => {
                     {data.files.length > 0 && (
                         <div className="border-t pt-4">
                             <h4 className="mb-2 text-sm font-medium text-gray-500">
-                                Archivos seleccionados ({data.files.length})
-                                {invalidFiles.length > 0 && <span className="ml-2 text-red-500">({invalidFiles.length} con errores)</span>}
+                                Selected files ({data.files.length})
+                                {invalidFiles.length > 0 && <span className="ml-2 text-red-500">({invalidFiles.length} with errors)</span>}
                             </h4>
                             <div className="max-h-[200px] overflow-y-auto">
                                 {data.files.map((file, index) => (
                                     <FilePreview
-                                    key={`${file.name}-${file.size}-${file.lastModified}`}
+                                        key={`${file.name}-${file.size}-${file.lastModified}`}
                                         file={file}
                                         onRemove={handleRemoveFile}
                                         isInvalid={invalidFiles.includes(file.name)}
@@ -265,8 +323,10 @@ const UploadForm = () => {
                 type="submit"
                 onClick={() => setTimeout(() => setData({ ...data, files: [] }), 1700)}
                 disabled={data.files.length === 0 || loading || !hasValidFiles || processing}
-                className={`w-full rounded-lg px-4 py-2 font-bold text-white text-xl transition duration-300 ${
-                    data.files.length === 0 || !hasValidFiles || processing ? 'cursor-not-allowed bg-gray-400' : 'custom-bg-color custom-bg-color-hover'
+                className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${
+                    data.files.length === 0 || !hasValidFiles || processing
+                        ? 'cursor-not-allowed bg-gray-400'
+                        : 'custom-bg-color custom-bg-color-hover'
                 }`}
             >
                 {loading || processing ? (

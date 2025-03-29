@@ -8,7 +8,7 @@ function getInitialTheme(): Theme {
 
   // Primero intenta obtener desde localStorage
   const savedTheme = localStorage.getItem('theme') as Theme | null;
-  if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
+  if (savedTheme && (savedTheme === 'light' || 'dark')) {
     return savedTheme;
   }
 
@@ -25,11 +25,14 @@ function applyTheme(theme: Theme) {
   if (typeof document === 'undefined') return;
 
   const root = document.documentElement;
+  const body = document.body;
 
   if (theme === 'dark') {
     root.classList.add('dark');
+    body.classList.remove('light');
   } else {
     root.classList.remove('dark');
+    body.classList.add('light');
   }
 
   // Guardar en localStorage

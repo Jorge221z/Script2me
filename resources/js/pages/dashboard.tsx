@@ -24,7 +24,7 @@ export default function Dashboard() {
     const handleClearSession = () => {
         router.post('/clear-session', {}, {
             onSuccess: () => {
-                toast.success('Historial limpiado correctamente');
+                toast.success('History cleared successfully');
             }
         });
     };
@@ -55,7 +55,7 @@ export default function Dashboard() {
                     {/* Botones de acción */}
                     <div className="flex justify-between mb-4 items-center">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                            Archivos cargados {contents.length > 0 ? `(${contents.length})` : ''}
+                            Uploaded files {contents.length > 0 ? `(${contents.length})` : ''}
                         </h2>
                         <div className="flex space-x-2">
                             {contents.length > 0 && (
@@ -65,26 +65,26 @@ export default function Dashboard() {
                                         className="flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
                                     >
                                         <FiTrash2 className="inline-block" />
-                                        Limpiar historial
+                                        Clear history
                                     </button>
                                     <button
                                         onClick={() => {
                                             const fullContent = contents.map((content, index) => {
                                                 const fileName = names[index];
-                                                return `Archivo: ${fileName}
-Contenido:
+                                                return `Filename: ${fileName}
+Content:
 --------------------------------------------------
 ${content}
 --------------------------------------------------\n\n`;
                                             }).join('\n');
 
                                             navigator.clipboard.writeText(fullContent);
-                                            toast.success('¡Contenido copiado al portapapeles!');
+                                            toast.success('¡Content copied to clipboard!');
                                         }}
                                         className="flex items-center gap-2 rounded-lg bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
                                     >
                                         <FiCopy className="inline-block" />
-                                        Copiar todo
+                                        Copy all
                                     </button>
                                 </>
                             )}
@@ -102,7 +102,7 @@ ${content}
                                     >
                                         <div className="mb-3 space-y-1">
                                             <h3 className="font-semibold text-gray-800 dark:text-gray-200">
-                                                Archivo: {fileName}
+                                                Filename: {fileName}
                                             </h3>
                                         </div>
                                         <div className="relative">
@@ -118,7 +118,7 @@ ${content}
                         </div>
                     ) : (
                         <div className="text-gray-500 dark:text-gray-400 text-center py-10">
-                            <p>Todavía no hay archivos subidos.</p>
+                            <p>There are no uploaded files yet.</p>
                             <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
                         </div>
                     )}

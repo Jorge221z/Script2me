@@ -92,6 +92,7 @@
 .custom-bg-color:hover {
     background-color: #00bb89 !important;
 }
+
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
@@ -113,6 +114,7 @@
 :root {
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
+    --background-light: #dbdcdc;
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
