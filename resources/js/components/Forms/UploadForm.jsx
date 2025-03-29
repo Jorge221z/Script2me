@@ -102,6 +102,25 @@ const UploadForm = () => {
         setLocalErrors([]);
     }, [data.files]);
 
+    // Añadir nuevo efecto para manejar el arrastre de archivos a nivel deL DOM completo //
+    useEffect(() => {
+        // Prevenir el comportamiento predeterminado del navegador al arrastrar/soltar archivos
+        const preventDefaultDrag = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        };
+
+        // Añadir event listeners al documento
+        document.addEventListener('dragover', preventDefaultDrag);
+        document.addEventListener('drop', preventDefaultDrag);
+
+        // Limpiar event listeners cuando el componente se desmonte
+        return () => {
+            document.removeEventListener('dragover', preventDefaultDrag);
+            document.removeEventListener('drop', preventDefaultDrag);
+        };
+    }, []);
+
     const validateFiles = (files) => {
         const errors = [];
         const newInvalidFiles = [];
@@ -266,15 +285,15 @@ const UploadForm = () => {
                 <div
                     className={`border-2 border-dashed ${
                         data.files.length > 0
-                            ? 'border-emerald-600 bg-emerald-900/20 dark:border-emerald-300 dark:bg-gray-50'
-                            : 'border-emerald-400 bg-gray-800/50 dark:border-emerald-300 dark:bg-gray-50'
+                            ? 'border-emerald-600 bg-emerald-600/20 dark:border-emerald-500 dark:bg-gray-50'
+                            : 'border-emerald-400 bg-gray-900/50 dark:border-emerald-500 dark:bg-gray-50'
                     }`}
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
                 >
                     <label
                         htmlFor="file-upload"
-                        className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-0 bg-transparent hover:bg-gray-800/50 dark:hover:bg-gray-300/50"
+                        className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-0 bg-transparent hover:bg-gray-900 dark:hover:bg-gray-300/50"
                     >
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                             <svg
