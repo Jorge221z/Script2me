@@ -1,10 +1,10 @@
 import { useForm } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { FiAlertCircle, FiFile, FiX } from 'react-icons/fi';
 import { HashLoader } from 'react-spinners';
 import '../../../css/app.css';
-import toast from 'react-hot-toast';
-import { Tooltip } from "react-tooltip";
+import FormTooltip from './FormTooltip';
 
 const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
     const getFileIcon = (extension) => {
@@ -241,16 +241,16 @@ const UploadForm = () => {
     // Cambiamos la lógica para que el botón esté deshabilitado si hay cualquier archivo inválido
     const hasValidFiles = data.files.length > 0 && invalidFiles.length === 0;
 
-// Función para dividir el array en grupos de 10
-const chunkArray = (array, size) => {
-    const result = [];
-    for (let i = 0; i < array.length; i += size) {
-      result.push(array.slice(i, i + size));
-    }
-    return result;
-  };
+    // Función para dividir el array en grupos de 10
+    const chunkArray = (array, size) => {
+        const result = [];
+        for (let i = 0; i < array.length; i += size) {
+            result.push(array.slice(i, i + size));
+        }
+        return result;
+    };
 
-  const extColumns = chunkArray(allowedExtensions, 10);
+    const extColumns = chunkArray(allowedExtensions, 10);
 
     return (
         <form
@@ -259,40 +259,10 @@ const chunkArray = (array, size) => {
         >
             <div className="mb-4 w-full">
                 <label htmlFor="file-upload" data-tooltip-id="info-tooltip" className="mb-2 block text-sm font-bold text-gray-400 dark:text-gray-700">
-                Drag or select your files<a className="ml-3 cursor-pointer">ℹ️</a>
-</label>
-<Tooltip
-  id="info-tooltip"
-  place="top"
-  content={() => (
-    <div style={{
-        textAlign: "left",
-        maxHeight: "700px",
-        overflowY: "auto",
-        padding: "10px",
+                    Drag or select your files<a className="ml-3 cursor-pointer">ℹ️</a>
+                </label>
+                <FormTooltip allowedExtensions={allowedExtensions} />
 
-        color: "#fff",
-        borderRadius: "10px",
-      }}>
-      <strong>Supported extensions:</strong>
-      <div
-        style={{
-          display: "flex", // Usamos Flexbox para columnas
-          gap: "20px", // Espacio entre columnas
-          marginTop: "5px",
-        }}
-      >
-        {extColumns.map((column, index) => (
-          <ul key={index} style={{ paddingLeft: "20px", margin: 0, minWidth: "80px" }}>
-            {column.map((ext) => (
-              <li key={ext}>{ext}</li>
-            ))}
-          </ul>
-        ))}
-      </div>
-    </div>
-  )}
-/>
                 <div
                     className={`border-2 border-dashed ${
                         data.files.length > 0
@@ -306,9 +276,6 @@ const chunkArray = (array, size) => {
                         htmlFor="file-upload"
                         className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-0 bg-transparent hover:bg-gray-800/50 dark:hover:bg-gray-300/50"
                     >
-
-
-
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                             <svg
                                 className="mb-3 h-8 w-8 text-gray-400"
@@ -366,19 +333,16 @@ const chunkArray = (array, size) => {
             </div>
             <button
                 type="submit"
-                onClick={() => setTimeout(() => {
-                    const filesCount = data.files.length;
-                    setData({ ...data, files: [] });
-                    toast.success(
-                        filesCount === 1
-                            ? 'File uploaded successfully!'
-                            : `${filesCount} files uploaded successfully!`,
-                        {
+                onClick={() =>
+                    setTimeout(() => {
+                        const filesCount = data.files.length;
+                        setData({ ...data, files: [] });
+                        toast.success(filesCount === 1 ? 'File uploaded successfully!' : `${filesCount} files uploaded successfully!`, {
                             duration: 1800,
                             position: 'top-center',
-                        }
-                    );
-                }, 1700)}
+                        });
+                    }, 1700)
+                }
                 disabled={data.files.length === 0 || loading || !hasValidFiles || processing}
                 className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${
                     data.files.length === 0 || !hasValidFiles || processing
