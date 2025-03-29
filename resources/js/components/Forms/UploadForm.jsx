@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { FiAlertCircle, FiFile, FiX } from 'react-icons/fi';
 import { HashLoader } from 'react-spinners';
 import '../../../css/app.css';
+import toast from 'react-hot-toast';
 
 const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
     const getFileIcon = (extension) => {
@@ -321,7 +322,19 @@ const UploadForm = () => {
             </div>
             <button
                 type="submit"
-                onClick={() => setTimeout(() => setData({ ...data, files: [] }), 1700)}
+                onClick={() => setTimeout(() => {
+                    const filesCount = data.files.length;
+                    setData({ ...data, files: [] });
+                    toast.success(
+                        filesCount === 1
+                            ? 'File uploaded successfully!'
+                            : `${filesCount} files uploaded successfully!`,
+                        {
+                            duration: 1800,
+                            position: 'top-center',
+                        }
+                    );
+                }, 1700)}
                 disabled={data.files.length === 0 || loading || !hasValidFiles || processing}
                 className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${
                     data.files.length === 0 || !hasValidFiles || processing
