@@ -53,6 +53,7 @@
         "react-hot-toast": "^2.5.2",
         "react-icons": "^5.5.0",
         "react-spinners": "^0.15.0",
+        "react-tooltip": "^5.28.0",
         "tailwind-merge": "^3.0.1",
         "tailwindcss": "^4.0.0",
         "tailwindcss-animate": "^1.0.7",

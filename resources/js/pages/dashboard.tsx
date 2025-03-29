@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Upload your files',
+        title: 'Transform your code files into optimized prompts for AI assistants. Upload, process, and enhance your scripts with a single click—completely free & open-source.',
         href: '/dashboard',
     },
 ];

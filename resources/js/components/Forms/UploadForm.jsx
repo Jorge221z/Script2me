@@ -4,6 +4,7 @@ import { FiAlertCircle, FiFile, FiX } from 'react-icons/fi';
 import { HashLoader } from 'react-spinners';
 import '../../../css/app.css';
 import toast from 'react-hot-toast';
+import { Tooltip } from "react-tooltip";
 
 const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
     const getFileIcon = (extension) => {
@@ -240,15 +241,58 @@ const UploadForm = () => {
     // Cambiamos la lógica para que el botón esté deshabilitado si hay cualquier archivo inválido
     const hasValidFiles = data.files.length > 0 && invalidFiles.length === 0;
 
+// Función para dividir el array en grupos de 10
+const chunkArray = (array, size) => {
+    const result = [];
+    for (let i = 0; i < array.length; i += size) {
+      result.push(array.slice(i, i + size));
+    }
+    return result;
+  };
+
+  const extColumns = chunkArray(allowedExtensions, 10);
+
     return (
         <form
             onSubmit={handleSubmit}
             className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center rounded-lg bg-gray-950 p-6 text-white shadow-md dark:bg-white dark:text-gray-950 dark:shadow-lg"
         >
             <div className="mb-4 w-full">
-                <label htmlFor="file-upload" className="mb-2 block text-sm font-bold text-gray-400 dark:text-gray-700">
-                    Drag or select your files
-                </label>
+                <label htmlFor="file-upload" data-tooltip-id="info-tooltip" className="mb-2 block text-sm font-bold text-gray-400 dark:text-gray-700">
+                Drag or select your files<a className="ml-3 cursor-pointer">ℹ️</a>
+</label>
+<Tooltip
+  id="info-tooltip"
+  place="top"
+  content={() => (
+    <div style={{
+        textAlign: "left",
+        maxHeight: "700px",
+        overflowY: "auto",
+        padding: "10px",
+
+        color: "#fff",
+        borderRadius: "10px",
+      }}>
+      <strong>Supported extensions:</strong>
+      <div
+        style={{
+          display: "flex", // Usamos Flexbox para columnas
+          gap: "20px", // Espacio entre columnas
+          marginTop: "5px",
+        }}
+      >
+        {extColumns.map((column, index) => (
+          <ul key={index} style={{ paddingLeft: "20px", margin: 0, minWidth: "80px" }}>
+            {column.map((ext) => (
+              <li key={ext}>{ext}</li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </div>
+  )}
+/>
                 <div
                     className={`border-2 border-dashed ${
                         data.files.length > 0
