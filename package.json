@@ -20,6 +20,7 @@
         "prettier": "^3.4.2",
         "prettier-plugin-organize-imports": "^4.1.0",
         "prettier-plugin-tailwindcss": "^0.6.11",
+        "typescript": "^5.8.2",
         "typescript-eslint": "^8.23.0"
     },
     "dependencies": {
@@ -57,7 +58,6 @@
         "tailwind-merge": "^3.0.1",
         "tailwindcss": "^4.0.0",
         "tailwindcss-animate": "^1.0.7",
-        "typescript": "^5.7.2",
         "vite": "^6.0"
     },
     "optionalDependencies": {
