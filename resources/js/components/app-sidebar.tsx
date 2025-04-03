@@ -4,7 +4,7 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { useTheme } from '@/hooks/use-theme';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Github, LayoutGrid, Moon, Sun, Home, BookType } from 'lucide-react';
+import { BookOpen, Github, LayoutGrid, Moon, Sun, Home, BookType, BrainCircuit } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -13,6 +13,11 @@ const mainNavItems: NavItem[] = [
         href: '/dashboard',
         icon: Home,
     },
+    {
+        title: 'AI Refactor',
+        href: '/refactor',
+        icon: BrainCircuit,
+    }
 ];
 
 export function AppSidebar() {
