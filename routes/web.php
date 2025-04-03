@@ -9,7 +9,9 @@ Route::get('/', [UploadController::class, 'index'])->name('home');
 Route::get('/dashboard', [UploadController::class, 'index'])->name('dashboard');
 Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
 Route::post('/clear-session', [UploadController::class, 'clearSession'])->name('clear.session');
-
+Route::get('/terms', function () {
+    return Inertia::render('TAndC');
+})->name('terms');
 
 require __DIR__.'/settings.php';
 

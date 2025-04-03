@@ -44,7 +44,7 @@ export default function AppLogo() {
             {state === 'expanded' && (
                 <div className="grid flex-1 text-left">
                     <span className="text-2xl font-semibold leading-none">
-                        script2me
+                        Script2me
                     </span>
                 </div>
             )}
