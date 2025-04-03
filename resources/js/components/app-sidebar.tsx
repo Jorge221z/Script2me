@@ -14,7 +14,7 @@ const mainNavItems: NavItem[] = [
         icon: Home,
     },
     {
-        title: 'AI Refactor',
+        title: 'AI Refactor (Coming soon)',
         href: '/refactor',
         icon: BrainCircuit,
     }
@@ -61,7 +61,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton
-                            size="lg"
+                            size="xl"
                             asChild
                         >
                             <Link href="/dashboard" prefetch className={state === 'collapsed' ? 'mt-8 flex justify-center' : ''}>
