@@ -22,3 +22,7 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+vite.config.ts
+docker-compose.yml
+/config/cors.php
+/bootstrap/app.php

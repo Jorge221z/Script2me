@@ -93,6 +93,10 @@
     background-color: #00bb89 !important;
 }
 
+.dark .color {
+    background-color: #0a0a0a !important;
+}
+
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still

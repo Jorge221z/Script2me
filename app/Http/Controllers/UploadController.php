@@ -21,7 +21,7 @@ class UploadController extends Controller
             return Inertia::render('dashboard', [
                 'contents' => [],
                 'names' => [],
-                'error' => 'Error al cargar el dashboard: ' . $e->getMessage()
+                'error' => 'Error al cargar dashboard: ' . $e->getMessage()
             ]);
         }
     }

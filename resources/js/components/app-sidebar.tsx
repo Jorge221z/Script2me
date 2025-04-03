@@ -4,7 +4,7 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { useTheme } from '@/hooks/use-theme';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Moon, Sun, Home } from 'lucide-react';
+import { BookOpen, Github, LayoutGrid, Moon, Sun, Home, BookType, BrainCircuit } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -13,6 +13,11 @@ const mainNavItems: NavItem[] = [
         href: '/dashboard',
         icon: Home,
     },
+    {
+        title: 'AI Refactor (Coming soon)',
+        href: '/refactor',
+        icon: BrainCircuit,
+    }
 ];
 
 export function AppSidebar() {
@@ -28,15 +33,20 @@ export function AppSidebar() {
     // Creamos los ítems de la barra lateral incluyendo el toggle de tema
     const footerNavItems: NavItem[] = [
         {
-            title: 'Repository',
-            href: 'https://github.com/Jorge221z/script2me.git',
-            icon: Folder,
+            title: 'Terms and Conditions',
+            href: '/terms',
+            icon: BookType,
         },
         {
+            title: 'Repository',
+            href: 'https://github.com/Jorge221z/script2me.git',
+            icon: Github,
+        },
+        /*{
             title: 'Documentation',
             href: 'https://laravel.com/docs/starter-kits',
             icon: BookOpen,
-        },
+        },*/
         {
             title: theme === 'light' ? 'Dark' : 'Light',
             href: '#',
@@ -51,7 +61,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton
-                            size="lg"
+                            size="xl"
                             asChild
                         >
                             <Link href="/dashboard" prefetch className={state === 'collapsed' ? 'mt-8 flex justify-center' : ''}>
