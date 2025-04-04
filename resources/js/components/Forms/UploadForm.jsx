@@ -41,10 +41,11 @@ const UploadForm = () => {
     const [invalidFiles, setInvalidFiles] = useState([]);
     const [fileErrors, setFileErrors] = useState({});
     const allowedExtensions = [
-        'pdf -> (only text)',
+        'pdf',
         'c',
         'cpp',
         'h',
+        'docx',
         'cs',
         'java',
         'kt',
