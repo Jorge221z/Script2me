@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Validator;
+
+use function PHPUnit\Framework\throwException;
 
 class UploadController extends Controller
 {
@@ -28,7 +31,7 @@ class UploadController extends Controller
 
     public function store(Request $request)
     {
-        $allowedExtensions = ['c', 'cpp', 'h', 'cs', 'java', 'kt', 'kts', 'swift', 'go', 'rs', 'dart', 'py', 'rb', 'pl', 'php', 'ts', 'tsx', 'html', 'htm', 'css', 'scss', 'sass', 'less', 'js', 'jsx', 'vue', 'svelte', 'sql', 'db', 'sqlite', 'sqlite3', 'mdb', 'accdb', 'json', 'xml', 'yaml', 'yml', 'toml', 'ini', 'env', 'sh', 'bat', 'ps1', 'twig', 'ejs', 'pug', 'md', 'ipynb', 'r', 'mat', 'asm', 'f90', 'f95', 'txt'];
+        $allowedExtensions = ['pdf','c', 'cpp', 'h', 'cs', 'java', 'kt', 'kts', 'swift', 'go', 'rs', 'dart', 'py', 'rb', 'pl', 'php', 'ts', 'tsx', 'html', 'htm', 'css', 'scss', 'sass', 'less', 'js', 'jsx', 'vue', 'svelte', 'sql', 'db', 'sqlite', 'sqlite3', 'mdb', 'accdb', 'json', 'xml', 'yaml', 'yml', 'toml', 'ini', 'env', 'sh', 'bat', 'ps1', 'twig', 'ejs', 'pug', 'md', 'ipynb', 'r', 'mat', 'asm', 'f90', 'f95', 'txt'];
 
         $validator = Validator::make($request->all(), [
             'files' => 'required|array|min:1',
@@ -59,12 +62,27 @@ class UploadController extends Controller
 
         foreach ($request->file('files') as $file) {
             try {
-                // Leer el contenido ANTES de almacenar
+                // Leer el contenido ANTES de almacenar y/o procesar
                 $content = file_get_contents($file->getRealPath());
-                $file->store('uploads', 'public');
-                $newContents[] = $content;
+
+                if (strtolower($file->getClientOriginalExtension()) === 'pdf') { //bucle para procesar pdfs
+                    try {
+                        $parser = new \Smalot\PdfParser\Parser();
+                        $pdf = $parser->parseContent($content);
+                        $text = $pdf->getText();
+                    } catch(Exception $e) {
+                        throw new Exception("Failed to parse the .pdf file: " . $e->getMessage());
+                    }
+                    $newContents[] = $text;
+                } else {
+                    $newContents[] = $content;
+                }
+
+                $timestampName = time().'_'.$file->getClientOriginalName();
+
+                $file->storeAs('uploads', $timestampName, 'public');
                 $newNames[] = $file->getClientOriginalName();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 return back()->withErrors(['files' => 'Error al procesar: '.$file->getClientOriginalName()]);
             }
         }
