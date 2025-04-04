@@ -6,8 +6,10 @@ use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Validator;
-
 use function PHPUnit\Framework\throwException;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\Element\Text;
+use PhpOffice\PhpWord\Element\TextRun;
 
 class UploadController extends Controller
 {
@@ -64,8 +66,9 @@ class UploadController extends Controller
             try {
                 // Leer el contenido ANTES de almacenar y/o procesar
                 $content = file_get_contents($file->getRealPath());
+                $extension = strtolower($file->getClientOriginalExtension()); //para comparar extensiones de forma sencilla//
 
-                if (strtolower($file->getClientOriginalExtension()) === 'pdf') { //bucle para procesar pdfs
+                if ($extension === 'pdf') { //bucle para procesar pdfs
                     try {
                         $parser = new \Smalot\PdfParser\Parser();
                         $pdf = $parser->parseContent($content);
@@ -74,6 +77,32 @@ class UploadController extends Controller
                         throw new Exception("Failed to parse the .pdf file: " . $e->getMessage());
                     }
                     $newContents[] = $text;
+
+                } else if ($extension === 'docx') {
+                 try {
+                    $phpWord = IOFactory::load($file->getRealPath());
+                    $text = '';
+                    foreach ($phpWord->getSections() as $section) {
+                        foreach ($section->getElements() as $element) {
+                            if ($element instanceof Text) {
+                                // Elemento de texto simple
+                                $text .= $element->getText() . ' ';
+                            } elseif ($element instanceof TextRun) {
+                                // Elemento que contiene varios textos
+                                foreach ($element->getElements() as $child) {
+                                    if ($child instanceof Text) {
+                                        $text .= $child->getText() . ' ';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $newContents[] = $text;
+
+                 } catch(Exception $e) {
+                    throw new Exception("Failed to parse the .docx file: " . $e->getMessage());
+                 }
+
                 } else {
                     $newContents[] = $content;
                 }
