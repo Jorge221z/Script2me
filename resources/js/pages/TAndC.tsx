@@ -6,7 +6,7 @@ import TermsAndConditions from './TermsAndConditions';
 export default function Terms() {
   return (
     <AppLayout>
-      <Head title="Términos y Condiciones" />
+      <Head title="Terms and Conditions" />
 
           <TermsAndConditions />
 
