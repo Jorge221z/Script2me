@@ -73,12 +73,15 @@ class UploadController extends Controller
                         $parser = new \Smalot\PdfParser\Parser();
                         $pdf = $parser->parseContent($content);
                         $text = $pdf->getText();
+
+                        $cleanText = trim(preg_replace('/\s+/', ' ', $text));
+                        $newContents[] = $cleanText;
+
                     } catch(Exception $e) {
                         throw new Exception("Failed to parse the .pdf file: " . $e->getMessage());
                     }
-                    $newContents[] = $text;
 
-                } else if ($extension === 'docx') {
+                } else if ($extension === 'docx') { //bucle para procesar docx
                  try {
                     $phpWord = IOFactory::load($file->getRealPath());
                     $text = '';
@@ -97,14 +100,17 @@ class UploadController extends Controller
                             }
                         }
                     }
-                    $newContents[] = $text;
+                    $cleanText = trim(preg_replace('/\s+/', ' ', $text));
+                    $newContents[] = $cleanText;
+
 
                  } catch(Exception $e) {
                     throw new Exception("Failed to parse the .docx file: " . $e->getMessage());
                  }
 
                 } else {
-                    $newContents[] = $content;
+                    $cleanText = trim(preg_replace('/\s+/', ' ', $content));
+                    $newContents[] = $cleanText;
                 }
 
                 $timestampName = time().'_'.$file->getClientOriginalName();
