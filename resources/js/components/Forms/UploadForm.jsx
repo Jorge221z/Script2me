@@ -19,7 +19,7 @@ const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
             <div className="flex items-center justify-between">
                 <div className="flex items-center">
                     {getFileIcon(file.name.split('.').pop())}
-                    <span className={`max-w-[200px] truncate text-sm ${isInvalid ? 'font-medium text-red-700' : 'text-gray-700'}`}>
+                    <span className={`max-w-[325px] truncate text-sm ${isInvalid ? 'font-medium text-red-700' : 'text-gray-700'}`}>
                         {file.name}
                         {isInvalid && <FiAlertCircle className="ml-1 inline h-4 w-4 text-red-500" />}
                     </span>
