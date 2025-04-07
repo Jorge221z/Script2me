@@ -10,6 +10,7 @@ Route::get('/', [UploadController::class, 'index'])->name('home');
 Route::get('/dashboard', [UploadController::class, 'index'])->name('dashboard');
 Route::get('/refactor', [RefactorController::class, 'index'])->name('refactor');
 Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
+Route::post('/refactor', [RefactorController::class, 'refactor'])->name('refactor.process');
 Route::post('/clear-session', [UploadController::class, 'clearSession'])->name('clear.session');
 Route::get('/terms', function () {
     return Inertia::render('TAndC');

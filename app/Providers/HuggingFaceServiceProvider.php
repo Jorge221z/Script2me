@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use GuzzleHttp\Client;
+use App\Services\HuggingFaceService;
 
 class HuggingFaceServiceProvider extends ServiceProvider
 {
@@ -21,6 +22,12 @@ class HuggingFaceServiceProvider extends ServiceProvider
                 ]
             ]);
         });
+
+        // Registrar el servicio
+        $this->app->singleton(HuggingFaceService::class, function ($app) {
+            return new HuggingFaceService($app->make('huggingface'));
+        });
+
     }
 
     /**
