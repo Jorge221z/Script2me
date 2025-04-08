@@ -16,6 +16,9 @@ Route::get('/terms', function () {
     return Inertia::render('TAndC');
 })->name('terms');
 
+// Nueva ruta para probar la API de Hugging Face
+Route::get('/test-huggingface-api', [RefactorController::class, 'testApi'])->name('huggingface.test');
+
 require __DIR__.'/settings.php';
 
 // Elimina este require para quitar rutas de autenticación
