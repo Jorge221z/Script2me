@@ -68,49 +68,61 @@ class UploadController extends Controller
                 $content = file_get_contents($file->getRealPath());
                 $extension = strtolower($file->getClientOriginalExtension()); //para comparar extensiones de forma sencilla//
 
-                if ($extension === 'pdf') { //bucle para procesar pdfs
+                if ($extension === 'pdf') {
                     try {
                         $parser = new \Smalot\PdfParser\Parser();
                         $pdf = $parser->parseContent($content);
                         $text = $pdf->getText();
 
-                        $cleanText = trim(preg_replace('/\s+/', ' ', $text));
-                        $newContents[] = $cleanText;
+                        $lines = explode("\n", $text);
+                        $cleanLines = [];
 
-                    } catch(Exception $e) {
+                        foreach ($lines as $line) {
+                            $trimmedLine = trim(preg_replace('/\s+/', ' ', $line));
+                            if ($trimmedLine !== '') {
+                                $cleanLines[] = $trimmedLine;
+                            }
+                        }
+
+                        $cleanText = implode("\n", $cleanLines);
+                        $newContents[] = $cleanText;
+                    } catch (Exception $e) {
                         throw new Exception("Failed to parse the .pdf file: " . $e->getMessage());
                     }
+                } else if ($extension === 'docx') {
+                    try {
+                        $phpWord = IOFactory::load($file->getRealPath());
+                        $lines = [];
 
-                } else if ($extension === 'docx') { //bucle para procesar docx
-                 try {
-                    $phpWord = IOFactory::load($file->getRealPath());
-                    $text = '';
-                    foreach ($phpWord->getSections() as $section) {
-                        foreach ($section->getElements() as $element) {
-                            if ($element instanceof Text) {
-                                // Elemento de texto simple
-                                $text .= $element->getText() . ' ';
-                            } elseif ($element instanceof TextRun) {
-                                // Elemento que contiene varios textos
-                                foreach ($element->getElements() as $child) {
-                                    if ($child instanceof Text) {
-                                        $text .= $child->getText() . ' ';
+                        foreach ($phpWord->getSections() as $section) {
+                            foreach ($section->getElements() as $element) {
+                                if ($element instanceof Text) {
+                                    $line = trim(preg_replace('/[ \t]+/', ' ', $element->getText()));
+                                    if ($line !== '') {
+                                        $lines[] = $line;
+                                    }
+                                } elseif ($element instanceof TextRun) {
+                                    $textRunLine = '';
+                                    foreach ($element->getElements() as $child) {
+                                        if ($child instanceof Text) {
+                                            $textRunLine .= $child->getText() . ' ';
+                                        }
+                                    }
+                                    $line = trim(preg_replace('/[ \t]+/', ' ', $textRunLine));
+                                    if ($line !== '') {
+                                        $lines[] = $line;
                                     }
                                 }
                             }
                         }
+                        $cleanText = implode("\n", $lines);
+                        $newContents[] = $cleanText;
+                    } catch(Exception $e) {
+                        throw new Exception("Failed to parse the .docx file: " . $e->getMessage());
                     }
-                    $cleanText = trim(preg_replace('/\s+/', ' ', $text));
-                    $newContents[] = $cleanText;
-
-
-                 } catch(Exception $e) {
-                    throw new Exception("Failed to parse the .docx file: " . $e->getMessage());
-                 }
-
                 } else {
-                    $cleanText = trim(preg_replace('/\s+/', ' ', $content));
-                    $newContents[] = $cleanText;
+                    //$cleanText = trim(preg_replace('/\s+/', ' ', $content));
+                    $newContents[] = $content;
                 }
 
                 $timestampName = time().'_'.$file->getClientOriginalName();
