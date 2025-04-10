@@ -33,7 +33,7 @@ const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
     );
 };
 
-const UploadForm = () => {
+const UploadForm = ({actionUrl}) => {
     const { data, setData, post, errors, processing } = useForm({ files: [] });
 
     const [loading, setLoading] = useState(false);
@@ -235,7 +235,7 @@ const UploadForm = () => {
             // Esperar mínimo 1.5 segundos antes de enviar
             await new Promise((resolve) => setTimeout(resolve, 1500));
 
-            post('/upload', formData, {
+            post(actionUrl, formData, { //segun de donde venga el form vamos a un metodo del backend o a otro//
                 forceFormData: true,
                 preserveScroll: true,
                 onSuccess: () => {

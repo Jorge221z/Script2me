@@ -20,13 +20,13 @@ class RefactorController extends Controller
     {
         try {
             // Eliminar la línea que borra la sesión
-            return Inertia::render('refactor', [
+            return Inertia::render('refactorDashboard', [
                 'contents' => session('contents', []),
                 'names' => session('names', [])
             ]);
         } catch (Exception $e) {
             error_log('Error en index: ' . $e->getMessage());
-            return Inertia::render('refactor', [
+            return Inertia::render('refactorDashboard', [
                 'contents' => [],
                 'names' => [],
                 'error' => 'Error al cargar refactor: ' . $e->getMessage()
@@ -98,7 +98,7 @@ class RefactorController extends Controller
     // }
 
     // Cambiar el nombre del método process a refactor para que coincida con la ruta en web.php
-    public function refactor(Request $request)
+    public function process(Request $request)
     {
         $allowedExtensions = ['pdf', 'docx', 'c', 'cpp', 'h', 'cs', 'java', 'kt', 'kts', 'swift', 'go', 'rs', 'dart', 'py', 'rb', 'pl', 'php', 'ts', 'tsx', 'html', 'htm', 'css', 'scss', 'sass', 'less', 'js', 'jsx', 'vue', 'svelte', 'sql', 'db', 'sqlite', 'sqlite3', 'mdb', 'accdb', 'json', 'xml', 'yaml', 'yml', 'toml', 'ini', 'env', 'sh', 'bat', 'ps1', 'twig', 'ejs', 'pug', 'md', 'ipynb', 'r', 'mat', 'asm', 'f90', 'f95', 'txt'];
 
