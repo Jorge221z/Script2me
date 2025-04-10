@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Validator;
+use function Laravel\Prompts\clear;
 use function PHPUnit\Framework\throwException;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\Element\Text;
@@ -151,6 +152,6 @@ class UploadController extends Controller
     public function clearSession(Request $request)
     {
         $request->session()->forget(['contents', 'names']);
-        return redirect()->route('dashboard')->with('success', 'Historial limpiado');
+        return redirect()->route('dashboard')->with('success', 'Historial cleared');
     }
 }

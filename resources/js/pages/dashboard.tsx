@@ -128,7 +128,7 @@ ${content}
 
                                         {/* Contenedor del visor de código con manejo mejorado del scroll */}
                                         <div className="relative max-h-[300px] overflow-y-auto">
-                                            <div className="flex w-full">
+                                            <div className="flex w-full min-w-fit">
                                                 {/* Columna de números de línea */}
                                                 <div className="sticky left-0 z-10 select-none py-2 text-right font-mono text-xs bg-emerald-50 dark:bg-emerald-950/30 border-r border-emerald-200 dark:border-emerald-500 flex-shrink-0">
                                                     {contentLines.map((_, lineIndex) => (
@@ -144,7 +144,7 @@ ${content}
                                                 </div>
 
                                                 {/* Contenido del archivo con mejor manejo de overflow */}
-                                                <div className="flex-1 py-2 overflow-x-hidden">
+                                                <div className="flex-1 py-2 overflow-x-auto">
                                                     <pre className="font-mono text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
                                                         {contentLines.map((line, lineIndex) => (
                                                             <div
