@@ -1,11 +1,8 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, usePage, router } from '@inertiajs/react';
 import UploadForm from '../components/Forms/UploadForm';
 import { FiCopy, FiTrash2 } from 'react-icons/fi';
-import { DocumentTextIcon } from '@heroicons/react/24/outline';
-import { DocumentIcon } from '@heroicons/react/24/solid';
 import toast, { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
 import BackgroundPattern from '@/layouts/app/BackgroundPattern';
@@ -160,9 +157,11 @@ ${content}
                                         </div>
 
                                         {/* Pie del visor */}
-                                        <div className="flex justify-between items-center px-4 py-2 border-t border-emerald-200 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30 text-xs text-emerald-500 dark:text-emerald-400">
-                                            <span>{contentLines.length} {contentLines.length === 1 ? 'line' : 'lines'}</span>
-                                            <span className="truncate max-w-xs">{fileName}</span>
+                                        <div className="flex justify-end items-end pr-6 py-2 border-t border-emerald-200 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30 text-xs text-emerald-500 dark:text-emerald-400">
+                                            {/* <span>{contentLines.length} {contentLines.length === 1 ? 'line' : 'lines'}</span> */}
+                                            <span className="truncate max-w-xs items-end">
+                                                {fileName.includes('.') ? `.${fileName.split('.').pop()}` : 'Sin extensión'}
+                                            </span>
                                         </div>
                                     </div>
                                 );
