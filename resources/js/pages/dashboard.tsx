@@ -8,6 +8,7 @@ import { DocumentTextIcon } from '@heroicons/react/24/outline';
 import { DocumentIcon } from '@heroicons/react/24/solid';
 import toast, { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
+import BackgroundPattern from '@/layouts/app/BackgroundPattern';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -53,7 +54,7 @@ export default function Dashboard() {
                     <UploadForm />
                 </div>
                 {/* Zona de vista previa */}
-                <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 rounded-xl border md:min-h-min p-4 overflow-y-auto">
+                <div className="border-sidebar-border dark:border-sidebar-border relative min-h-[100vh] flex-1 rounded-xl border md:min-h-min p-4 overflow-y-auto">
                     {/* Botones de acción */}
                     <div className="flex justify-between mb-4 items-center">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
@@ -168,8 +169,8 @@ ${content}
                             })}
                         </div>
                     ) : (
-                        <div className="relative text-center py-12 px-4 rounded-xl border border-dashed border-gray-300 dark:border-gray-700 bg-gray-250 bg-gray-200 dark:bg-neutral-950/20">
-                            <div className="absolute inset-0 size-full stroke-neutral-900/10 dark:stroke-neutral-100/10"></div>
+                        <div className="relative text-center py-12 px-4 rounded-xl border border-dashed border-black dark:border-gray-700 bg-gray-200 dark:bg-neutral-950/20">
+                            <BackgroundPattern />
                             <div className="relative">
                                 <svg className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />

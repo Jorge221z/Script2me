@@ -2,7 +2,7 @@
 
 const TermsAndConditions = () => {
     return (
-      <div className="max-w-4xl mx-auto p-6 bg-white color shadow-md rounded-lg">
+      <div className="max-w-4xl mx-auto p-6 bg-gray color shadow-md rounded-lg">
         <h1 className="text-3xl font-bold mb-6 text-center text-black dark:text-white">
           Script2me Terms and Conditions
         </h1>
