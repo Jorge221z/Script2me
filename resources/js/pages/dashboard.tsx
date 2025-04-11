@@ -36,7 +36,19 @@ export default function Dashboard() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Toaster position="bottom-center" />
+            <Toaster
+  position="bottom-center"
+  toastOptions={{
+    className: 'my-custom-toast',
+    style: {
+      background: '#363636',
+      color: '#fff',
+      borderRadius: '8px',
+      padding: '20px 28px',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+    },
+  }}
+/>
             <Head title="Code to AI prompts" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
 

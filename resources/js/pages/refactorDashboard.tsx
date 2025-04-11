@@ -15,36 +15,31 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Refactor() {
-    const { contents = [], names = [], success } = usePage<{
+    const { contents = [], names = [], flash } = usePage<{
         contents: string[];
         names: string[];
-        success?: string;
+        flash: { success?: string; error?: string };
     }>().props;
 
     const handleClearSession = () => {
-        router.post('/clear-session', {}, {
-            onSuccess: () => {
-                toast.success('Historial limpiado con éxito');
-            },
-        });
+        router.post('/clear-session');
     };
 
     useEffect(() => {
-        if (success) {
-            toast.success(success);
+        if (flash && flash.success) {
+            toast.success(flash.success);
         }
-    }, [success]);
+        if (flash && flash.error) {
+            toast.error(flash.error);
+        }
+    }, [flash]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Toaster position="bottom-center" />
             <Head title="AI-powered code processing" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                {success && (
-                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
-                        <span className="block sm:inline">{success}</span>
-                    </div>
-                )}
+
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative rounded-xl">
                     <UploadForm actionUrl="/process" />
                 </div>

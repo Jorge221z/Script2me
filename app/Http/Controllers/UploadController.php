@@ -146,7 +146,7 @@ class UploadController extends Controller
             $newNames
         ));
 
-        return redirect()->back()->with('success', count($newNames) === 1 ? 'eeee' : count($newNames) . ' files uploaded successfully');
+        return redirect()->back()->with('success', count($newNames) === 1 ? 'File upload successfully' : count($newNames) . ' files uploaded successfully');
     }
 
     public function clearSession(Request $request)

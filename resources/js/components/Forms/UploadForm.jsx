@@ -305,13 +305,8 @@ const UploadForm = ({actionUrl}) => {
                 type="submit"
                 onClick={() =>
                     setTimeout(() => {
-                        const filesCount = data.files.length;
                         setData({ ...data, files: [] });
-                        // toast.success(filesCount === 1 ? 'File uploaded successfully!' : `${filesCount} Files uploaded successfully!`, {
-                        //     duration: 1800,
-                        //     position: 'top-center',
-                        // });
-                    }, 1700)
+                    }, 1501)
                 }
                 disabled={data.files.length === 0 || loading || !hasValidFiles || processing}
                 className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${

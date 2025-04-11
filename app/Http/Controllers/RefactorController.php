@@ -184,20 +184,20 @@ class RefactorController extends Controller
                         }
                         $cleanText = implode("\n", $lines);
                         $newContents[] = $cleanText;
-                    } catch (Exception $e) {
+                    } catch(Exception $e) {
                         throw new Exception("Failed to parse the .docx file: " . $e->getMessage());
                     }
                 } else {
-                    //$cleanText = trim(preg_replace('/\s+/', ' ', $content)); evitamos quitar formato a codigo original subido //
+                    //$cleanText = trim(preg_replace('/\s+/', ' ', $content));
                     $newContents[] = $content;
                 }
 
-                $timestampName = time() . '_' . $file->getClientOriginalName();
+                $timestampName = time().'_'.$file->getClientOriginalName();
 
                 $file->storeAs('uploads', $timestampName, 'public');
                 $newNames[] = $file->getClientOriginalName();
             } catch (Exception $e) {
-                return back()->withErrors(['files' => 'Error al procesar "' . $file->getClientOriginalName() . '": ' . $e->getMessage()]);
+                return back()->withErrors(['files' => 'Error al procesar: '.$file->getClientOriginalName()]);
             }
         }
 
@@ -212,6 +212,6 @@ class RefactorController extends Controller
             $newNames
         ));
 
-        return redirect()->back()->with('success', 'Files uploaded successfully');
+        return redirect()->back()->with('success', count($newNames) === 1 ? 'File upload successfully' : count($newNames) . ' files uploaded successfully');
     }
 }
