@@ -8,7 +8,7 @@ use Inertia\Inertia;
 // Mostrar el mismo contenido en la ruta principal y en dashboard
 Route::get('/', [UploadController::class, 'index'])->name('home');
 Route::get('/dashboard', [UploadController::class, 'index'])->name('dashboard');
-Route::get('/refactor-dashboard', [RefactorController::class, 'index'])->name('refactor');
+Route::get('/refactor-dashboard', [RefactorController::class, 'index'])->name('refactor.index');
 Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
 Route::post('/process', [RefactorController::class, 'process'])->name('refactor.process');
 Route::post('/clear-session', [UploadController::class, 'clearSession'])->name('clear.session');

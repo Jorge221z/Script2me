@@ -38,7 +38,7 @@ export default function Refactor() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Toaster position="bottom-center" />
-            <Head title="Process files" />
+            <Head title="AI-powered code processing" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 {success && (
                     <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">

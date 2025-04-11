@@ -181,7 +181,13 @@ const UploadForm = ({actionUrl}) => {
             post(actionUrl, formData, { //segun de donde venga el form vamos a un metodo del backend o a otro//
                 forceFormData: true,
                 preserveScroll: true,
-                onSuccess: () => {
+                onSuccess: (page) => {
+                    if (page.props.flash && page.props.flash.success) { //mostramos los mensajes flash que nos envia el backend //
+                        toast.success(page.props.flash.success, {
+                            duration: 1800,
+                            position: 'top-center',
+                        });
+                    }
                     setData('files', []); // <- Limpiar archivos
                     setInvalidFiles([]); // <- Limpiar archivos inválidos
                     setFileErrors({}); // <- Limpiar errores individuales
@@ -301,10 +307,10 @@ const UploadForm = ({actionUrl}) => {
                     setTimeout(() => {
                         const filesCount = data.files.length;
                         setData({ ...data, files: [] });
-                        toast.success(filesCount === 1 ? 'File uploaded successfully!' : `${filesCount} files uploaded successfully!`, {
-                            duration: 1800,
-                            position: 'top-center',
-                        });
+                        // toast.success(filesCount === 1 ? 'File uploaded successfully!' : `${filesCount} Files uploaded successfully!`, {
+                        //     duration: 1800,
+                        //     position: 'top-center',
+                        // });
                     }, 1700)
                 }
                 disabled={data.files.length === 0 || loading || !hasValidFiles || processing}

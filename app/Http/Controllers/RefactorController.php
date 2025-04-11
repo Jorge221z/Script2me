@@ -135,44 +135,61 @@ class RefactorController extends Controller
                 $content = file_get_contents($file->getRealPath());
                 $extension = strtolower($file->getClientOriginalExtension()); //para comparar extensiones de forma sencilla//
 
-                if ($extension === 'pdf') { //bucle para procesar pdfs
+                if ($extension === 'pdf') {
                     try {
                         $parser = new \Smalot\PdfParser\Parser();
                         $pdf = $parser->parseContent($content);
                         $text = $pdf->getText();
 
-                        $cleanText = trim(preg_replace('/\s+/', ' ', $text));
+                        $lines = explode("\n", $text);
+                        $cleanLines = [];
+
+                        foreach ($lines as $line) {
+                            $trimmedLine = trim(preg_replace('/\s+/', ' ', $line));
+                            if ($trimmedLine !== '') {
+                                $cleanLines[] = $trimmedLine;
+                            }
+                        }
+
+                        $cleanText = implode("\n", $cleanLines);
                         $newContents[] = $cleanText;
                     } catch (Exception $e) {
                         throw new Exception("Failed to parse the .pdf file: " . $e->getMessage());
                     }
-                } else if ($extension === 'docx') { //bucle para procesar docx
+                } else if ($extension === 'docx') {
                     try {
                         $phpWord = IOFactory::load($file->getRealPath());
-                        $text = '';
+                        $lines = [];
+
                         foreach ($phpWord->getSections() as $section) {
                             foreach ($section->getElements() as $element) {
                                 if ($element instanceof Text) {
-                                    // Elemento de texto simple
-                                    $text .= $element->getText() . ' ';
+                                    $line = trim(preg_replace('/[ \t]+/', ' ', $element->getText()));
+                                    if ($line !== '') {
+                                        $lines[] = $line;
+                                    }
                                 } elseif ($element instanceof TextRun) {
-                                    // Elemento que contiene varios textos
+                                    $textRunLine = '';
                                     foreach ($element->getElements() as $child) {
                                         if ($child instanceof Text) {
-                                            $text .= $child->getText() . ' ';
+                                            $textRunLine .= $child->getText() . ' ';
                                         }
+                                    }
+                                    $line = trim(preg_replace('/[ \t]+/', ' ', $textRunLine));
+                                    if ($line !== '') {
+                                        $lines[] = $line;
                                     }
                                 }
                             }
                         }
-                        $cleanText = trim(preg_replace('/\s+/', ' ', $text));
+                        $cleanText = implode("\n", $lines);
                         $newContents[] = $cleanText;
                     } catch (Exception $e) {
                         throw new Exception("Failed to parse the .docx file: " . $e->getMessage());
                     }
                 } else {
-                    $cleanText = trim(preg_replace('/\s+/', ' ', $content));
-                    $newContents[] = $cleanText;
+                    //$cleanText = trim(preg_replace('/\s+/', ' ', $content)); evitamos quitar formato a codigo original subido //
+                    $newContents[] = $content;
                 }
 
                 $timestampName = time() . '_' . $file->getClientOriginalName();
@@ -180,80 +197,14 @@ class RefactorController extends Controller
                 $file->storeAs('uploads', $timestampName, 'public');
                 $newNames[] = $file->getClientOriginalName();
             } catch (Exception $e) {
-                return back()->withErrors(['files' => 'Error al procesar: ' . $file->getClientOriginalName()]);
-            }
-        }
-        //Aqui manejamos la llamda a la api de huggingface//
-        $apiContent = [];
-        $apiKey = config('services.huggingface.api_key'); // Obtener el API key desde la config
-
-        // Usar el mismo cliente y modelo que funciona en testApi
-        $httpClient = new Client();
-        $model = 'codellama/CodeLlama-13b-hf'; // Usar el mismo modelo que funciona en testApi
-
-        foreach ($newContents as $index => $content) {
-            try {
-                // Crear el prompt con instrucciones + código
-                $prompt = "Refactoriza el siguiente código para que sea más legible, elimina bloques que hagan referencia a los estilos si los hay y haz que siga las mejores prácticas de programación. Devuelve solo el código refactorizado, sin explicaciones adicionales:\n\n" . $content;
-
-                $response = $httpClient->post("https://api-inference.huggingface.co/models/{$model}", [
-                    'headers' => [
-                        'Authorization' => "Bearer {$apiKey}",
-                        'Content-Type' => 'application/json',
-                    ],
-                    'json' => [
-                        'inputs' => $prompt,
-                        'parameters' => [
-                            'max_new_tokens' => 2000, // Aumentar para permitir respuestas más largas
-                            'temperature' => 0.7,
-                            'return_full_text' => false, // Para obtener solo la respuesta generada
-                        ],
-                    ],
-                    'timeout' => 120, // Aumentar timeout para archivos grandes
-                    'connect_timeout' => 10, // Tiempo de conexión
-                ]);
-
-                $responseBody = $response->getBody()->getContents();
-                $result = json_decode($responseBody, true);
-
-                // Mejorado el procesamiento de la respuesta para garantizar que se almacene el texto generado
-                if (is_array($result) && isset($result[0]['generated_text'])) {
-                    // Formato estándar de respuesta de Hugging Face
-                    $apiContent[] = $result[0]['generated_text'];
-                } elseif (is_array($result) && !empty($result)) {
-                    // Otro formato de array, buscamos texto generado en cualquier campo
-                    $text = '';
-                    array_walk_recursive($result, function($item, $key) use (&$text) {
-                        if (is_string($item) && (
-                            $key === 'generated_text' ||
-                            $key === 'text' ||
-                            strpos($key, 'text') !== false
-                        )) {
-                            $text .= $item . "\n";
-                        }
-                    });
-                    $apiContent[] = !empty($text) ? $text : 'Respuesta de la API sin texto generado identificable';
-                } elseif (is_string($result)) {
-                    // Si ya es un string, lo usamos directamente
-                    $apiContent[] = $result;
-                } else {
-                    // Si nada funciona, convertimos a JSON para visualización
-                    $apiContent[] = 'Formato de respuesta no estándar: ' . json_encode($result);
-                    // Añadir a log para debugging
-                    Log::debug('Respuesta API no estándar: ' . $responseBody);
-                }
-            } catch (GuzzleException $e) {
-                // Manejar específicamente errores de Guzzle
-                return back()->withErrors(['apiError' => 'Error de conexión con la API: ' . $e->getMessage()]);
-            } catch (Exception $e) {
-                return back()->withErrors(['apiError' => 'Error al procesar la respuesta: ' . $e->getMessage()]);
+                return back()->withErrors(['files' => 'Error al procesar "' . $file->getClientOriginalName() . '": ' . $e->getMessage()]);
             }
         }
 
-        // Actualizar sesión con el contenido de la API
+        // Actualizar sesión
         $request->session()->put('contents', array_merge(
             $request->session()->get('contents', []),
-            $apiContent
+            $newContents
         ));
 
         $request->session()->put('names', array_merge(
@@ -261,6 +212,6 @@ class RefactorController extends Controller
             $newNames
         ));
 
-        return redirect()->back()->with('success', 'Archivos subidos correctamente');
+        return redirect()->back()->with('success', 'Files uploaded successfully');
     }
 }

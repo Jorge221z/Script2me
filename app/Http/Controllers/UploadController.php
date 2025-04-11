@@ -22,7 +22,7 @@ class UploadController extends Controller
                 'contents' => session('contents', []),
                 'names' => session('names', [])
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             error_log('Error en index: ' . $e->getMessage());
             return Inertia::render('dashboard', [
                 'contents' => [],
@@ -146,7 +146,7 @@ class UploadController extends Controller
             $newNames
         ));
 
-        return redirect()->back()->with('success', 'Archivos subidos correctamente');
+        return redirect()->back()->with('success', count($newNames) === 1 ? 'eeee' : count($newNames) . ' files uploaded successfully');
     }
 
     public function clearSession(Request $request)
