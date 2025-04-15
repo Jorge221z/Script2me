@@ -18,8 +18,9 @@ Route::get('/terms', function () {
     return Inertia::render('TAndC');
 })->name('terms');
 
-// Nueva ruta para probar la API de Hugging Face
-Route::get('/test-huggingface-api', [RefactorController::class, 'testApi'])->name('huggingface.test');
+// Nueva ruta para probar la API de Gemini
+Route::get('/test-gemini-api', [RefactorController::class, 'testApi'])->name('gemini.test');
+Route::get('/list-gemini-models', [RefactorController::class, 'listModels'])->name('gemini.models');
 
 require __DIR__.'/settings.php';
 

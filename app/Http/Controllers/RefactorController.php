@@ -13,6 +13,8 @@ use PhpOffice\PhpWord\Element\Text;
 use PhpOffice\PhpWord\Element\TextRun;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use App\Services\GeminiService;
+
 
 class RefactorController extends Controller
 {
@@ -37,54 +39,38 @@ class RefactorController extends Controller
     /**
      * Prueba la conexión a la API de Hugging Face
      */
-    public function testApi()
+    public function testApi(GeminiService $geminiService)
     {
         try {
-            $apiKey = config('services.huggingface.api_key');
-
-            if (empty($apiKey)) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'API key de Hugging Face no configurada'
-                ]);
-            }
-
-            // Usar Guzzle directamente en lugar de Kambo
-            $client = new Client();
-            $model = 'codellama/CodeLlama-13b-hf';
-            $prompt = "Hola, ¿estás funcionando correctamente?";
-
-            $response = $client->post("https://api-inference.huggingface.co/models/{$model}", [
-                'headers' => [
-                    'Authorization' => "Bearer {$apiKey}",
-                    'Content-Type' => 'application/json',
-                ],
-                'json' => [
-                    'inputs' => $prompt,
-                    'parameters' => [
-                        'max_new_tokens' => 100,
-                        'temperature' => 0.7,
-                    ],
-                ],
-            ]);
-
-            $result = json_decode($response->getBody()->getContents(), true);
+            $prompt = "Hola, hazme un bucle for en php?";
+            $response = $geminiService->generateText($prompt);
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'API de Hugging Face funcionando correctamente',
-                'response' => $result[0]['generated_text'] ?? 'No se recibió respuesta específica'
-            ]);
-        } catch (GuzzleException $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Error al conectar con la API de Hugging Face',
-                'error' => $e->getMessage()
+                'message' => 'API de Gemini funcionando correctamente',
+                'response' => $response
             ]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Error al procesar la respuesta',
+                'message' => 'Error al procesar la solicitud con Gemini',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function listModels(GeminiService $geminiService)
+    {
+        try {
+            $models = $geminiService->listModels();
+            return response()->json([
+                'status' => 'success',
+                'models' => $models
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error al listar los modelos',
                 'error' => $e->getMessage()
             ]);
         }
