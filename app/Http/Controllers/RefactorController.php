@@ -37,25 +37,91 @@ class RefactorController extends Controller
     }
 
     /**
-     * Prueba la conexión a la API de Hugging Face
+     * Prueba la conexión a la API de Gemini.
      */
+
     public function testApi(GeminiService $geminiService)
     {
+        $prompt = <<<'EOD'
+Actúa como un experto en refactorización de código TypeScript.
+
+Refactoriza el siguiente código TypeScript para mejorar su legibilidad y eficiencia. Devuelve **únicamente el código TypeScript refactorizado**, sin explicaciones ni texto adicional. Asegúrate de que el código refactorizado sea funcionalmente equivalente al original. Si la refactorización no es posible o el código original es óptimo, devuelve el código original tal cual.
+
+```typescript
+interface Producto {
+    nombre: string;
+    precio: number;
+    cantidad: number;
+    descuento?: number; // Propiedad opcional para el descuento
+}
+
+
+class CarritoCompra {
+    private productos: Producto[] = [];
+
+    agregarProducto(producto: Producto): void {
+        this.productos.push(producto);
+    }
+
+    calcularTotal(): number {
+        let total = 0;
+        for (const producto of this.productos) {
+            const precioFinal = producto.precio * (1 - (producto.descuento || 0)); // Aplicar descuento si existe
+            total += precioFinal * producto.cantidad;
+        }
+        return total;
+    }
+
+    aplicarDescuento(tipoCliente: string): void {
+        let descuento = 0;
+        const totalProductos = this.productos.length;
+        const totalCarrito = this.calcularTotal();
+
+        if (tipoCliente === 'premium') {
+            descuento = totalProductos > 10 || totalCarrito > 500 ? 0.20 : 0.10;
+        } else if (tipoCliente === 'regular' && totalProductos > 5 && totalCarrito > 200) {
+            descuento = 0.05;
+        }
+
+        if (descuento > 0) {
+            for (let i = 0; i < this.productos.length; i++) {
+                if (this.productos[i].descuento === undefined) { // Solo aplicar si no hay descuento previo
+                    this.productos[i].descuento = descuento;
+                }
+            }
+        }
+
+    }
+}
+
+IGNORE_WHEN_COPYING_START
+Use code with caution.TypeScript
+IGNORE_WHEN_COPYING_END
+
+
+EOD;
+
         try {
-            $prompt = "Hola, hazme un bucle for en php?";
             $response = $geminiService->generateText($prompt);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'API de Gemini funcionando correctamente',
-                'response' => $response
-            ]);
+            // Limpiar la respuesta usando expresiones regulares
+            $response = preg_replace('/^```(?:typescript)?\n?/', '', $response); // Elimina ```typescript al principio
+            $response = preg_replace('/```$/', '', $response); // Elimina ``` al final
+            $response = trim($response); // Elimina espacios en blanco adicionales al principio y al final
+
+            // Verificar si la respuesta contiene código TypeScript válido.
+            if (strpos($response, 'interface') !== false || strpos($response, 'class') !== false || strpos($response, '=>') !== false) {
+                return response($response)->header('Content-Type', 'text/plain');
+            } else {
+                throw new Exception("La respuesta de Gemini no contiene código TypeScript válido: " . $response);
+            }
+
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Error al procesar la solicitud con Gemini',
                 'error' => $e->getMessage()
-            ]);
+            ], 500);
         }
     }
 
@@ -76,14 +142,9 @@ class RefactorController extends Controller
         }
     }
 
-    // protected $huggingFaceService;
+   
 
-    // public function __construct(HuggingFaceService $huggingFaceService)
-    // {
-    //     $this->huggingFaceService = $huggingFaceService;
-    // }
-
-    // Cambiar el nombre del método process a refactor para que coincida con la ruta en web.php
+    
     public function process(Request $request)
     {
         $allowedExtensions = ['pdf', 'docx', 'c', 'cpp', 'h', 'cs', 'java', 'kt', 'kts', 'swift', 'go', 'rs', 'dart', 'py', 'rb', 'pl', 'php', 'ts', 'tsx', 'html', 'htm', 'css', 'scss', 'sass', 'less', 'js', 'jsx', 'vue', 'svelte', 'sql', 'db', 'sqlite', 'sqlite3', 'mdb', 'accdb', 'json', 'xml', 'yaml', 'yml', 'toml', 'ini', 'env', 'sh', 'bat', 'ps1', 'twig', 'ejs', 'pug', 'md', 'ipynb', 'r', 'mat', 'asm', 'f90', 'f95', 'txt'];
@@ -170,7 +231,7 @@ class RefactorController extends Controller
                         }
                         $cleanText = implode("\n", $lines);
                         $newContents[] = $cleanText;
-                    } catch(Exception $e) {
+                    } catch (Exception $e) {
                         throw new Exception("Failed to parse the .docx file: " . $e->getMessage());
                     }
                 } else {
@@ -178,12 +239,12 @@ class RefactorController extends Controller
                     $newContents[] = $content;
                 }
 
-                $timestampName = time().'_'.$file->getClientOriginalName();
+                $timestampName = time() . '_' . $file->getClientOriginalName();
 
                 $file->storeAs('uploads', $timestampName, 'public');
                 $newNames[] = $file->getClientOriginalName();
             } catch (Exception $e) {
-                return back()->withErrors(['files' => 'Error al procesar: '.$file->getClientOriginalName()]);
+                return back()->withErrors(['files' => 'Error al procesar: ' . $file->getClientOriginalName()]);
             }
         }
 

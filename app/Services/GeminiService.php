@@ -23,7 +23,7 @@ class GeminiService
         ]);
     }
 
-    public function generateText($prompt, $model = 'gemini-2.0-flash-001')
+    public function generateText($prompt, $model = 'gemini-1.5-pro-latest')
     {
         try {
             $response = $this->client->post("/v1beta/models/{$model}:generateContent?key={$this->apiKey}", [
