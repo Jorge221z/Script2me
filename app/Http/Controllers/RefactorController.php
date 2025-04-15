@@ -7,17 +7,18 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use App\Services\HuggingFaceService;
+
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\Element\Text;
 use PhpOffice\PhpWord\Element\TextRun;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use App\Services\GeminiService;
-
+use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class RefactorController extends Controller
 {
+    use ValidatesRequests;
     public function index()
     {
         try {
@@ -37,7 +38,7 @@ class RefactorController extends Controller
     }
 
     /**
-     * Prueba la conexión a la API de Gemini.
+     * Prueba de la API de Gemini.
      */
 
     public function testApi(GeminiService $geminiService)
@@ -113,7 +114,7 @@ EOD;
             if (strpos($response, 'interface') !== false || strpos($response, 'class') !== false || strpos($response, '=>') !== false) {
                 return response($response)->header('Content-Type', 'text/plain');
             } else {
-                throw new Exception("La respuesta de Gemini no contiene código TypeScript válido: " . $response);
+                throw new Exception(message: "La respuesta de Gemini no contiene código TypeScript válido: " . $response);
             }
 
         } catch (Exception $e) {
@@ -142,123 +143,166 @@ EOD;
         }
     }
 
-   
 
-    
-    public function process(Request $request)
+
+
+    public function process(Request $request, GeminiService $geminiService) //le pasamos tambien el servicio de gemini//
     {
-        $allowedExtensions = ['pdf', 'docx', 'c', 'cpp', 'h', 'cs', 'java', 'kt', 'kts', 'swift', 'go', 'rs', 'dart', 'py', 'rb', 'pl', 'php', 'ts', 'tsx', 'html', 'htm', 'css', 'scss', 'sass', 'less', 'js', 'jsx', 'vue', 'svelte', 'sql', 'db', 'sqlite', 'sqlite3', 'mdb', 'accdb', 'json', 'xml', 'yaml', 'yml', 'toml', 'ini', 'env', 'sh', 'bat', 'ps1', 'twig', 'ejs', 'pug', 'md', 'ipynb', 'r', 'mat', 'asm', 'f90', 'f95', 'txt'];
-
-        $validator = Validator::make($request->all(), [
+        // Validar los archivos subidos
+        $this->validate($request, [
             'files' => 'required|array|min:1',
-            'files.*' => [
-                'required',
-                'file',
-                'max:2048',
-                function ($attribute, $value, $fail) use ($allowedExtensions) {
-                    $extension = strtolower($value->getClientOriginalExtension());
-                    if (!in_array($extension, $allowedExtensions)) {
-                        $fail("La extensión .$extension no está permitida.");
-                    }
-                }
-            ]
-        ], [
-            'files.required' => 'Debes subir al menos un archivo',
-            'files.*.file' => 'Cada elemento debe ser un archivo válido',
-            'files.*.max' => 'Los archivos no deben exceder 2MB',
-            'files.min' => 'Debes subir al menos un archivo'
+            'files.*' => 'required|file|max:2048'
         ]);
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator);
-        }
+        // Definir las extensiones permitidas
+        {
+            $allowedExtensions = ['pdf', 'docx', 'c', 'cpp', 'h', 'cs', 'java', 'kt', 'kts', 'swift', 'go', 'rs', 'dart', 'py', 'rb', 'pl', 'php', 'ts', 'tsx', 'html', 'htm', 'css', 'scss', 'sass', 'less', 'js', 'jsx', 'vue', 'svelte', 'sql', 'db', 'sqlite', 'sqlite3', 'mdb', 'accdb', 'json', 'xml', 'yaml', 'yml', 'toml', 'ini', 'env', 'sh', 'bat', 'ps1', 'twig', 'ejs', 'pug', 'md', 'ipynb', 'r', 'mat', 'asm', 'f90', 'f95', 'txt'];
 
-        $newContents = [];
-        $newNames = [];
-
-        foreach ($request->file('files') as $file) {
-            try {
-                // Leer el contenido ANTES de almacenar y/o procesar
-                $content = file_get_contents($file->getRealPath());
-                $extension = strtolower($file->getClientOriginalExtension()); //para comparar extensiones de forma sencilla//
-
-                if ($extension === 'pdf') {
-                    try {
-                        $parser = new \Smalot\PdfParser\Parser();
-                        $pdf = $parser->parseContent($content);
-                        $text = $pdf->getText();
-
-                        $lines = explode("\n", $text);
-                        $cleanLines = [];
-
-                        foreach ($lines as $line) {
-                            $trimmedLine = trim(preg_replace('/\s+/', ' ', $line));
-                            if ($trimmedLine !== '') {
-                                $cleanLines[] = $trimmedLine;
-                            }
+            $validator = Validator::make($request->all(), [
+                'files' => 'required|array|min:1',
+                'files.*' => [
+                    'required',
+                    'file',
+                    'max:2048',
+                    function ($attribute, $value, $fail) use ($allowedExtensions) {
+                        $extension = strtolower($value->getClientOriginalExtension());
+                        if (!in_array($extension, $allowedExtensions)) {
+                            $fail("La extensión .$extension no está permitida.");
                         }
-
-                        $cleanText = implode("\n", $cleanLines);
-                        $newContents[] = $cleanText;
-                    } catch (Exception $e) {
-                        throw new Exception("Failed to parse the .pdf file: " . $e->getMessage());
                     }
-                } else if ($extension === 'docx') {
-                    try {
-                        $phpWord = IOFactory::load($file->getRealPath());
-                        $lines = [];
+                ]
+            ], [
+                'files.required' => 'Debes subir al menos un archivo',
+                'files.*.file' => 'Cada elemento debe ser un archivo válido',
+                'files.*.max' => 'Los archivos no deben exceder 2MB',
+                'files.min' => 'Debes subir al menos un archivo'
+            ]);
 
-                        foreach ($phpWord->getSections() as $section) {
-                            foreach ($section->getElements() as $element) {
-                                if ($element instanceof Text) {
-                                    $line = trim(preg_replace('/[ \t]+/', ' ', $element->getText()));
-                                    if ($line !== '') {
-                                        $lines[] = $line;
-                                    }
-                                } elseif ($element instanceof TextRun) {
-                                    $textRunLine = '';
-                                    foreach ($element->getElements() as $child) {
-                                        if ($child instanceof Text) {
-                                            $textRunLine .= $child->getText() . ' ';
+            if ($validator->fails()) {
+                return back()->withErrors($validator);
+            }
+
+            $newContents = [];
+            $newNames = [];
+
+            foreach ($request->file('files') as $file) {
+                try {
+                    // Leer el contenido ANTES de almacenar y/o procesar
+                    $content = file_get_contents($file->getRealPath());
+                    $extension = strtolower($file->getClientOriginalExtension()); //para comparar extensiones de forma sencilla//
+
+                    if ($extension === 'pdf') {
+                        try {
+                            $parser = new \Smalot\PdfParser\Parser();
+                            $pdf = $parser->parseContent($content);
+                            $text = $pdf->getText();
+
+                            $lines = explode("\n", $text);
+                            $cleanLines = [];
+
+                            foreach ($lines as $line) {
+                                $trimmedLine = trim(preg_replace('/\s+/', ' ', $line));
+                                if ($trimmedLine !== '') {
+                                    $cleanLines[] = $trimmedLine;
+                                }
+                            }
+
+                            $cleanText = implode("\n", $cleanLines);
+                            $newContents[] = $cleanText;
+                        } catch (Exception $e) {
+                            throw new Exception("Failed to parse the .pdf file: " . $e->getMessage());
+                        }
+                    } else if ($extension === 'docx') {
+                        try {
+                            $phpWord = IOFactory::load($file->getRealPath());
+                            $lines = [];
+
+                            foreach ($phpWord->getSections() as $section) {
+                                foreach ($section->getElements() as $element) {
+                                    if ($element instanceof Text) {
+                                        $line = trim(preg_replace('/[ \t]+/', ' ', $element->getText()));
+                                        if ($line !== '') {
+                                            $lines[] = $line;
                                         }
-                                    }
-                                    $line = trim(preg_replace('/[ \t]+/', ' ', $textRunLine));
-                                    if ($line !== '') {
-                                        $lines[] = $line;
+                                    } elseif ($element instanceof TextRun) {
+                                        $textRunLine = '';
+                                        foreach ($element->getElements() as $child) {
+                                            if ($child instanceof Text) {
+                                                $textRunLine .= $child->getText() . ' ';
+                                            }
+                                        }
+                                        $line = trim(preg_replace('/[ \t]+/', ' ', $textRunLine));
+                                        if ($line !== '') {
+                                            $lines[] = $line;
+                                        }
                                     }
                                 }
                             }
+                            $cleanText = implode("\n", $lines);
+                            $newContents[] = $cleanText;
+                        } catch (Exception $e) {
+                            throw new Exception("Failed to parse the .docx file: " . $e->getMessage());
                         }
-                        $cleanText = implode("\n", $lines);
-                        $newContents[] = $cleanText;
-                    } catch (Exception $e) {
-                        throw new Exception("Failed to parse the .docx file: " . $e->getMessage());
+                    } else {
+                        //$cleanText = trim(preg_replace('/\s+/', ' ', $content));
+                        $newContents[] = $content;
                     }
-                } else {
-                    //$cleanText = trim(preg_replace('/\s+/', ' ', $content));
-                    $newContents[] = $content;
+
+                    $timestampName = time() . '_' . $file->getClientOriginalName();
+
+                    $file->storeAs('uploads', $timestampName, 'public');
+                    $newNames[] = $file->getClientOriginalName();
+                } catch (Exception $e) {
+                    return back()->withErrors(['files' => 'Error al procesar: ' . $file->getClientOriginalName()]);
                 }
-
-                $timestampName = time() . '_' . $file->getClientOriginalName();
-
-                $file->storeAs('uploads', $timestampName, 'public');
-                $newNames[] = $file->getClientOriginalName();
-            } catch (Exception $e) {
-                return back()->withErrors(['files' => 'Error al procesar: ' . $file->getClientOriginalName()]);
             }
+            //Aqui vamos a manejar las llamadas a la API de Gemini y como lo integramos en los arrays de session//
+            $basePrompt = <<<'EOD'
+            Actúa como un experto en refactorización de código.
+
+            Refactoriza el siguiente código para mejorar su legibilidad y eficiencia. Detecta automáticamente el lenguaje de programación. Devuelve únicamente el código refactorizado, sin explicaciones ni texto adicional. Asegúrate de que el código refactorizado sea funcionalmente equivalente al original. Si la refactorización no es posible o el código original es óptimo, devuelve el código original tal cual.
+        EOD;
+
+            $apiContent = []; //array para almacenar la salida de la API//
+
+            foreach ($newContents as $content) {
+                try {
+                    $completePrompt = $basePrompt . "\n\n" . $content;
+                    
+
+
+
+
+
+
+
+
+                } catch (Exception $e) {
+                    return redirect()->back()->with('error', 'Error while trying to call the API: ' . $e->getMessage());
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+            // Actualizar sesión
+            $request->session()->put('contents', array_merge(
+                $request->session()->get('contents', []),
+                $newContents
+            ));
+
+            $request->session()->put('names', array_merge(
+                $request->session()->get('names', []),
+                $newNames
+            ));
+
+            return redirect()->back()->with('success', count($newNames) === 1 ? 'File upload successfully' : count($newNames) . ' files uploaded successfully');
         }
-
-        // Actualizar sesión
-        $request->session()->put('contents', array_merge(
-            $request->session()->get('contents', []),
-            $newContents
-        ));
-
-        $request->session()->put('names', array_merge(
-            $request->session()->get('names', []),
-            $newNames
-        ));
-
-        return redirect()->back()->with('success', count($newNames) === 1 ? 'File upload successfully' : count($newNames) . ' files uploaded successfully');
     }
 }
