@@ -14,8 +14,8 @@ const mainNavItems: NavItem[] = [
         icon: Home,
     },
     {
-        title: 'AI Refactor (Coming soon)',
-        href: '/refactor',
+        title: 'AI Refactor',
+        href: '/refactor-dashboard',
         icon: BrainCircuit,
     }
 ];
