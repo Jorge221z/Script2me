@@ -24,14 +24,14 @@ class RefactorController extends Controller
         try {
             // Eliminar la línea que borra la sesión
             return Inertia::render('refactorDashboard', [
-                'contents' => session('contents', []),
-                'names' => session('names', [])
+                'ApiContents' => session('ApiContents', []),
+                'ApiNames' => session('ApiNames', [])
             ]);
         } catch (Exception $e) {
             error_log('Error en index: ' . $e->getMessage());
             return Inertia::render('refactorDashboard', [
-                'contents' => [],
-                'names' => [],
+                'ApiContents' => [],
+                'ApiNames' => [],
                 'error' => 'Error al cargar refactor: ' . $e->getMessage()
             ]);
         }
@@ -290,17 +290,25 @@ EOD;
 
 
             // Actualizamos arrays de sesion
-            $request->session()->put('contents', array_merge(
-                $request->session()->get('contents', []),
+            $request->session()->put('ApiContents', array_merge(
+                $request->session()->get('ApiContents', []),
                 $apiContents
             ));
 
-            $request->session()->put('names', array_merge(
-                $request->session()->get('names', []),
+            $request->session()->put('ApiNames', array_merge(
+                $request->session()->get('ApiNames', []),
                 $newNames
             ));
 
             return redirect()->back()->with('success', count($newNames) === 1 ? 'File processed successfully' : count($newNames) . ' files processed successfully');
         }
     }
+
+
+    public function clearApiSession(Request $request)
+    {
+        $request->session()->forget(['ApiContents', 'ApiNames']);
+        return redirect()->back()->with('success', 'Historial cleared');
+    }
+
 }

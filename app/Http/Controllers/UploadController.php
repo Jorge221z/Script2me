@@ -152,6 +152,6 @@ class UploadController extends Controller
     public function clearSession(Request $request)
     {
         $request->session()->forget(['contents', 'names']);
-        return redirect()->route('dashboard')->with('success', 'Historial cleared');
+        return redirect()->back()->with('success', 'Historial cleared');
     }
 }
