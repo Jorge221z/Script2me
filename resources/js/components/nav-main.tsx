@@ -19,6 +19,7 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                             <Link
                                 href={item.href}
                                 prefetch
+                                preserveState={false}
                             >
                                 {item.icon && <item.icon />}
                                 <span>{item.title}</span>

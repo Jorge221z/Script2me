@@ -6,6 +6,7 @@ import { FiCopy, FiTrash2 } from 'react-icons/fi';
 import toast, { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
 import BackgroundPattern from '@/layouts/app/BackgroundPattern';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -15,7 +16,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Dashboard() {
-    const { contents = [], names = [], flash } = usePage<{
+    const { contents = [], names = [], flash, _sync } = usePage<{
         contents: string[];
         names: string[];
         flash: { success?: string; error?: string };
@@ -25,14 +26,18 @@ export default function Dashboard() {
         router.post('/clear-session');
     };
 
+    const [localContents, setLocalContents] = useState(contents);
+
     useEffect(() => {
+        setLocalContents(contents);
+
         if (flash && flash.success) {
             toast.success(flash.success);
         }
         if (flash && flash.error) {
             toast.error(flash.error);
         }
-    }, [flash]);
+    }, [contents, _sync, flash]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

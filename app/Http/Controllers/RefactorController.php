@@ -300,6 +300,8 @@ EOD;
                 $newNames
             ));
 
+            $request->session()->save(); //guardamos la sesion de forma explicita //
+
             return redirect()->back()->with('success', count($newNames) === 1 ? 'File processed successfully' : count($newNames) . ' files processed successfully');
         }
     }
@@ -308,7 +310,11 @@ EOD;
     public function clearApiSession(Request $request)
     {
         $request->session()->forget(['ApiContents', 'ApiNames']);
-        return redirect()->back()->with('success', 'Historial cleared');
+        $request->session()->save(); //guardamos la sesion de forma explicita //
+        return redirect()->back()->with([
+            'success' => 'Historial cleared',
+            '_sync' => now()->timestamp,
+        ]);
     }
 
 }

@@ -6,6 +6,7 @@ import { FiCopy, FiTrash2 } from 'react-icons/fi';
 import toast, { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
 import BackgroundPattern from '@/layouts/app/BackgroundPattern';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -15,7 +16,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Refactor() {
-    const { ApiContents = [], ApiNames = [], flash } = usePage<{
+    const { ApiContents = [], ApiNames = [], flash, _sync } = usePage<{
         ApiContents: string[];
         ApiNames: string[];
         flash: { success?: string; error?: string };
@@ -25,14 +26,18 @@ export default function Refactor() {
         router.post('/clear-api-session');
     };
 
+    const [localContents, setLocalContents] = useState(ApiContents);
+
     useEffect(() => {
+        setLocalContents(ApiContents);
+
         if (flash && flash.success) {
             toast.success(flash.success);
         }
         if (flash && flash.error) {
             toast.error(flash.error);
         }
-    }, [flash]);
+    }, [ApiContents, _sync, flash]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
