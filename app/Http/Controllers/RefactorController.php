@@ -263,18 +263,24 @@ EOD;
             Refactoriza el siguiente código para mejorar su legibilidad y eficiencia. Detecta automáticamente el lenguaje de programación. Devuelve únicamente el código refactorizado, sin explicaciones ni texto adicional. Asegúrate de que el código refactorizado sea funcionalmente equivalente al original. Si la refactorización no es posible o el código original es óptimo, devuelve el código original tal cual.
         EOD;
 
-            $apiContent = []; //array para almacenar la salida de la API//
+            $apiContents = []; //array para almacenar la salida de la API//
 
             foreach ($newContents as $content) {
                 try {
                     $completePrompt = $basePrompt . "\n\n" . $content;
-                    
+                    $rawResponse = $geminiService->generateText($completePrompt);
+                    // Limpiamos la salida para que se vea mas limpia y ordenada //
+                    $cleanedResponse = preg_replace('/^```.*?\n?/', '', $rawResponse);
+                    $cleanedResponse = preg_replace('/```$/', '', $cleanedResponse);
+                    $cleanedResponse = trim($cleanedResponse);
 
+                    //Validamos el caso en el que la salida se quede vacia tras limpiarla //
+                    if (empty($cleanedResponse)) {
+                        return redirect()->back()->with('error','The response from Gemini is empty. Please try again with other file.');
+                    }
 
-
-
-
-
+                    // Ahora almacenamos la salida en el arrray de la API//
+                    $apiContents[] = $cleanedResponse;
 
 
                 } catch (Exception $e) {
@@ -283,18 +289,10 @@ EOD;
             }
 
 
-
-
-
-
-
-
-
-
-            // Actualizar sesión
+            // Actualizamos arrays de sesion
             $request->session()->put('contents', array_merge(
                 $request->session()->get('contents', []),
-                $newContents
+                $apiContents
             ));
 
             $request->session()->put('names', array_merge(
@@ -302,7 +300,7 @@ EOD;
                 $newNames
             ));
 
-            return redirect()->back()->with('success', count($newNames) === 1 ? 'File upload successfully' : count($newNames) . ' files uploaded successfully');
+            return redirect()->back()->with('success', count($newNames) === 1 ? 'File processed successfully' : count($newNames) . ' files processed successfully');
         }
     }
 }
