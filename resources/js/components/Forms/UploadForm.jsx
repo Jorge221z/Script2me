@@ -34,7 +34,7 @@ const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
     );
 };
 
-const UploadForm = ({actionUrl}) => {
+const UploadForm = ({actionUrl, loadingTime}) => {
     const { data, setData, post, errors, processing } = useForm({ files: [] });
 
     const [loading, setLoading] = useState(false);
@@ -176,7 +176,7 @@ const UploadForm = ({actionUrl}) => {
             validFiles.forEach((file) => formData.append('files[]', file));
 
             // Esperar mínimo 1.5 segundos antes de enviar
-            await new Promise((resolve) => setTimeout(resolve, 1500));
+            await new Promise((resolve) => setTimeout(resolve, loadingTime));
 
             post(actionUrl, formData, { //segun de donde venga el form vamos a un metodo del backend o a otro//
                 forceFormData: true,
@@ -184,13 +184,13 @@ const UploadForm = ({actionUrl}) => {
                 onSuccess: (page) => {
                     if (page.props.flash && page.props.flash.success) { //mostramos los mensajes flash que nos envia el backend //
                         toast.success(page.props.flash.success, {
-                            duration: 1800,
+                            duration: loadingTime,
                             position: 'top-center',
                         });
                     }
                     setData('files', []); // <- Limpiar archivos
                     setInvalidFiles([]); // <- Limpiar archivos inválidos
-                    setFileErrors({}); // <- Limpiar errores individuales
+                    setFileErrors({}); // <- Limpiar errores individuales(internos)
                     setLocalErrors([]);
                 },
                 onError: (errors) => {
@@ -200,8 +200,8 @@ const UploadForm = ({actionUrl}) => {
         } finally {
             // Completar tiempo restante si la petición fue más rápida
             const elapsed = Date.now() - startTime;
-            if (elapsed < 1500) {
-                await new Promise((resolve) => setTimeout(resolve, 1500 - elapsed));
+            if (elapsed < loadingTime) {
+                await new Promise((resolve) => setTimeout(resolve, 105 - elapsed));
             }
             setLoading(false);
         }
@@ -306,7 +306,7 @@ const UploadForm = ({actionUrl}) => {
                 onClick={() =>
                     setTimeout(() => {
                         setData({ ...data, files: [] });
-                    }, 1501)
+                    }, loadingTime+1)
                 }
                 disabled={data.files.length === 0 || loading || !hasValidFiles || processing}
                 className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${
@@ -318,7 +318,7 @@ const UploadForm = ({actionUrl}) => {
                 {loading || processing ? (
                     <div className="flex items-center justify-center">
                         <HashLoader color="white" size={35} style={{ transform: 'translateX(-95px)' }} />
-                        <span className="ml-2">Uploading...</span>
+                        <span className="ml-2">Uploading & processing...</span>
                     </div>
                 ) : (
                     'Upload files'
