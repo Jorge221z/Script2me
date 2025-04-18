@@ -7,7 +7,7 @@ export default function BackgroundPattern() {
   useEffect(() => {
     // Generar puntos para el patrón
     const newPatterns = [];
-    for (let i = 0; i < 220; i++) {
+    for (let i = 0; i < 300; i++) {
       newPatterns.push({
         x: Math.floor(Math.random() * 100),
         y: Math.floor(Math.random() * 100),

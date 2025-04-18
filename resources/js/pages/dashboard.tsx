@@ -205,7 +205,7 @@ ${content}
                             })}
                         </div>
                     ) : (
-                        <div className="relative text-center py-12 px-4 rounded-xl border border-dashed border-black dark:border-gray-700 bg-gray-200 dark:bg-neutral-950/20">
+                        <div className="relative text-center py-12 px-4 h-auto min-h-[50vh] max-h-screen rounded-xl border border-dashed border-black dark:border-gray-700 bg-gray-200 dark:bg-neutral-950/20">
                             <BackgroundPattern />
                             <div className="relative">
                                 <svg className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
