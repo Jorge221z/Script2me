@@ -18,19 +18,19 @@ export default function BackgroundPattern() {
   }, []);
 
   return (
-    <div className="absolute inset-0 overflow-hidden">
-      {patterns.map((pattern, index) => (
-        <div
-          key={index}
-          className="absolute rounded-full bg-gray-300 dark:bg-gray-700 opacity-50"
-          style={{
-            top: `${pattern.y}%`,
-            left: `${pattern.x}%`,
-            width: `${pattern.size}px`,
-            height: `${pattern.size}px`
-          }}
-        />
-      ))}
-    </div>
-  );
+  <div className="hidden dark:block absolute inset-0 overflow-hidden">
+    {patterns.map((pattern, index) => (
+      <div
+        key={index}
+        className="absolute rounded-full bg-gray-300 dark:bg-gray-700 opacity-50"
+        style={{
+          top: `${pattern.y}%`,
+          left: `${pattern.x}%`,
+          width: `${pattern.size}px`,
+          height: `${pattern.size}px`
+        }}
+      />
+    ))}
+  </div>
+);
 }
