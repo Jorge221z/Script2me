@@ -16,14 +16,19 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Refactor() {
-    const { ApiContents = [], ApiNames = [], flash, _sync } = usePage<{
+    const { ApiContents = [], ApiNames = [], flash } = usePage<{
         ApiContents: string[];
         ApiNames: string[];
         flash: { success?: string; error?: string };
     }>().props;
 
     const handleClearSession = () => {
-        router.post('/clear-api-session');
+        router.post('/clear-api-session', {}, {
+            onSuccess: () => {
+                sessionStorage.setItem('flash.success', 'Session cleared successfully');
+                window.location.href = window.location.href; // Fuerza recarga completa
+            }
+        });
     };
 
     const [localContents, setLocalContents] = useState(ApiContents);
@@ -31,13 +36,34 @@ export default function Refactor() {
     useEffect(() => {
         setLocalContents(ApiContents);
 
+        //para el flash de limpieza de sesión
+        const successMessage = sessionStorage.getItem('flash.success');
+        if (successMessage) {
+            setTimeout(() => {
+                toast.success(successMessage);
+                sessionStorage.removeItem('flash.success'); // Limpiar el mensaje después de mostrarlo
+            }
+                , 800);
+        }
+        //para flash de otra procedencia
+
         if (flash && flash.success) {
             toast.success(flash.success);
         }
         if (flash && flash.error) {
             toast.error(flash.error);
         }
-    }, [ApiContents, _sync, flash]);
+    }, [ApiContents, flash]);
+
+    
+    useEffect(() => {
+        const refreshData = async () => {
+            await router.reload({ only: ['ApiContents', 'ApiNames'] });
+        };
+
+        // Solo ejecutar al montar el componente
+        refreshData();
+    }, []); // Array de dependencias vacío
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

@@ -157,7 +157,6 @@ class UploadController extends Controller
         $request->session()->save(); //guardamos la sesion de forma explicita //
         return redirect()->back()->with([
             'success' => 'Historial cleared',
-            '_sync' => now()->timestamp,
         ]);
     }
 }
