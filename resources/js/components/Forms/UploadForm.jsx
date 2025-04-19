@@ -34,7 +34,7 @@ const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
     );
 };
 
-const UploadForm = ({actionUrl, loadingTime}) => {
+const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
     const { data, setData, post, errors, processing } = useForm({ files: [] });
 
     const [loading, setLoading] = useState(false);
@@ -234,11 +234,10 @@ const UploadForm = ({actionUrl, loadingTime}) => {
                 <FormTooltip allowedExtensions={allowedExtensions} />
 
                 <div
-                    className={`border-2 border-dashed ${
-                        data.files.length > 0
+                    className={`border-2 border-dashed ${data.files.length > 0
                             ? 'border-emerald-600 bg-emerald-600/20 dark:border-emerald-500 dark:bg-gray-50'
                             : 'border-emerald-400 bg-gray-900/50 dark:border-emerald-500 dark:bg-gray-50'
-                    }`}
+                        }`}
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
                 >
@@ -306,19 +305,18 @@ const UploadForm = ({actionUrl, loadingTime}) => {
                 onClick={() =>
                     setTimeout(() => {
                         setData({ ...data, files: [] });
-                    }, loadingTime+1)
+                    }, loadingTime + 1)
                 }
                 disabled={data.files.length === 0 || loading || !hasValidFiles || processing}
-                className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${
-                    data.files.length === 0 || !hasValidFiles || processing
+                className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${data.files.length === 0 || !hasValidFiles || processing
                         ? 'cursor-not-allowed bg-gray-400'
                         : 'custom-bg-color custom-bg-color-hover'
-                }`}
+                    }`}
             >
                 {loading || processing ? (
                     <div className="flex items-center justify-center">
                         <HashLoader color="white" size={35} style={{ transform: 'translateX(-95px)' }} />
-                        <span className="ml-2">Uploading & processing...</span>
+                        <span className="ml-2 animate-pulse">{buttonText}<span className="dots">...</span></span>
                     </div>
                 ) : (
                     'Upload files'

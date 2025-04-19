@@ -10,7 +10,7 @@ import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Transform your code files into optimized prompts for AI assistants. Upload, process, and enhance your scripts with a single click—completely free & open-source.',
+        title: 'Turn code into optimized AI prompts. Upload, process, and enhance scripts—free & open-source.',
         href: '/dashboard',
     },
 ];
@@ -85,7 +85,7 @@ export default function Dashboard() {
 
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative rounded-xl">
                     {/* Formulario */}
-                    <UploadForm actionUrl="/upload" loadingTime={1000} />
+                    <UploadForm actionUrl="/upload" loadingTime={1000} buttonText={"Uploading files"}/>
                 </div>
                 {/* Zona de vista previa */}
                 <div className="border-sidebar-border dark:border-sidebar-border relative min-h-[100vh] flex-1 rounded-xl border md:min-h-min p-4 overflow-y-auto">

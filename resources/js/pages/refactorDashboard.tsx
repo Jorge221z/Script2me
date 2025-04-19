@@ -10,7 +10,7 @@ import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Procesa tus archivos de manera personalizada. Sube y transforma tus scripts con opciones avanzadas.',
+        title: 'Optimize code using the Google Gemini API for smart processing and refactoring.',
         href: '/refactor-dashboard',
     },
 ];
@@ -80,12 +80,12 @@ export default function Refactor() {
                     },
                 }}
             />
-            <Head title="Code to AI prompts" />
+            <Head title="AI-powered code processing" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
 
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative rounded-xl">
                     {/* Formulario */}
-                    <UploadForm actionUrl="/process" loadingTime={100} />
+                    <UploadForm actionUrl="/process" loadingTime={100} buttonText={"Processing files"}/>
                 </div>
                 {/* Zona de vista previa */}
                 <div className="border-sidebar-border dark:border-sidebar-border relative min-h-[100vh] flex-1 rounded-xl border md:min-h-min p-4 overflow-y-auto">
