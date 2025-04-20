@@ -270,7 +270,7 @@ EOD;
                     $completePrompt = $basePrompt . "\n\n" . $content;
                     $rawResponse = $geminiService->generateText($completePrompt);
                     // Limpiamos la salida para que se vea mas limpia y ordenada //
-                    $cleanedResponse = preg_replace('/^```.*?\n?/', '', $rawResponse);
+                    $cleanedResponse = preg_replace('/^```[a-zA-Z]*\n/', '', $rawResponse);
                     $cleanedResponse = preg_replace('/```$/', '', $cleanedResponse);
                     $cleanedResponse = trim($cleanedResponse);
 
