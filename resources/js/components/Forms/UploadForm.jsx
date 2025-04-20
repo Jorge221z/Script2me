@@ -41,13 +41,19 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
     const [localErrors, setLocalErrors] = useState([]);
     const [invalidFiles, setInvalidFiles] = useState([]);
     const [fileErrors, setFileErrors] = useState({});
+    const [recentlyExceededLimit, setRecentlyExceededLimit] = useState(false); // variable para controlar el warning del limite de archivos//
+    const MAX_FILE_COUNT = 20; // Cantidad maxima de archivos por subida //
 
     useEffect(() => {
         // Limpiar errores generales cuando se cambian los archivos
         setLocalErrors([]);
+        
+        // Reset the warning when files change
+        if (data.files.length <= MAX_FILE_COUNT) {
+            setRecentlyExceededLimit(false);
+        }
     }, [data.files]);
 
-    // Añadir nuevo efecto para manejar el arrastre de archivos a nivel deL DOM completo //
     useEffect(() => {
         // Prevenir el comportamiento predeterminado del navegador al arrastrar/soltar archivos
         const preventDefaultDrag = (e) => {
@@ -66,11 +72,22 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
         };
     }, []);
 
-    const validateFiles = (files) => {
+    const validateFiles = (files, currentFileCount = 0) => {
         const errors = [];
         const newInvalidFiles = [];
         const newFileErrors = {};
         const MAX_SIZE_MB = 2;
+
+        // Verificar si el número total de archivos excede el límite//
+        if (currentFileCount + files.length > MAX_FILE_COUNT) {
+            errors.push(`❌ It´s not possible to add more than ${MAX_FILE_COUNT} files (trying to add ${files.length} to the ${currentFileCount} existing ones)`);
+            return {
+                errors,
+                invalidFiles: newInvalidFiles,
+                fileErrors: newFileErrors,
+                exceedsMaxCount: true,
+            };
+        }
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
@@ -80,8 +97,8 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
 
             // Validación de extensión
             if (!allowedExtensions.includes(ext)) {
-                const errorMsg = `Extensión .${ext} no permitida`;
-                errors.push(`❌ Archivo bloqueado: ${file.name} (${errorMsg})`);
+                const errorMsg = `Extension .${ext} doesn´t match the allowed ones`;
+                errors.push(`❌ Blocked file: ${file.name} (${errorMsg})`);
                 fileIsInvalid = true;
                 fileErrorMessage = errorMsg;
             }
@@ -89,7 +106,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
             // Validación de tamaño
             if (file.size > MAX_SIZE_MB * 1024 * 1024) {
                 const errorMsg = `Excede ${MAX_SIZE_MB}MB`;
-                errors.push(`❌ Archivo demasiado grande: ${file.name} (${errorMsg})`);
+                errors.push(`❌ Too big filesize: ${file.name} (${errorMsg})`);
                 fileIsInvalid = true;
                 fileErrorMessage = fileErrorMessage ? `${fileErrorMessage}, ${errorMsg}` : errorMsg;
             }
@@ -100,21 +117,35 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
             }
         }
 
-        return { errors, invalidFiles: newInvalidFiles, fileErrors: newFileErrors };
+        return {
+            errors,
+            invalidFiles: newInvalidFiles,
+            fileErrors: newFileErrors,
+            exceedsMaxCount: false,
+        };
     };
 
     const handleFileChange = (e) => {
         const newFiles = Array.from(e.target.files);
-        const { errors: validationErrors, invalidFiles: newInvalidFiles, fileErrors: newFileErrors } = validateFiles(newFiles);
+        const { errors: validationErrors, invalidFiles: newInvalidFiles, fileErrors: newFileErrors, exceedsMaxCount } =
+            validateFiles(newFiles, data.files.length);
 
         if (validationErrors.length > 0) {
             setLocalErrors(validationErrors);
         }
 
-        // Añadir todos los archivos a la lista, válidos o no
-        setData('files', [...data.files, ...newFiles]);
-        setInvalidFiles([...invalidFiles, ...newInvalidFiles]);
-        setFileErrors({ ...fileErrors, ...newFileErrors });
+        // actualizamos el warning pero no deshabilitamos el botón si ya tenemos archivos válidos
+        if (exceedsMaxCount) {
+            setRecentlyExceededLimit(true);
+        }
+
+        // Solo añadir archivos si no excedemos el límite de 20//
+        if (!exceedsMaxCount) {
+            // Añadir todos los archivos a la lista, válidos o no
+            setData('files', [...data.files, ...newFiles]);
+            setInvalidFiles([...invalidFiles, ...newInvalidFiles]);
+            setFileErrors({ ...fileErrors, ...newFileErrors });
+        }
     };
 
     const handleDragOver = (e) => {
@@ -125,16 +156,25 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
     const handleDrop = (e) => {
         e.preventDefault();
         const newFiles = Array.from(e.dataTransfer.files);
-        const { errors: validationErrors, invalidFiles: newInvalidFiles, fileErrors: newFileErrors } = validateFiles(newFiles);
+        const { errors: validationErrors, invalidFiles: newInvalidFiles, fileErrors: newFileErrors, exceedsMaxCount } =
+            validateFiles(newFiles, data.files.length);
 
         if (validationErrors.length > 0) {
             setLocalErrors(validationErrors);
         }
 
-        // Añadir todos los archivos a la lista, válidos o no
-        setData('files', [...data.files, ...newFiles]);
-        setInvalidFiles([...invalidFiles, ...newInvalidFiles]);
-        setFileErrors({ ...fileErrors, ...newFileErrors });
+        // actualizamos el warning pero no deshabilitamos el botón si ya tenemos archivos válidos
+        if (exceedsMaxCount) {
+            setRecentlyExceededLimit(true);
+        }
+
+        // Solo añadir archivos si no excedemos el límite de 20//
+        if (!exceedsMaxCount) {
+            // Añadir todos los archivos a la lista, válidos o no
+            setData('files', [...data.files, ...newFiles]);
+            setInvalidFiles([...invalidFiles, ...newInvalidFiles]);
+            setFileErrors({ ...fileErrors, ...newFileErrors });
+        }
     };
 
     const handleRemoveFile = (fileToRemove) => {
@@ -154,6 +194,11 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
 
         // Actualizar errores generales si es necesario
         setLocalErrors(localErrors.filter((error) => !error.includes(fileToRemove.name)));
+        
+        // Reset the warning if we're back under the limit
+        if (data.files.length - 1 <= MAX_FILE_COUNT) {
+            setRecentlyExceededLimit(false);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -163,7 +208,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
         const validFiles = data.files.filter((file) => !invalidFiles.includes(file.name));
 
         if (validFiles.length === 0) {
-            setLocalErrors([...localErrors.filter((e) => !e.includes('No hay archivos válidos')), '❌ No hay archivos válidos para subir']);
+            setLocalErrors([...localErrors.filter((e) => !e.includes('There are no valid files')), '❌ There are no valid files to upload']);
             return;
         }
 
@@ -209,7 +254,10 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
 
     // Verificar si hay archivos válidos para habilitar el botón
     // Cambiamos la lógica para que el botón esté deshabilitado si hay cualquier archivo inválido
-    const hasValidFiles = data.files.length > 0 && invalidFiles.length === 0;
+    // o si hay más de MAX_FILE_COUNT archivos 
+    const hasValidFiles = data.files.length > 0 && 
+                         invalidFiles.length === 0 && 
+                         data.files.length <= MAX_FILE_COUNT;
 
     // Función para dividir el array en grupos de 10
     const chunkArray = (array, size) => {
@@ -264,6 +312,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
                                 <span className="font-semibold">Drag and drop</span> or click to upload
                             </p>
                             <p className="text-xs text-gray-300 dark:text-gray-800 mt-3 ">By uploading a file, you accept our Terms & Conditions</p>
+                            <p className="text-xs text-gray-300 dark:text-gray-800 mt-1">Maximum {MAX_FILE_COUNT} files allowed</p>
                         </div>
                         <input id="file-upload" type="file" name="files" multiple onChange={handleFileChange} className="hidden" />
                     </label>
@@ -298,6 +347,13 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
                             </div>
                         ))}
                     {errors.files && <div className="text-sm text-red-400 dark:text-red-600">⚠️ {errors.files}</div>}
+                    
+                    {/* Solo mostrar este mensaje si se ha intentado exceder el límite recientemente */}
+                    {recentlyExceededLimit && data.files.length <= MAX_FILE_COUNT && (
+                        <div className="text-sm text-amber-400 dark:text-amber-500">
+                            ⚠️ Some files weren´t added because they exceed the {MAX_FILE_COUNT} file limit.
+                        </div>
+                    )}
                 </div>
             </div>
             <button
@@ -308,10 +364,11 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
                     }, loadingTime + 1)
                 }
                 disabled={data.files.length === 0 || loading || !hasValidFiles || processing}
-                className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${data.files.length === 0 || !hasValidFiles || processing
+                className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${
+                    data.files.length === 0 || !hasValidFiles || processing
                         ? 'cursor-not-allowed bg-gray-400'
                         : 'custom-bg-color custom-bg-color-hover'
-                    }`}
+                }`}
             >
                 {loading || processing ? (
                     <div className="flex items-center justify-center">
@@ -319,7 +376,9 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
                         <span className="ml-2 animate-pulse">{buttonText}<span className="dots">...</span></span>
                     </div>
                 ) : (
-                    'Upload files'
+                    data.files.length > MAX_FILE_COUNT 
+                    ? `Demasiados archivos (máx. ${MAX_FILE_COUNT})` 
+                    : 'Upload files'
                 )}
             </button>
         </form>
