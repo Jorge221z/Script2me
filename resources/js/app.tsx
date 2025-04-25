@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-theme';
 
 createInertiaApp({
-    title: (title) => `Script2Me - ${title}`,
+    title: (title) => `Script2me - ${title}`,
     resolve: (name) => {
         const pages = import.meta.glob('./pages/**/*.tsx', { eager: true });
         return pages[`./pages/${name}.tsx`];

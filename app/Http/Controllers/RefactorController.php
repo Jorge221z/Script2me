@@ -7,7 +7,6 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\Element\Text;
 use PhpOffice\PhpWord\Element\TextRun;
@@ -15,6 +14,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use App\Services\GeminiService;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Support\Facades\Http;
 
 class RefactorController extends Controller
 {
@@ -148,6 +148,27 @@ EOD;
 
     public function process(Request $request, GeminiService $geminiService) //le pasamos tambien el servicio de gemini//
     {
+        //validamos el captcha//
+        $this->validate($request, [
+            'captcha' => 'required|string'
+        ]);
+        // Verificamos el captcha
+        $captchaResponse = $request->input('captcha');
+        $secretKey = env('RECAPTCHA_SECRET_KEY');
+
+        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret' => $secretKey,
+            'response' => $captchaResponse,
+            'remoteip' => $request->ip(),
+        ]);
+
+        $responseData = $response->json();
+
+        if (!$responseData['success']) {
+            return redirect()->back()->with('error', 'Captcha verification failed. Please try again.');
+        }
+
+
         // Validar los archivos subidos
         $this->validate($request, [
             'files' => 'required|array|min:1',
