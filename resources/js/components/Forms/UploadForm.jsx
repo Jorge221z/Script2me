@@ -34,7 +34,7 @@ const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
     );
 };
 
-const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
+const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false }) => {
     const { data, setData, post, errors, processing } = useForm({ files: [] });
 
     const [loading, setLoading] = useState(false);
@@ -43,6 +43,26 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
     const [fileErrors, setFileErrors] = useState({});
     const [recentlyExceededLimit, setRecentlyExceededLimit] = useState(false); // variable para controlar el warning del limite de archivos//
     const MAX_FILE_COUNT = 20; // Cantidad maxima de archivos por subida //
+
+    //manejo del estado del captcha//
+    useEffect(() => {
+        const handleRecaptchaLoad = () => {
+            if (window.grecaptcha) {
+                window.grecaptcha.render('recaptcha-container', {
+                    sitekey: import.meta.env.VITE_RECAPTCHA_SITE_KEY,
+                });
+            }
+        };
+
+        if (showCaptcha) {
+            window.onRecaptchaLoad = handleRecaptchaLoad;
+        }
+
+        return () => {
+            delete window.onRecaptchaLoad; // Limpieza al desmontar
+        };
+    }, [showCaptcha]); // Se ejecuta cuando `showCaptcha` cambia
+
 
     useEffect(() => {
         // Limpiar errores generales cuando se cambian los archivos
@@ -204,14 +224,16 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        //manejamos el captcha//
-        const captchaResponse = window.grecaptcha.getResponse();
-        if (!captchaResponse) {
-            toast.error('Please complete the captcha to proceed', {
-                duration: 3000,
-                position: 'top-center',
-            });
-            return;
+        //manejamos el captcha solo si es requerido
+        if (showCaptcha) {
+            const captchaResponse = window.grecaptcha.getResponse();
+            if (!captchaResponse) {
+                toast.error('Please complete the captcha to proceed', {
+                    duration: 2000,
+                    position: 'top-center',
+                });
+                return;
+            }
         }
 
         // Verificar si hay archivos válidos para enviar
@@ -229,8 +251,11 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
         try {
             const formData = new FormData();
             validFiles.forEach((file) => formData.append('files[]', file));
-            //añadimos el captcha a la peticion//
-            formData.append('captcha', captchaResponse);
+            
+            //añadimos el captcha a la peticion solo si es necesario
+            if (showCaptcha) {
+                formData.append('captcha', window.grecaptcha.getResponse());
+            }
 
             // Esperar mínimo 1.5 segundos antes de enviar
             await new Promise((resolve) => setTimeout(resolve, loadingTime));
@@ -284,124 +309,128 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
 
     return (
         <div>
-            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-        <form
-            onSubmit={handleSubmit}
-            className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center rounded-lg bg-gray-950 p-6 text-white shadow-md dark:bg-white dark:text-gray-950 dark:shadow-lg"
-        >
-            <div className="mb-1 w-full">
-                <label htmlFor="file-upload" data-tooltip-id="info-tooltip" className="mb-2 block text-sm font-bold text-gray-400 dark:text-gray-700">
-                    Drag or select your files<a className="ml-3 cursor-pointer text-lg">ℹ️</a>
-                </label>
-                <FormTooltip allowedExtensions={allowedExtensions} />
+            {showCaptcha && (<script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoad" async defer></script>)}
 
-                <div
-                    className={`border-2 border-dashed ${data.files.length > 0
-                            ? 'border-emerald-600 bg-emerald-600/20 dark:border-emerald-500 dark:bg-gray-50'
-                            : 'border-emerald-400 bg-gray-900/50 dark:border-emerald-500 dark:bg-gray-50'
-                        }`}
-                    onDragOver={handleDragOver}
-                    onDrop={handleDrop}
-                >
-                    <label
-                        htmlFor="file-upload"
-                        className="flex h-38 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-0 bg-transparent hover:bg-gray-900 dark:hover:bg-gray-300/50"
-                    >
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                            <svg
-                                className="mb-4 h-8 w-8 text-emerald-500"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 22 22"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-                                />
-                            </svg>
-                            <p className="mb-5 text-sm text-gray-300 dark:text-gray-800">
-                                <span className="font-semibold">Drag and drop</span> or click to upload
-                            </p>
-                            <p className="text-xs text-gray-300 dark:text-gray-800 mt-3 ">By uploading a file, you accept our Terms & Conditions</p>
-                            <p className="text-xs text-gray-300 dark:text-gray-800 mt-1">Maximum {MAX_FILE_COUNT} files allowed</p>
-                        </div>
-                        <input id="file-upload" type="file" name="files" multiple onChange={handleFileChange} className="hidden" />
-                    </label>
-                </div>
-                <div className="mt-4">
-                    {data.files.length > 0 && (
-                        <div className="border-t pt-4">
-                            <h4 className="mb-2 text-sm font-medium text-gray-500">
-                                Selected files ({data.files.length})
-                                {invalidFiles.length > 0 && <span className="ml-2 text-red-500">({invalidFiles.length} with errors)</span>}
-                            </h4>
-                            <div className="max-h-[200px] overflow-y-auto">
-                                {data.files.map((file, index) => (
-                                    <FilePreview
-                                        key={`${file.name}-${file.size}-${file.lastModified}`}
-                                        file={file}
-                                        onRemove={handleRemoveFile}
-                                        isInvalid={invalidFiles.includes(file.name)}
-                                        errorMessage={fileErrors[file.name]}
-                                        className="transition-all duration-200 ease-in-out ..."
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </div>
-                <div className="mt-4 space-y-2">
-                    {localErrors.length > 0 &&
-                        localErrors.map((error, index) => (
-                            <div key={index} className="text-sm text-red-400 dark:text-red-600">
-                                ⚠️ {error}
-                            </div>
-                        ))}
-                    {errors.files && <div className="text-sm text-red-400 dark:text-red-600">⚠️ {errors.files}</div>}
-                    
-                    {/* Solo mostrar este mensaje si se ha intentado exceder el límite recientemente */}
-                    {recentlyExceededLimit && data.files.length <= MAX_FILE_COUNT && (
-                        <div className="text-sm text-amber-400 dark:text-amber-500">
-                            ⚠️ Some files weren´t added because they exceed the {MAX_FILE_COUNT} file limit.
-                        </div>
-                    )}
-                </div>
-            </div>
-                <div className="my-4">
-                    <div
-                        className="g-recaptcha"
-                        data-sitekey={import.meta.env.RECAPTCHA_SITE_KEY}
-                    ></div>
-                </div>
-            <button
-                type="submit"
-                onClick={() =>
-                    setTimeout(() => {
-                        setData({ ...data, files: [] });
-                    }, loadingTime + 1)
-                }
-                disabled={data.files.length === 0 || loading || !hasValidFiles || processing}
-                className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${
-                    data.files.length === 0 || !hasValidFiles || processing
-                        ? 'cursor-not-allowed bg-gray-400'
-                        : 'custom-bg-color custom-bg-color-hover'
-                }`}
+            <form
+                onSubmit={handleSubmit}
+                className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center rounded-lg bg-gray-950 p-6 text-white shadow-md dark:bg-white dark:text-gray-950 dark:shadow-lg"
             >
-                {loading || processing ? (
-                    <div className="flex items-center justify-center">
-                        <HashLoader color="white" size={35} style={{ transform: 'translateX(-95px)' }} />
-                        <span className="ml-2 animate-pulse">{buttonText}<span className="dots">...</span></span>
+                <div className="mb-1 w-full">
+                    <label htmlFor="file-upload" data-tooltip-id="info-tooltip" className="mb-2 block text-sm font-bold text-gray-400 dark:text-gray-700">
+                        Drag or select your files<a className="ml-3 cursor-pointer text-lg">ℹ️</a>
+                    </label>
+                    <FormTooltip allowedExtensions={allowedExtensions} />
+
+                    <div
+                        className={`border-2 border-dashed ${data.files.length > 0
+                                ? 'border-emerald-600 bg-emerald-600/20 dark:border-emerald-500 dark:bg-gray-50'
+                                : 'border-emerald-400 bg-gray-900/50 dark:border-emerald-500 dark:bg-gray-50'
+                            }`}
+                        onDragOver={handleDragOver}
+                        onDrop={handleDrop}
+                    >
+                        <label
+                            htmlFor="file-upload"
+                            className="flex h-38 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-0 bg-transparent hover:bg-gray-900 dark:hover:bg-gray-300/50"
+                        >
+                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg
+                                    className="mb-4 h-8 w-8 text-emerald-500"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 22 22"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+                                    />
+                                </svg>
+                                <p className="mb-5 text-sm text-gray-300 dark:text-gray-800">
+                                    <span className="font-semibold">Drag and drop</span> or click to upload
+                                </p>
+                                <p className="text-xs text-gray-300 dark:text-gray-800 mt-3 ">By uploading a file, you accept our Terms & Conditions</p>
+                            </div>
+                            <input id="file-upload" type="file" name="files" multiple onChange={handleFileChange} className="hidden" />
+                        </label>
                     </div>
-                ) : (
-                    data.files.length > MAX_FILE_COUNT 
-                    ? `Demasiados archivos (máx. ${MAX_FILE_COUNT})` 
-                    : 'Upload files'
+                    <div className="mt-4">
+                        {data.files.length > 0 && (
+                            <div className="border-t pt-4">
+                                <h4 className="mb-2 text-sm font-medium text-gray-500">
+                                    Selected files ({data.files.length})
+                                    {invalidFiles.length > 0 && <span className="ml-2 text-red-500">({invalidFiles.length} with errors)</span>}
+                                </h4>
+                                <div className="max-h-[200px] overflow-y-auto">
+                                    {data.files.map((file, index) => (
+                                        <FilePreview
+                                            key={`${file.name}-${file.size}-${file.lastModified}`}
+                                            file={file}
+                                            onRemove={handleRemoveFile}
+                                            isInvalid={invalidFiles.includes(file.name)}
+                                            errorMessage={fileErrors[file.name]}
+                                            className="transition-all duration-200 ease-in-out ..."
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <div className="mt-4 space-y-2">
+                        {localErrors.length > 0 &&
+                            localErrors.map((error, index) => (
+                                <div key={index} className="text-sm text-red-400 dark:text-red-600">
+                                    ⚠️ {error}
+                                </div>
+                            ))}
+                        {errors.files && <div className="text-sm text-red-400 dark:text-red-600">⚠️ {errors.files}</div>}
+                        
+                        {/* Solo mostrar este mensaje si se ha intentado exceder el límite recientemente */}
+                        {recentlyExceededLimit && data.files.length <= MAX_FILE_COUNT && (
+                            <div className="text-sm text-amber-400 dark:text-amber-500">
+                                ⚠️ Some files weren´t added because they exceed the {MAX_FILE_COUNT} file limit.
+                            </div>
+                        )}
+                    </div>
+                </div>
+                {showCaptcha && (
+                    <div
+                        id="recaptcha-container"
+                        className="g-recaptcha mb-4"
+                        data-sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                        data-callback="onSubmit"
+                        data-size="normal"
+                        data-theme="dark"
+                    ></div>
                 )}
-            </button>
-        </form>
+                <button
+                    type="submit"
+                    onClick={() =>
+                        setTimeout(() => {
+                            setData({ ...data, files: [] });
+                        }, loadingTime + 1)
+                    }
+                    disabled={data.files.length === 0 || loading || !hasValidFiles || processing}
+                    className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${
+                        data.files.length === 0 || !hasValidFiles || processing
+                            ? 'cursor-not-allowed bg-gray-400'
+                            : 'custom-bg-color custom-bg-color-hover'
+                    }`}
+                >
+                    {loading || processing ? (
+                        <div className="flex items-center justify-center">
+                            <HashLoader color="white" size={35} style={{ transform: 'translateX(-95px)' }} />
+                            <span className="ml-2 animate-pulse">{buttonText}<span className="dots">...</span></span>
+                        </div>
+                    ) : (
+                        data.files.length > MAX_FILE_COUNT 
+                        ? `Demasiados archivos (máx. ${MAX_FILE_COUNT})` 
+                        : 'Upload files'
+                    )}
+                </button>
+            </form>
         </div>    
     );
 };

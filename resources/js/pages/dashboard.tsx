@@ -85,7 +85,7 @@ export default function Dashboard() {
 
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative rounded-xl">
                     {/* Formulario */}
-                    <UploadForm actionUrl="/upload" loadingTime={1000} buttonText={"Uploading files"}/>
+                    <UploadForm actionUrl="/upload" loadingTime={1000} buttonText={"Uploading files"} showCaptcha={false} />
                 </div>
                 {/* Zona de vista previa */}
                 <div className="border-sidebar-border dark:border-sidebar-border relative min-h-[100vh] flex-1 rounded-xl border md:min-h-min p-4 overflow-y-auto">
@@ -142,7 +142,7 @@ ${content}
                                             <div className="flex items-center gap-2 min-w-0">
                                                 <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/50">
                                                     <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0-2 2h12a2 2 0 0 0 2-2V8z" />
                                                         <polyline points="14 2 14 8 20 8" />
                                                         <line x1="16" y1="13" x2="8" y2="13" />
                                                         <line x1="16" y1="17" x2="8" y2="17" />
@@ -209,7 +209,7 @@ ${content}
                             <BackgroundPattern />
                             <div className="relative">
                                 <svg className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0-2 2h12a2 2 0 0 0 2-2V8z" />
                                     <polyline points="14 2 14 8 20 8" />
                                     <line x1="16" y1="13" x2="8" y2="13" />
                                     <line x1="16" y1="17" x2="8" y2="17" />

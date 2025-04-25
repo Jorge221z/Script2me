@@ -148,26 +148,28 @@ EOD;
 
     public function process(Request $request, GeminiService $geminiService) //le pasamos tambien el servicio de gemini//
     {
-        //validamos el captcha//
-        $this->validate($request, [
-            'captcha' => 'required|string'
-        ]);
-        // Verificamos el captcha
-        $captchaResponse = $request->input('captcha');
-        $secretKey = env('RECAPTCHA_SECRET_KEY');
+        //validamos el captcha solo si fue enviado
+        if ($request->has('captcha')) {
+            $this->validate($request, [
+                'captcha' => 'required|string'
+            ]);
+            
+            // Verificamos el captcha
+            $captchaResponse = $request->input('captcha');
+            $secretKey = env('RECAPTCHA_SECRET_KEY');
 
-        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-            'secret' => $secretKey,
-            'response' => $captchaResponse,
-            'remoteip' => $request->ip(),
-        ]);
+            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                'secret' => $secretKey,
+                'response' => $captchaResponse,
+                'remoteip' => $request->ip(),
+            ]);
 
-        $responseData = $response->json();
+            $responseData = $response->json();
 
-        if (!$responseData['success']) {
-            return redirect()->back()->with('error', 'Captcha verification failed. Please try again.');
+            if (!$responseData['success']) {
+                return redirect()->back()->with('error', 'Captcha verification failed. Please try again.');
+            }
         }
-
 
         // Validar los archivos subidos
         $this->validate($request, [
