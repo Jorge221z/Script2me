@@ -204,6 +204,16 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        //manejamos el captcha//
+        const captchaResponse = window.grecaptcha.getResponse();
+        if (!captchaResponse) {
+            toast.error('Please complete the captcha to proceed', {
+                duration: 3000,
+                position: 'top-center',
+            });
+            return;
+        }
+
         // Verificar si hay archivos válidos para enviar
         const validFiles = data.files.filter((file) => !invalidFiles.includes(file.name));
 
@@ -219,6 +229,8 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
         try {
             const formData = new FormData();
             validFiles.forEach((file) => formData.append('files[]', file));
+            //añadimos el captcha a la peticion//
+            formData.append('captcha', captchaResponse);
 
             // Esperar mínimo 1.5 segundos antes de enviar
             await new Promise((resolve) => setTimeout(resolve, loadingTime));
@@ -271,6 +283,8 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
     const extColumns = chunkArray(allowedExtensions, 10);
 
     return (
+        <div>
+            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <form
             onSubmit={handleSubmit}
             className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center rounded-lg bg-gray-950 p-6 text-white shadow-md dark:bg-white dark:text-gray-950 dark:shadow-lg"
@@ -356,6 +370,12 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
                     )}
                 </div>
             </div>
+                <div className="my-4">
+                    <div
+                        className="g-recaptcha"
+                        data-sitekey={import.meta.env.RECAPTCHA_SITE_KEY}
+                    ></div>
+                </div>
             <button
                 type="submit"
                 onClick={() =>
@@ -382,6 +402,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText }) => {
                 )}
             </button>
         </form>
+        </div>    
     );
 };
 
