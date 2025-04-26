@@ -7,6 +7,8 @@ import '../../../css/app.css';
 import FormTooltip from './FormTooltip';
 import { allowedExtensions } from './allowedExtensions';
 import RecaptchaContainer from './RecaptchaContainer';
+import { CloudUpload } from 'lucide-react';
+
 
 const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
     const getFileIcon = (extension) => {
@@ -449,21 +451,27 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
                     type="submit"
                     disabled={isButtonDisabled}
                     className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${isButtonDisabled
-                            ? 'cursor-not-allowed bg-gray-400'
-                            : 'custom-bg-color custom-bg-color-hover'
+                        ? 'cursor-not-allowed bg-gray-400'
+                        : 'custom-bg-color custom-bg-color-hover'
                         }`}
                 >
                     {loading || processing ? (
                         <div className="flex items-center justify-center">
                             <HashLoader color="white" size={35} style={{ transform: 'translateX(-95px)' }} />
-                            <span className="ml-2 animate-pulse">{buttonText}<span className="dots">...</span></span>
+                            <span className="ml-2 animate-pulse">
+                                {buttonText}
+                                <span className="dots">...</span>
+                            </span>
                         </div>
+                    ) : shouldShowCaptcha && !captchaVerified ? (
+                        'Please complete the CAPTCHA'
+                    ) : data.files.length > MAX_FILE_COUNT ? (
+                        `Demasiados archivos (máx. ${MAX_FILE_COUNT})`
                     ) : (
-                        shouldShowCaptcha && !captchaVerified
-                            ? 'Please complete the CAPTCHA'
-                            : (data.files.length > MAX_FILE_COUNT
-                                ? `Demasiados archivos (máx. ${MAX_FILE_COUNT})`
-                                : 'Upload files')
+                        <span className="inline-flex items-center justify-center">
+                            Upload files
+                            <CloudUpload className="ml-4 h-6 w-6" />
+                        </span>
                     )}
                 </button>
             </form>

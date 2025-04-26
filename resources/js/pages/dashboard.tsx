@@ -7,6 +7,8 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
 import BackgroundPattern from '@/layouts/app/BackgroundPattern';
 import { useState } from 'react';
+import { FileText } from 'lucide-react';
+
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -43,7 +45,7 @@ export default function Dashboard() {
                 toast.success(successMessage);
                 sessionStorage.removeItem('flash.success'); // Limpiar el mensaje después de mostrarlo
             }
-            , 800);
+                , 800);
         }
         //para flash de otra procedencia
 
@@ -54,7 +56,7 @@ export default function Dashboard() {
             toast.error(flash.error);
         }
 
-    }, [contents,  flash]);
+    }, [contents, flash]);
 
     useEffect(() => {
         const refreshData = async () => {
@@ -205,18 +207,16 @@ ${content}
                             })}
                         </div>
                     ) : (
-                            <div className="relative text-center py-12 px-4 h-auto min-h-[50vh] max-h-screen rounded-xl custom-border dark:border-gray-700 bg-gray-200 dark:bg-neutral-950/20">
+                        <div className="relative text-center py-12 px-4 h-auto min-h-[50vh] max-h-screen rounded-xl custom-border dark:border-gray-700 bg-gray-200 dark:bg-neutral-950/20">
                             <BackgroundPattern />
                             <div className="relative">
-                                <svg className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0-2 2h12a2 2 0 0 0 2-2V8z" />
-                                    <polyline points="14 2 14 8 20 8" />
-                                    <line x1="16" y1="13" x2="8" y2="13" />
-                                    <line x1="16" y1="17" x2="8" y2="17" />
-                                    <line x1="10" y1="9" x2="8" y2="9" />
-                                </svg>
-                                <p className="text-gray-600 dark:text-gray-400 font-medium">There are no uploaded files yet</p>
-                                <p className="text-gray-500 dark:text-gray-500 text-sm mt-1">Add some to see them here</p>
+                                <FileText className="mx-auto h-15 w-15 text-gray-400 dark:text-gray-500 mb-4" />
+                                <p className="text-gray-600 dark:text-gray-400 font-medium">
+                                    There are no uploaded files yet
+                                </p>
+                                <p className="text-gray-500 dark:text-gray-500 text-sm mt-1">
+                                    Add some to see them here
+                                </p>
                             </div>
                         </div>
                     )}
