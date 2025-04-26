@@ -382,10 +382,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
                     <FormTooltip allowedExtensions={allowedExtensions} />
 
                     <div
-                        className={`border-2 border-dashed ${data.files.length > 0
-                            ? 'border-emerald-600 bg-emerald-600/20 dark:border-emerald-500 dark:bg-gray-50'
-                            : 'border-emerald-400 ctbox dark:border-emerald-500 dark:bg-gray-50'
-                            }`}
+                        className={`border-2 border-dashed border-emerald-400 ctbox dark:border-emerald-500 dark:bg-gray-50`}
                         onDragOver={handleDragOver}
                         onDrop={handleDrop}
                     >
