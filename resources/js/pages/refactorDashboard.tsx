@@ -44,7 +44,7 @@ export default function Refactor() {
                 toast.success(successMessage);
                 sessionStorage.removeItem('flash.success'); // Limpiar el mensaje después de mostrarlo
             }
-                , 800);
+                , 300);
         }
         //para flash de otra procedencia
 
