@@ -28,7 +28,12 @@ const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
                         {isInvalid && <FiAlertCircle className="ml-1 inline h-4 w-4 text-red-500" />}
                     </span>
                 </div>
-                <button type="button" onClick={() => onRemove(file)} className="text-gray-400 transition-colors hover:text-red-500">
+                <button 
+                    type="button" 
+                    onClick={() => onRemove(file)} 
+                    title="Remove file"
+                    className="flex items-center justify-center rounded-full bg-gray-200 p-1.5 text-gray-500 transition-all duration-200 hover:bg-red-100 hover:text-red-600 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-400"
+                >
                     <FiX className="h-4 w-4" />
                 </button>
             </div>
