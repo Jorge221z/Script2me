@@ -6,6 +6,7 @@ import { HashLoader } from 'react-spinners';
 import '../../../css/app.css';
 import FormTooltip from './FormTooltip';
 import { allowedExtensions } from './allowedExtensions';
+import RecaptchaContainer from './RecaptchaContainer';
 
 const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
     const getFileIcon = (extension) => {
@@ -79,7 +80,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
         };
     }, [showCaptcha, shouldShowCaptcha]); // se ejecuta cada vez que cambia el estado del captcha//
 
-//una vez se comienza a procesar en la API de Gemini, limpiamos los archivos del formulario//
+    //una vez se comienza a procesar en la API de Gemini, limpiamos los archivos del formulario//
     useEffect(() => {
         if (processing) {
             const timer = setTimeout(() => {
@@ -439,24 +440,18 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
                         )}
                     </div>
                 </div>
-                {showCaptcha && shouldShowCaptcha && (
-                    <div
-                        id="recaptcha-container"
-                        className="g-recaptcha mb-4"
-                        data-sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                        data-callback="onCaptchaCompleted" // Make sure this matches the global function name
-                        data-size="normal"
-                        data-theme="dark"
-                    ></div>
-                )}
+                <RecaptchaContainer
+                    showCaptcha={showCaptcha}
+                    shouldShowCaptcha={shouldShowCaptcha}
+                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                />
                 <button
                     type="submit"
                     disabled={isButtonDisabled}
-                    className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${
-                        isButtonDisabled
+                    className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${isButtonDisabled
                             ? 'cursor-not-allowed bg-gray-400'
                             : 'custom-bg-color custom-bg-color-hover'
-                    }`}
+                        }`}
                 >
                     {loading || processing ? (
                         <div className="flex items-center justify-center">
