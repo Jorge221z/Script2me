@@ -44,30 +44,56 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
     const [recentlyExceededLimit, setRecentlyExceededLimit] = useState(false); // variable para controlar el warning del limite de archivos//
     const MAX_FILE_COUNT = 20; // Cantidad maxima de archivos por subida //
 
+    // Con estas variables controlamos el estado del captcha//
+    const [shouldShowCaptcha, setShouldShowCaptcha] = useState(false);
+    const [captchaVerified, setCaptchaVerified] = useState(false);
+
     //manejo del estado del captcha//
     useEffect(() => {
+        // Define a global callback function for reCAPTCHA
+        window.onCaptchaCompleted = () => {
+            setCaptchaVerified(true);
+        };
+
         const handleRecaptchaLoad = () => {
             if (window.grecaptcha) {
                 window.grecaptcha.render('recaptcha-container', {
                     sitekey: import.meta.env.VITE_RECAPTCHA_SITE_KEY,
+                    callback: 'onCaptchaCompleted', // Use the name of the global function
                 });
             }
         };
 
-        if (showCaptcha) {
+        if (showCaptcha && shouldShowCaptcha) {
             window.onRecaptchaLoad = handleRecaptchaLoad;
+
+            // Una vez que este cargado, se renderiza el captcha//
+            if (window.grecaptcha && window.grecaptcha.render) {
+                handleRecaptchaLoad();
+            }
         }
 
         return () => {
             delete window.onRecaptchaLoad; // Limpieza al desmontar
+            delete window.onCaptchaCompleted; // Clean up global callback
         };
-    }, [showCaptcha]); // Se ejecuta cuando `showCaptcha` cambia
+    }, [showCaptcha, shouldShowCaptcha]); // se ejecuta cada vez que cambia el estado del captcha//
 
+//una vez se comienza a procesar en la API de Gemini, limpiamos los archivos del formulario//
+    useEffect(() => {
+        if (processing) {
+            const timer = setTimeout(() => {
+                setData('files', []);
+            }, 1000); // 1 segundo
+
+            return () => clearTimeout(timer); // Limpieza si cambia antes
+        }
+    }, [processing]);
 
     useEffect(() => {
         // Limpiar errores generales cuando se cambian los archivos
         setLocalErrors([]);
-        
+
         // Reset the warning when files change
         if (data.files.length <= MAX_FILE_COUNT) {
             setRecentlyExceededLimit(false);
@@ -214,7 +240,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
 
         // Actualizar errores generales si es necesario
         setLocalErrors(localErrors.filter((error) => !error.includes(fileToRemove.name)));
-        
+
         // Reset the warning if we're back under the limit
         if (data.files.length - 1 <= MAX_FILE_COUNT) {
             setRecentlyExceededLimit(false);
@@ -224,8 +250,22 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        //manejamos el captcha solo si es requerido
-        if (showCaptcha) {
+        // Verificar si hay archivos válidos para enviar
+        const validFiles = data.files.filter((file) => !invalidFiles.includes(file.name));
+
+        if (validFiles.length === 0) {
+            setLocalErrors([...localErrors.filter((e) => !e.includes('There are no valid files')), '❌ There are no valid files to upload']);
+            return;
+        }
+
+        // Si el captcha es requerido y no se ha verificado, mostrar el captcha//
+        if (showCaptcha && !shouldShowCaptcha) {
+            setShouldShowCaptcha(true);
+            return;
+        }
+
+        //manejamos el captcha solo si es requerido y ya está mostrado
+        if (showCaptcha && shouldShowCaptcha) {
             const captchaResponse = window.grecaptcha.getResponse();
             if (!captchaResponse) {
                 toast.error('Please complete the captcha to proceed', {
@@ -236,24 +276,16 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
             }
         }
 
-        // Verificar si hay archivos válidos para enviar
-        const validFiles = data.files.filter((file) => !invalidFiles.includes(file.name));
-
-        if (validFiles.length === 0) {
-            setLocalErrors([...localErrors.filter((e) => !e.includes('There are no valid files')), '❌ There are no valid files to upload']);
-            return;
-        }
-
-        // Activar loading con retraso mínimo de 1.5s
+        // Activar loading con retraso dado por el parametro loadingTime//
         setLoading(true);
         const startTime = Date.now();
 
         try {
             const formData = new FormData();
             validFiles.forEach((file) => formData.append('files[]', file));
-            
+
             //añadimos el captcha a la peticion solo si es necesario
-            if (showCaptcha) {
+            if (showCaptcha && shouldShowCaptcha) {
                 formData.append('captcha', window.grecaptcha.getResponse());
             }
 
@@ -270,10 +302,17 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
                             position: 'top-center',
                         });
                     }
+                    // Limpiar archivos y errores después de la subida exitosa y el captcha completado//
                     setData('files', []); // <- Limpiar archivos
                     setInvalidFiles([]); // <- Limpiar archivos inválidos
                     setFileErrors({}); // <- Limpiar errores individuales(internos)
                     setLocalErrors([]);
+                    // Resetetamos los states del captcha//
+                    setShouldShowCaptcha(false);
+                    setCaptchaVerified(false);
+                    if (window.grecaptcha) {
+                        window.grecaptcha.reset();
+                    }
                 },
                 onError: (errors) => {
                     setLocalErrors(Object.values(errors).flat());
@@ -290,11 +329,16 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
     };
 
     // Verificar si hay archivos válidos para habilitar el botón
-    // Cambiamos la lógica para que el botón esté deshabilitado si hay cualquier archivo inválido
-    // o si hay más de MAX_FILE_COUNT archivos 
-    const hasValidFiles = data.files.length > 0 && 
-                         invalidFiles.length === 0 && 
-                         data.files.length <= MAX_FILE_COUNT;
+    const hasValidFiles = data.files.length > 0 &&
+        invalidFiles.length === 0 &&
+        data.files.length <= MAX_FILE_COUNT;
+
+    // Update button disabled logic to consider CAPTCHA
+    const isButtonDisabled = data.files.length === 0 ||
+        loading ||
+        !hasValidFiles ||
+        processing ||
+        (showCaptcha && shouldShowCaptcha && !captchaVerified);
 
     // Función para dividir el array en grupos de 10
     const chunkArray = (array, size) => {
@@ -309,7 +353,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
 
     return (
         <div>
-            {showCaptcha && (<script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoad" async defer></script>)}
+            {showCaptcha && shouldShowCaptcha && (<script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoad" async defer></script>)}
 
             <form
                 onSubmit={handleSubmit}
@@ -323,8 +367,8 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
 
                     <div
                         className={`border-2 border-dashed ${data.files.length > 0
-                                ? 'border-emerald-600 bg-emerald-600/20 dark:border-emerald-500 dark:bg-gray-50'
-                                : 'border-emerald-400 bg-gray-900/50 dark:border-emerald-500 dark:bg-gray-50'
+                            ? 'border-emerald-600 bg-emerald-600/20 dark:border-emerald-500 dark:bg-gray-50'
+                            : 'border-emerald-400 bg-gray-900/50 dark:border-emerald-500 dark:bg-gray-50'
                             }`}
                         onDragOver={handleDragOver}
                         onDrop={handleDrop}
@@ -386,7 +430,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
                                 </div>
                             ))}
                         {errors.files && <div className="text-sm text-red-400 dark:text-red-600">⚠️ {errors.files}</div>}
-                        
+
                         {/* Solo mostrar este mensaje si se ha intentado exceder el límite recientemente */}
                         {recentlyExceededLimit && data.files.length <= MAX_FILE_COUNT && (
                             <div className="text-sm text-amber-400 dark:text-amber-500">
@@ -395,26 +439,21 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
                         )}
                     </div>
                 </div>
-                {showCaptcha && (
+                {showCaptcha && shouldShowCaptcha && (
                     <div
                         id="recaptcha-container"
                         className="g-recaptcha mb-4"
                         data-sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                        data-callback="onSubmit"
+                        data-callback="onCaptchaCompleted" // Make sure this matches the global function name
                         data-size="normal"
                         data-theme="dark"
                     ></div>
                 )}
                 <button
                     type="submit"
-                    onClick={() =>
-                        setTimeout(() => {
-                            setData({ ...data, files: [] });
-                        }, loadingTime + 1)
-                    }
-                    disabled={data.files.length === 0 || loading || !hasValidFiles || processing}
+                    disabled={isButtonDisabled}
                     className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${
-                        data.files.length === 0 || !hasValidFiles || processing
+                        isButtonDisabled
                             ? 'cursor-not-allowed bg-gray-400'
                             : 'custom-bg-color custom-bg-color-hover'
                     }`}
@@ -425,13 +464,15 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
                             <span className="ml-2 animate-pulse">{buttonText}<span className="dots">...</span></span>
                         </div>
                     ) : (
-                        data.files.length > MAX_FILE_COUNT 
-                        ? `Demasiados archivos (máx. ${MAX_FILE_COUNT})` 
-                        : 'Upload files'
+                        shouldShowCaptcha && !captchaVerified
+                            ? 'Please complete the CAPTCHA'
+                            : (data.files.length > MAX_FILE_COUNT
+                                ? `Demasiados archivos (máx. ${MAX_FILE_COUNT})`
+                                : 'Upload files')
                     )}
                 </button>
             </form>
-        </div>    
+        </div>
     );
 };
 
