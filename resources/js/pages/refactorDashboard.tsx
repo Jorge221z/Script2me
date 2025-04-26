@@ -7,7 +7,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
 import BackgroundPattern from '@/layouts/app/BackgroundPattern';
 import { useState } from 'react';
-import { FileText } from 'lucide-react';
+import { FileText, File } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -142,13 +142,7 @@ ${content}
                                         <div className="flex items-center justify-between px-2 py-3 bg-emerald-50 dark:bg-emerald-950/0 border border-emerald-200 dark:border-t-white border-l-white rounded-t-xl">
                                             <div className="flex items-center gap-2 min-w-0">
                                                 <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/50">
-                                                    <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                                        <polyline points="14 2 14 8 20 8" />
-                                                        <line x1="16" y1="13" x2="8" y2="13" />
-                                                        <line x1="16" y1="17" x2="8" y2="17" />
-                                                        <line x1="10" y1="9" x2="8" y2="9" />
-                                                    </svg>
+                                                    <File className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                                                 </div>
                                                 <h3 className="font-medium text-emerald-800 dark:text-emerald-200 truncate">
                                                     {fileName}
