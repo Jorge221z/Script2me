@@ -82,6 +82,13 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
         };
     }, [showCaptcha, shouldShowCaptcha]); // se ejecuta cada vez que cambia el estado del captcha//
 
+    // Limpiar archivos cuando se inicia la carga normal//
+    useEffect(() => {
+        if (loading) {
+            setData('files', []);
+        }
+    }, [loading]);
+
     //una vez se comienza a procesar en la API de Gemini, limpiamos los archivos del formulario//
     useEffect(() => {
         if (processing) {
@@ -92,6 +99,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
             return () => clearTimeout(timer); // Limpieza si cambia antes
         }
     }, [processing]);
+
 
     useEffect(() => {
         // Limpiar errores generales cuando se cambian los archivos
