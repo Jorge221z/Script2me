@@ -368,7 +368,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
 
             <form
                 onSubmit={handleSubmit}
-                className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center rounded-lg bg-gray-950 p-6 text-white shadow-md dark:bg-white dark:text-gray-950 dark:shadow-lg"
+                className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center rounded-lg ctform p-6 text-white shadow-md  dark:text-gray-950 dark:shadow-lg"
             >
                 <div className="mb-1 w-full">
                     <label htmlFor="file-upload" data-tooltip-id="info-tooltip" className="mb-2 block text-sm font-bold text-gray-400 dark:text-gray-700">
@@ -379,14 +379,14 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
                     <div
                         className={`border-2 border-dashed ${data.files.length > 0
                             ? 'border-emerald-600 bg-emerald-600/20 dark:border-emerald-500 dark:bg-gray-50'
-                            : 'border-emerald-400 bg-gray-900/50 dark:border-emerald-500 dark:bg-gray-50'
+                            : 'border-emerald-400 ctbox dark:border-emerald-500 dark:bg-gray-50'
                             }`}
                         onDragOver={handleDragOver}
                         onDrop={handleDrop}
                     >
                         <label
                             htmlFor="file-upload"
-                            className="flex h-38 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-0 bg-transparent hover:bg-gray-900 dark:hover:bg-gray-300/50"
+                            className="flex h-38 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-0 bg-transparent hover:bg-[#303030]/50 dark:hover:bg-gray-300/50"
                         >
                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                 <svg
@@ -478,7 +478,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
                     ) : (
                         <span className="inline-flex items-center justify-center">
                             Upload files
-                            <CloudUpload className="ml-4 h-6 w-6" />
+                            <CloudUpload className="ml-6 h-6 w-6" />
                         </span>
                     )}
                 </button>

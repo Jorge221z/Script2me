@@ -2,9 +2,9 @@
 
 const TermsAndConditions = () => {
     return (
-      <div className="max-w-4xl mx-auto p-6 bg-gray color shadow-md rounded-lg">
+      <div className="max-w-4xl mx-auto p-6 bg-gray color shadow-md rounded-lg border-gray">
         <h1 className="text-3xl font-bold mb-6 text-center text-black dark:text-white">
-          Script2me Terms and Conditions
+          <span className="text-emerald-600 dark:text-emerald-400 cursor-pointer">Script2me</span> Terms and Conditions
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
           Last updated: April 3, 2025
@@ -15,7 +15,7 @@ const TermsAndConditions = () => {
             1. Welcome to Script2me
           </h2>
           <p className="text-lg text-black dark:text-white">
-            <span className="text-emerald-600 dark:text-emerald-400 cursor-pointer">Script2me</span> is a platform designed for programmers and professionals to upload plain text files <br /> (.py, .php, .yml, .tsx, etc.) to organize and process them. <br /> By using the Platform, you accept these <strong>Terms and Conditions</strong>. If you do not agree, do not use the service. <br /> We reserve the right to update these Terms in accordance with current legislation.
+            Script2me is a platform designed for programmers and professionals to upload plain text files <br /> (.py, .php, .yml, .tsx, etc.) to organize and process them. <br /> By using the Platform, you accept these <strong>Terms and Conditions</strong>. If you do not agree, do not use the service. <br /> We reserve the right to update these Terms in accordance with current legislation.
           </p>
         </section>
 

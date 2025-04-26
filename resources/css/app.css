@@ -105,6 +105,24 @@
     border: 1px groove #171717 !important;
 }
 
+.ctform {
+    background-color: #171717 !important;
+}
+
+.dark .ctform {
+    background-color: #ffffff !important;
+}
+
+.ctbox {
+    background-color: #202020 !important;
+    opacity: 0.9 !important;
+}
+.dark .ctbox {
+    background-color: #ffffff !important;
+}
+
+
+
 @keyframes dotAnimation {
     0% {
         opacity: 0.2;
