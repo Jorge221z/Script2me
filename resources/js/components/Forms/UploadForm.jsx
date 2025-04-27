@@ -8,6 +8,9 @@ import FormTooltip from './FormTooltip';
 import { allowedExtensions } from './allowedExtensions';
 import RecaptchaContainer from './RecaptchaContainer';
 import { CloudUpload } from 'lucide-react';
+import DragOverAnimation from './DragOverAnimation';
+import GlobalDragOver from './GlobalDragOver';
+
 
 
 const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
@@ -51,6 +54,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
     const [fileErrors, setFileErrors] = useState({});
     const [recentlyExceededLimit, setRecentlyExceededLimit] = useState(false); // variable para controlar el warning del limite de archivos//
     const MAX_FILE_COUNT = 20; // Cantidad maxima de archivos por subida //
+    const [isDragging, setIsDragging] = useState(false); //con esta variable manejaremos el estado del dragOver
 
     // Con estas variables controlamos el estado del captcha//
     const [shouldShowCaptcha, setShouldShowCaptcha] = useState(false);
@@ -211,12 +215,22 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
     };
 
     const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isDragging) setIsDragging(true);
+    };
+
+    const handleDragLeave = (e) => {
         e.preventDefault();
         e.stopPropagation();
+        setIsDragging(false);
     };
 
     const handleDrop = (e) => {
         e.preventDefault();
+
+        setIsDragging(false);
+
         const newFiles = Array.from(e.dataTransfer.files);
         const { errors: validationErrors, invalidFiles: newInvalidFiles, fileErrors: newFileErrors, exceedsMaxCount } =
             validateFiles(newFiles, data.files.length);
@@ -367,7 +381,29 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
 
     const extColumns = chunkArray(allowedExtensions, 10);
 
+    const handleFilesDropped = (newFiles) => {
+    const { errors: validationErrors, invalidFiles: newInvalidFiles, fileErrors: newFileErrors, exceedsMaxCount } =
+        validateFiles(newFiles, data.files.length);
+
+    if (validationErrors.length > 0) {
+        setLocalErrors(validationErrors);
+    }
+
+    if (exceedsMaxCount) {
+        setRecentlyExceededLimit(true);
+    }
+
+    // Only add files if we don't exceed the limit
+    if (!exceedsMaxCount) {
+        setData('files', [...data.files, ...newFiles]);
+        setInvalidFiles([...invalidFiles, ...newInvalidFiles]);
+        setFileErrors({ ...fileErrors, ...newFileErrors });
+    }
+};
+
     return (
+        <div>
+        <GlobalDragOver onFilesDropped={handleFilesDropped} />
         <div>
             {showCaptcha && shouldShowCaptcha && (<script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoad" async defer></script>)}
 
@@ -382,10 +418,12 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
                     <FormTooltip allowedExtensions={allowedExtensions} />
 
                     <div
-                        className={`border-2 border-dashed border-emerald-400 ctbox dark:border-emerald-500 dark:bg-gray-50`}
+                        className={`relative border-2 border-dashed border-emerald-400 ctbox dark:border-emerald-500 dark:bg-gray-50`}
                         onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
                         onDrop={handleDrop}
                     >
+                        <DragOverAnimation isDragging={isDragging} />
                         <label
                             htmlFor="file-upload"
                             className="flex h-38 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-0 bg-transparent hover:bg-[#303030]/50 dark:hover:bg-gray-300/50"
@@ -485,6 +523,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
                     )}
                 </button>
             </form>
+        </div>
         </div>
     );
 };
