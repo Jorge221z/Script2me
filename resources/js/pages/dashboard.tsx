@@ -190,9 +190,14 @@ ${content}
                                         </div>
 
                                         {/* Pie del visor */}
-                                        <div className="flex justify-end items-end pr-6 py-2 border-t border-emerald-200 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30 text-xs text-emerald-500 dark:text-emerald-400">
-                                            {/* <span>{contentLines.length} {contentLines.length === 1 ? 'line' : 'lines'}</span> */}
-                                            <span className="truncate max-w-xs items-end">
+                                        <div className="flex justify-between items-center pr-6 py-2 border-t border-emerald-200 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30 text-xs text-emerald-500 dark:text-emerald-400">
+                                            {/* Tamaño al principio */}
+                                            <span className='pl-4'>
+                                                {/* calculamos en KB, con dos decimales */}
+                                                {(content.length / 1024).toFixed(2)} KB
+                                            </span>
+                                            {/* Extensión al final */}
+                                            <span className="truncate max-w-xs">
                                                 {fileName.includes('.') ? `.${fileName.split('.').pop()}` : 'Sin extensión'}
                                             </span>
                                         </div>
