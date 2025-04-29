@@ -10,9 +10,7 @@ import { CloudUpload } from 'lucide-react';
 import DragOverAnimation from './DragOverAnimation';
 import GlobalDragOver from './GlobalDragOver';
 import FilePreview from './FilePreview';
-
-
-
+import AnimatedRemoveWrapper from './AnimatedRemoveWrapper';
 
 const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false }) => {
     const { data, setData, post, errors, processing } = useForm({ files: [] });
@@ -429,14 +427,21 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
                                 </h4>
                                 <div className="max-h-[200px] overflow-y-auto">
                                     {data.files.map((file, index) => (
-                                        <FilePreview
+                                        <AnimatedRemoveWrapper
                                             key={`${file.name}-${file.size}-${file.lastModified}`}
                                             file={file}
                                             onRemove={handleRemoveFile}
-                                            isInvalid={invalidFiles.includes(file.name)}
-                                            errorMessage={fileErrors[file.name]}
-                                            className="transition-all duration-200 ease-in-out ..."
-                                        />
+                                        >
+                                            {({ onRemove }) => (
+                                                <FilePreview
+                                                    file={file}
+                                                    onRemove={onRemove}
+                                                    isInvalid={invalidFiles.includes(file.name)}
+                                                    errorMessage={fileErrors[file.name]}
+                                                    className="transition-all duration-200 ease-in-out ..."
+                                                />
+                                            )}
+                                        </AnimatedRemoveWrapper>
                                     ))}
                                 </div>
                             </div>
