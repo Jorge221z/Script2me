@@ -11,6 +11,7 @@ import DragOverAnimation from './DragOverAnimation';
 import GlobalDragOver from './GlobalDragOver';
 import FilePreview from './FilePreview';
 import AnimatedRemoveWrapper from './AnimatedRemoveWrapper';
+import FilesSentAnimation from './FilesSentAnimation';
 
 const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false }) => {
     const { data, setData, post, errors, processing } = useForm({ files: [] });
@@ -26,6 +27,11 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
     // Con estas variables controlamos el estado del captcha//
     const [shouldShowCaptcha, setShouldShowCaptcha] = useState(false);
     const [captchaVerified, setCaptchaVerified] = useState(false);
+
+    // Nuevo estado para controlar la animación
+    const [showSentAnimation, setShowSentAnimation] = useState(false);
+    // Nuevo estado para animación de fade out
+    const [filesFadeOut, setFilesFadeOut] = useState(false);
 
     //manejo del estado del captcha//
     useEffect(() => {
@@ -60,22 +66,36 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
 
     // Limpiar archivos cuando se inicia la carga normal//
     useEffect(() => {
-        if (loading) {
-            setData('files', []);
+        if (loading && data.files.length > 0) {
+            setFilesFadeOut(true);
+            const timer = setTimeout(() => {
+                setData('files', []);
+                setFilesFadeOut(false);
+            }, 400); // Duración del fade out
+            return () => clearTimeout(timer);
         }
     }, [loading]);
 
     //una vez se comienza a procesar en la API de Gemini, limpiamos los archivos del formulario//
     useEffect(() => {
-        if (processing) {
+        if (processing && data.files.length > 0) {
+            setFilesFadeOut(true);
             const timer = setTimeout(() => {
                 setData('files', []);
-            }, 1000); // 1 segundo
-
-            return () => clearTimeout(timer); // Limpieza si cambia antes
+                setFilesFadeOut(false);
+            }, 400);
+            return () => clearTimeout(timer);
         }
     }, [processing]);
 
+    // Mostrar animación cuando los archivos se vacían tras un envío
+    useEffect(() => {
+        if (data.files.length === 0 && (loading || processing)) {
+            setShowSentAnimation(true);
+            const timer = setTimeout(() => setShowSentAnimation(false), 1200);
+            return () => clearTimeout(timer);
+        }
+    }, [data.files, loading, processing]);
 
     useEffect(() => {
         // Limpiar errores generales cuando se cambian los archivos
@@ -182,9 +202,9 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
     };
 
     const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!isDragging) setIsDragging(true);
+        e.preventDefault();
+        e.stopPropagation();
+        if (!isDragging) setIsDragging(true);
     };
 
     const handleDragLeave = (e) => {
@@ -349,155 +369,167 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
     const extColumns = chunkArray(allowedExtensions, 10);
 
     const handleFilesDropped = (newFiles) => {
-    const { errors: validationErrors, invalidFiles: newInvalidFiles, fileErrors: newFileErrors, exceedsMaxCount } =
-        validateFiles(newFiles, data.files.length);
+        const { errors: validationErrors, invalidFiles: newInvalidFiles, fileErrors: newFileErrors, exceedsMaxCount } =
+            validateFiles(newFiles, data.files.length);
 
-    if (validationErrors.length > 0) {
-        setLocalErrors(validationErrors);
-    }
+        if (validationErrors.length > 0) {
+            setLocalErrors(validationErrors);
+        }
 
-    if (exceedsMaxCount) {
-        setRecentlyExceededLimit(true);
-    }
+        if (exceedsMaxCount) {
+            setRecentlyExceededLimit(true);
+        }
 
-    // Only add files if we don't exceed the limit
-    if (!exceedsMaxCount) {
-        setData('files', [...data.files, ...newFiles]);
-        setInvalidFiles([...invalidFiles, ...newInvalidFiles]);
-        setFileErrors({ ...fileErrors, ...newFileErrors });
-    }
-};
+        // Only add files if we don't exceed the limit
+        if (!exceedsMaxCount) {
+            setData('files', [...data.files, ...newFiles]);
+            setInvalidFiles([...invalidFiles, ...newInvalidFiles]);
+            setFileErrors({ ...fileErrors, ...newFileErrors });
+        }
+    };
 
     return (
         <div>
-        <GlobalDragOver onFilesDropped={handleFilesDropped} />
-        <div>
-            {showCaptcha && shouldShowCaptcha && (<script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoad" async defer></script>)}
+            <GlobalDragOver onFilesDropped={handleFilesDropped} />
+            <div>
+                {/* Animación de archivos enviados */}
+                <FilesSentAnimation show={showSentAnimation} />
+                {showCaptcha && shouldShowCaptcha && (<script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoad" async defer></script>)}
 
-            <form
-                onSubmit={handleSubmit}
-                className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center rounded-lg ctform p-6 text-white shadow-md  dark:text-gray-950 dark:shadow-lg"
-            >
-                <div className="mb-1 w-full">
-                    <label htmlFor="file-upload" data-tooltip-id="info-tooltip" className="mb-2 block text-sm font-bold text-gray-400 dark:text-gray-700">
-                        Drag or select your files<a className="ml-3 cursor-pointer text-lg">ℹ️</a>
-                    </label>
-                    <FormTooltip allowedExtensions={allowedExtensions} />
-
-                    <div
-                        className={`relative border-2 border-dashed border-emerald-400 ctbox dark:border-emerald-500 dark:bg-gray-50`}
-                        onDragOver={handleDragOver}
-                        onDragLeave={handleDragLeave}
-                        onDrop={handleDrop}
-                    >
-                        <DragOverAnimation isDragging={isDragging} />
-                        <label
-                            htmlFor="file-upload"
-                            className="flex h-38 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-0 bg-transparent hover:bg-[#303030]/50 dark:hover:bg-gray-300/50"
-                        >
-                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                <svg
-                                    className="mb-4 h-8 w-8 text-emerald-500"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 22 22"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-                                    />
-                                </svg>
-                                <p className="mb-5 text-sm text-gray-300 dark:text-gray-800">
-                                    <span className="font-semibold">Drag and drop</span> or click to upload
-                                </p>
-                                <p className="text-xs text-gray-300 dark:text-gray-800 mt-3 ">By uploading a file, you accept our Terms & Conditions</p>
-                            </div>
-                            <input id="file-upload" type="file" name="files" multiple onChange={handleFileChange} className="hidden" />
-                        </label>
-                    </div>
-                    <div className="mt-4">
-                        {data.files.length > 0 && (
-                            <div className="border-t pt-4">
-                                <h4 className="mb-2 text-sm font-medium text-gray-500">
-                                    Selected files ({data.files.length})
-                                    {invalidFiles.length > 0 && <span className="ml-2 text-red-500">({invalidFiles.length} with errors)</span>}
-                                </h4>
-                                <div className="max-h-[200px] overflow-y-auto">
-                                    {data.files.map((file, index) => (
-                                        <AnimatedRemoveWrapper
-                                            key={`${file.name}-${file.size}-${file.lastModified}`}
-                                            file={file}
-                                            onRemove={handleRemoveFile}
-                                        >
-                                            {({ onRemove }) => (
-                                                <FilePreview
-                                                    file={file}
-                                                    onRemove={onRemove}
-                                                    isInvalid={invalidFiles.includes(file.name)}
-                                                    errorMessage={fileErrors[file.name]}
-                                                    className="transition-all duration-200 ease-in-out ..."
-                                                />
-                                            )}
-                                        </AnimatedRemoveWrapper>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                    <div className="mt-4 space-y-2">
-                        {localErrors.length > 0 &&
-                            localErrors.map((error, index) => (
-                                <div key={index} className="text-sm text-red-400 dark:text-red-600">
-                                    ⚠️ {error}
-                                </div>
-                            ))}
-                        {errors.files && <div className="text-sm text-red-400 dark:text-red-600">⚠️ {errors.files}</div>}
-
-                        {/* Solo mostrar este mensaje si se ha intentado exceder el límite recientemente */}
-                        {recentlyExceededLimit && data.files.length <= MAX_FILE_COUNT && (
-                            <div className="text-sm text-amber-400 dark:text-amber-500">
-                                ⚠️ Some files weren´t added because they exceed the {MAX_FILE_COUNT} file limit.
-                            </div>
-                        )}
-                    </div>
-                </div>
-                <RecaptchaContainer
-                    showCaptcha={showCaptcha}
-                    shouldShowCaptcha={shouldShowCaptcha}
-                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                />
-                <button
-                    type="submit"
-                    disabled={isButtonDisabled}
-                    className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${isButtonDisabled
-                        ? 'cursor-not-allowed bg-gray-400'
-                        : 'custom-bg-color custom-bg-color-hover'
-                        }`}
+                <form
+                    onSubmit={handleSubmit}
+                    className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center rounded-lg ctform p-6 text-white shadow-md  dark:text-gray-950 dark:shadow-lg"
                 >
-                    {loading || processing ? (
-                        <div className="flex items-center justify-center">
-                            <HashLoader color="white" size={35} style={{ transform: 'translateX(-95px)' }} />
-                            <span className="ml-2 animate-pulse">
-                                {buttonText}
-                                <span className="dots">...</span>
-                            </span>
+                    <div className="mb-1 w-full">
+                        <label htmlFor="file-upload" data-tooltip-id="info-tooltip" className="mb-2 block text-sm font-bold text-gray-400 dark:text-gray-700">
+                            Drag or select your files<a className="ml-3 cursor-pointer text-lg">ℹ️</a>
+                        </label>
+                        <FormTooltip allowedExtensions={allowedExtensions} />
+
+                        <div
+                            className={`relative border-2 border-dashed border-emerald-400 ctbox dark:border-emerald-500 dark:bg-gray-50`}
+                            onDragOver={handleDragOver}
+                            onDragLeave={handleDragLeave}
+                            onDrop={handleDrop}
+                        >
+                            <DragOverAnimation isDragging={isDragging} />
+                            <label
+                                htmlFor="file-upload"
+                                className="flex h-38 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-0 bg-transparent hover:bg-[#303030]/50 dark:hover:bg-gray-300/50"
+                            >
+                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <svg
+                                        className="mb-4 h-8 w-8 text-emerald-500"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 22 22"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+                                        />
+                                    </svg>
+                                    <p className="mb-5 text-sm text-gray-300 dark:text-gray-800">
+                                        <span className="font-semibold">Drag and drop</span> or click to upload
+                                    </p>
+                                    <p className="text-xs text-gray-300 dark:text-gray-800 mt-3 ">By uploading a file, you accept our Terms & Conditions</p>
+                                </div>
+                                <input id="file-upload" type="file" name="files" multiple onChange={handleFileChange} className="hidden" />
+                            </label>
                         </div>
-                    ) : shouldShowCaptcha && !captchaVerified ? (
-                        'Please complete the CAPTCHA'
-                    ) : data.files.length > MAX_FILE_COUNT ? (
-                        `Demasiados archivos (máx. ${MAX_FILE_COUNT})`
-                    ) : (
-                        <span className="inline-flex items-center justify-center">
-                            Upload files
-                            <CloudUpload className="ml-6 h-6 w-6" />
-                        </span>
-                    )}
-                </button>
-            </form>
-        </div>
+                        <div className="mt-4">
+                            {data.files.length > 0 && (
+                                <div className={`border-t pt-4 transition-all duration-400 ${filesFadeOut ? 'fade-out-files' : ''}`}>
+                                    <h4 className="mb-2 text-sm font-medium text-gray-500">
+                                        Selected files ({data.files.length})
+                                        {invalidFiles.length > 0 && <span className="ml-2 text-red-500">({invalidFiles.length} with errors)</span>}
+                                    </h4>
+                                    <div className="max-h-[200px] overflow-y-auto">
+                                        {data.files.map((file, index) => (
+                                            <AnimatedRemoveWrapper
+                                                key={`${file.name}-${file.size}-${file.lastModified}`}
+                                                file={file}
+                                                onRemove={handleRemoveFile}
+                                            >
+                                                {({ onRemove }) => (
+                                                    <FilePreview
+                                                        file={file}
+                                                        onRemove={onRemove}
+                                                        isInvalid={invalidFiles.includes(file.name)}
+                                                        errorMessage={fileErrors[file.name]}
+                                                        className="transition-all duration-200 ease-in-out ..."
+                                                    />
+                                                )}
+                                            </AnimatedRemoveWrapper>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        <div className="mt-4 space-y-2">
+                            {localErrors.length > 0 &&
+                                localErrors.map((error, index) => (
+                                    <div key={index} className="text-sm text-red-400 dark:text-red-600">
+                                        ⚠️ {error}
+                                    </div>
+                                ))}
+                            {errors.files && <div className="text-sm text-red-400 dark:text-red-600">⚠️ {errors.files}</div>}
+
+                            {/* Solo mostrar este mensaje si se ha intentado exceder el límite recientemente */}
+                            {recentlyExceededLimit && data.files.length <= MAX_FILE_COUNT && (
+                                <div className="text-sm text-amber-400 dark:text-amber-500">
+                                    ⚠️ Some files weren´t added because they exceed the {MAX_FILE_COUNT} file limit.
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    <RecaptchaContainer
+                        showCaptcha={showCaptcha}
+                        shouldShowCaptcha={shouldShowCaptcha}
+                        sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                    />
+                    <button
+                        type="submit"
+                        disabled={isButtonDisabled}
+                        className={`w-full rounded-lg px-4 py-2 text-xl font-bold text-white transition duration-300 ${isButtonDisabled
+                            ? 'cursor-not-allowed bg-gray-400'
+                            : 'custom-bg-color custom-bg-color-hover'
+                            }`}
+                    >
+                        {loading || processing ? (
+                            <div className="flex items-center justify-center">
+                                <HashLoader color="white" size={35} style={{ transform: 'translateX(-95px)' }} />
+                                <span className="ml-2 animate-pulse">
+                                    {buttonText}
+                                    <span className="dots">...</span>
+                                </span>
+                            </div>
+                        ) : shouldShowCaptcha && !captchaVerified ? (
+                            'Please complete the CAPTCHA'
+                        ) : data.files.length > MAX_FILE_COUNT ? (
+                            `Demasiados archivos (máx. ${MAX_FILE_COUNT})`
+                        ) : (
+                            <span className="inline-flex items-center justify-center">
+                                Upload files
+                                <CloudUpload className="ml-6 h-6 w-6" />
+                            </span>
+                        )}
+                    </button>
+                </form>
+            </div>
+            {/* Animación fade out archivos */}
+            <style>
+                {`
+                .fade-out-files {
+                    opacity: 0;
+                    transform: translateY(30px) scale(0.97);
+                    transition: opacity 0.4s cubic-bezier(.4,0,.2,1), transform 0.4s cubic-bezier(.4,0,.2,1);
+                }
+                `}
+            </style>
         </div>
     );
 };
