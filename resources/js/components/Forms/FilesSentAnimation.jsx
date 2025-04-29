@@ -58,50 +58,7 @@ const FilesSentAnimation = ({ show }) => {
             <style>
                 {`
                 .files-sent-animation-bar {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    animation: fadeBarInOut 1s cubic-bezier(.4,0,.2,1);
-                    background: none !important;
-                    padding: 0;
-                }
-                .files-sent-animation-bar .bar {
-                    width: 100%;
-                    height: 100%;
-                    border-radius: 6px;
-                    background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
-                    opacity: 0.85;
-                    position: relative;
-                    overflow: hidden;
-                    animation: barSlide 1s cubic-bezier(.4,0,.2,1);
-                }
-                @keyframes barSlide {
-                    0% {
-                        transform: scaleX(0.2);
-                        opacity: 0.2;
-                    }
-                    30% {
-                        transform: scaleX(1.08);
-                        opacity: 1;
-                    }
-                    60% {
-                        transform: scaleX(0.98);
-                        opacity: 0.85;
-                    }
-                    80% {
-                        transform: scaleX(1.03);
-                        opacity: 0.7;
-                    }
-                    100% {
-                        transform: scaleX(1);
-                        opacity: 0;
-                    }
-                }
-                @keyframes fadeBarInOut {
-                    0% { opacity: 0; }
-                    10% { opacity: 1; }
-                    90% { opacity: 1; }
-                    100% { opacity: 0; }
+                    display: none;
                 }
                 `}
             </style>
