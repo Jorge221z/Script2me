@@ -12,8 +12,26 @@ import GlobalDragOver from './GlobalDragOver';
 import FilePreview from './FilePreview';
 import AnimatedRemoveWrapper from './AnimatedRemoveWrapper';
 import FilesSentAnimation from './FilesSentAnimation';
+import LinearProgress from '@mui/material/LinearProgress';
+import { styled } from '@mui/material/styles';
 
-const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false }) => {
+// Barra de progreso personalizada color esmeralda
+const EmeraldLinearProgress = styled(LinearProgress)(({ theme }) => ({
+    height: 10,
+    borderRadius: 10,
+    backgroundColor: '#ecfdf5', // emerald-50
+
+    boxShadow: 'inset 0 1px 2px rgba(0, 0, 0, 0.1)',
+
+    '& .MuiLinearProgress-bar': {
+        background: 'linear-gradient(90deg, #34d399, #10b981)', // degradado emerald-400 a 500
+        borderRadius: 10,
+        
+    },
+}));
+
+
+const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, progressSpeed = 100, progressMaxTime = 1200 }) => {
     const { data, setData, post, errors, processing } = useForm({ files: [] });
 
     const [loading, setLoading] = useState(false);
@@ -33,6 +51,19 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
     // Nuevo estado para animación de fade out
     const [filesFadeOut, setFilesFadeOut] = useState(false);
 
+    const [progress, setProgress] = useState(0);
+    const [progressState, setProgressState] = useState('idle'); // 'idle' | 'uploading' | 'processing' | 'completed'
+
+    // Texto dinámico para la barra de progreso
+    let progressText = '';
+    if (progressState === 'uploading') {
+        progressText = 'Uploading...';
+    } else if (progressState === 'processing') {
+        progressText = 'Processing...';
+    } else if (progressState === 'completed' && progress === 100) {
+        progressText = 'Completed!';
+    }
+
     //manejo del estado del captcha//
     useEffect(() => {
         // Define a global callback function for reCAPTCHA
@@ -41,28 +72,41 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
         };
 
         const handleRecaptchaLoad = () => {
-            if (window.grecaptcha) {
-                window.grecaptcha.render('recaptcha-container', {
-                    sitekey: import.meta.env.VITE_RECAPTCHA_SITE_KEY,
-                    callback: 'onCaptchaCompleted', // Use the name of the global function
-                });
+            if (window.grecaptcha && document.getElementById('recaptcha-container')) {
+                // Solo renderizar si no está ya renderizado
+                if (!document.getElementById('recaptcha-container').hasChildNodes()) {
+                    window.grecaptcha.render('recaptcha-container', {
+                        sitekey: import.meta.env.VITE_RECAPTCHA_SITE_KEY,
+                        callback: 'onCaptchaCompleted', // Use the name of the global function
+                    });
+                }
             }
         };
 
         if (showCaptcha && shouldShowCaptcha) {
             window.onRecaptchaLoad = handleRecaptchaLoad;
 
-            // Una vez que este cargado, se renderiza el captcha//
+            // Si grecaptcha ya está cargado, renderiza inmediatamente
             if (window.grecaptcha && window.grecaptcha.render) {
                 handleRecaptchaLoad();
+            } else {
+                // Si no, añade el script si no existe
+                if (!document.getElementById('recaptcha-script')) {
+                    const script = document.createElement('script');
+                    script.id = 'recaptcha-script';
+                    script.src = 'https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoad';
+                    script.async = true;
+                    script.defer = true;
+                    document.body.appendChild(script);
+                }
             }
         }
 
         return () => {
-            delete window.onRecaptchaLoad; // Limpieza al desmontar
-            delete window.onCaptchaCompleted; // Clean up global callback
+            delete window.onRecaptchaLoad;
+            delete window.onCaptchaCompleted;
         };
-    }, [showCaptcha, shouldShowCaptcha]); // se ejecuta cada vez que cambia el estado del captcha//
+    }, [showCaptcha, shouldShowCaptcha]);
 
     // Limpiar archivos cuando se inicia la carga normal//
     useEffect(() => {
@@ -124,6 +168,54 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
             document.removeEventListener('drop', preventDefaultDrag);
         };
     }, []);
+
+    // Sincronizar progreso con loading/processing
+    useEffect(() => {
+        let interval = null;
+
+        if (loading) {
+            setProgress(0);
+            setProgressState('uploading');
+            const start = Date.now();
+            interval = setInterval(() => {
+                const elapsed = Date.now() - start;
+                let percent = Math.min(100, (elapsed / progressMaxTime) * 60); // uploading hasta 60%
+                setProgress(percent);
+                if (percent >= 60) {
+                    setProgress(60);
+                    clearInterval(interval);
+                }
+            }, progressSpeed);
+        } else if (processing) {
+            setProgressState('processing');
+            const start = Date.now();
+            interval = setInterval(() => {
+                setProgress(prev => {
+                    if (prev < 30) return 30; // asegúrate de empezar desde 60
+                    let percent = Math.min(99, prev + (70 / (progressMaxTime / progressSpeed))); // processing 60-99%
+                    return percent;
+                });
+            }, progressSpeed);
+        } else if (!loading && !processing && progressState !== 'idle') {
+            setProgress(100);
+            setProgressState('completed');
+        } else if (!loading && !processing && progressState === 'idle') {
+            setProgress(0);
+        }
+
+        return () => interval && clearInterval(interval);
+    }, [loading, processing, progressMaxTime, progressSpeed]);
+
+    // Resetear barra cuando se reinicia el formulario
+    useEffect(() => {
+        if (!loading && !processing && progressState === 'completed') {
+            const timeout = setTimeout(() => {
+                setProgress(0);
+                setProgressState('idle');
+            }, 800);
+            return () => clearTimeout(timeout);
+        }
+    }, [loading, processing, progressState]);
 
     const validateFiles = (files, currentFileCount = 0) => {
         const errors = [];
@@ -394,8 +486,6 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
             <div>
                 {/* Animación de archivos enviados */}
                 <FilesSentAnimation show={showSentAnimation} />
-                {showCaptcha && shouldShowCaptcha && (<script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoad" async defer></script>)}
-
                 <form
                     onSubmit={handleSubmit}
                     className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center rounded-lg ctform p-6 text-white shadow-md  dark:text-gray-950 dark:shadow-lg"
@@ -491,6 +581,19 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false })
                         shouldShowCaptcha={shouldShowCaptcha}
                         sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
                     />
+                    {/* Barra de progreso justo encima del botón */}
+                    {(progressState !== 'idle') && (
+                        <div className="w-full mb-4 flex flex-col items-center">
+                            <EmeraldLinearProgress
+                                variant="determinate"
+                                value={progress}
+                                className="w-full"
+                            />
+                            <span className="mt-2 text-emerald-600 dark:text-emerald-400 font-semibold text-sm">
+                                {progressText}
+                            </span>
+                        </div>
+                    )}
                     <button
                         type="submit"
                         disabled={isButtonDisabled}
