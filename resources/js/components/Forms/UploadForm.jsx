@@ -606,16 +606,6 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
                     </button>
                 </form>
             </div>
-            {/* Animación fade out archivos */}
-            <style>
-                {`
-                .fade-out-files {
-                    opacity: 0;
-                    transform: translateY(30px) scale(0.97);
-                    transition: opacity 0.4s cubic-bezier(.4,0,.2,1), transform 0.4s cubic-bezier(.4,0,.2,1);
-                }
-                `}
-            </style>
         </div>
     );
 };
