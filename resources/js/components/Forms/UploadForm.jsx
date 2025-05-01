@@ -13,6 +13,7 @@ import FilePreview from './FilePreview';
 import AnimatedRemoveWrapper from './AnimatedRemoveWrapper';
 import FilesSentAnimation from './FilesSentAnimation';
 import EmeraldLinearProgress from './EmeraldLinearProgress';
+import ProgressBarDisplay from './ProgressBarDisplay';
 
 const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, progressSpeed = 100, progressMaxTime = 1200 }) => {
     const { data, setData, post, errors, processing } = useForm({ files: [] });
@@ -175,7 +176,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
             interval = setInterval(() => {
                 setProgress(prev => {
                     if (prev < 30) return 30; // asegúrate de empezar desde 60
-                    let percent = Math.min(98, prev + (70 / (progressMaxTime / progressSpeed))); // processing 60-99%
+                    let percent = Math.min(99, prev + (70 / (progressMaxTime / progressSpeed))); // processing 60-99%
                     return percent;
                 });
             }, progressSpeed);
@@ -471,7 +472,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
                 <FilesSentAnimation show={showSentAnimation} />
                 <form
                     onSubmit={handleSubmit}
-                    className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center rounded-lg ctform p-6 text-white shadow-md  dark:text-gray-950 dark:shadow-lg"
+                    className="mx-auto flex w-full max-w-[730px] flex-col items-center justify-center rounded-lg ctform p-6 text-white shadow-md  dark:text-gray-950 dark:shadow-lg"
                 >
                     <div className="mb-1 w-full">
                         <label htmlFor="file-upload" data-tooltip-id="info-tooltip" className="mb-2 block text-sm font-bold text-gray-400 dark:text-gray-700">
@@ -566,16 +567,11 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
                     />
                     {/* Barra de progreso justo encima del botón */}
                     {(progressState !== 'idle') && (
-                        <div className="w-full mb-4 flex flex-row items-center">
-                            <EmeraldLinearProgress
-                                variant="determinate"
-                                value={progress}
-                                className="flex-1"
-                            />
-                            <span className="ml-2 text-emerald-600 dark:text-emerald-400 font-semibold text-sm">
-                                {progressText}
-                            </span>
-                        </div>
+                        <ProgressBarDisplay
+                            progress={progress}
+                            progressText={progressText}
+                            progressState={progressState}
+                        />
                     )}
                     <button
                         type="submit"
