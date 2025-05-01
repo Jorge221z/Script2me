@@ -89,7 +89,7 @@ export default function Refactor() {
                     <UploadForm
                         actionUrl="/process"
                         loadingTime={100}
-                        buttonText={"Processing files"}
+                        buttonText={""}
                         showCaptcha={true}
                         progressSpeed={50}
                         progressMaxTime={15000}

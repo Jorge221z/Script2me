@@ -566,13 +566,13 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
                     />
                     {/* Barra de progreso justo encima del botón */}
                     {(progressState !== 'idle') && (
-                        <div className="w-full mb-4 flex flex-col items-center">
+                        <div className="w-full mb-4 flex flex-row items-center">
                             <EmeraldLinearProgress
                                 variant="determinate"
                                 value={progress}
-                                className="w-full"
+                                className="flex-1"
                             />
-                            <span className="mt-2 text-emerald-600 dark:text-emerald-400 font-semibold text-sm">
+                            <span className="ml-2 text-emerald-600 dark:text-emerald-400 font-semibold text-sm">
                                 {progressText}
                             </span>
                         </div>
@@ -587,11 +587,11 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
                     >
                         {loading || processing ? (
                             <div className="flex items-center justify-center">
-                                <HashLoader color="white" size={35} style={{ transform: 'translateX(-95px)' }} />
-                                <span className="ml-2 animate-pulse">
+                                <HashLoader color="white" size={35} /*style={{ transform: 'translateX(-95px)' }} */ />
+                                {/* <span className="ml-2 animate-pulse">
                                     {buttonText}
                                     <span className="dots">...</span>
-                                </span>
+                                </span> */}
                             </div>
                         ) : shouldShowCaptcha && !captchaVerified ? (
                             'Please complete the CAPTCHA'

@@ -90,7 +90,7 @@ export default function Dashboard() {
                     <UploadForm
                         actionUrl="/upload"
                         loadingTime={1000}
-                        buttonText={"Uploading files"}
+                        buttonText={""}
                         showCaptcha={false}
                         progressSpeed={50}
                         progressMaxTime={800}
