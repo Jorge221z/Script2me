@@ -92,7 +92,7 @@ export default function Dashboard() {
                         loadingTime={1000}
                         buttonText={"Uploading files"}
                         showCaptcha={false}
-                        progressSpeed={100}
+                        progressSpeed={50}
                         progressMaxTime={800}
                     />
                 </div>

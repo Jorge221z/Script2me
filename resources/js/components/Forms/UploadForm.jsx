@@ -192,7 +192,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
             interval = setInterval(() => {
                 setProgress(prev => {
                     if (prev < 30) return 30; // asegúrate de empezar desde 60
-                    let percent = Math.min(99, prev + (70 / (progressMaxTime / progressSpeed))); // processing 60-99%
+                    let percent = Math.min(98, prev + (70 / (progressMaxTime / progressSpeed))); // processing 60-99%
                     return percent;
                 });
             }, progressSpeed);

@@ -91,7 +91,7 @@ export default function Refactor() {
                         loadingTime={100}
                         buttonText={"Processing files"}
                         showCaptcha={true}
-                        progressSpeed={200}
+                        progressSpeed={50}
                         progressMaxTime={15000}
                     />
                 </div>
