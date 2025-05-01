@@ -15,6 +15,10 @@ const FormTooltip = ({ allowedExtensions }) => {
         <Tooltip
             id="info-tooltip"
             place="top"
+            style={{
+                zIndex: 99999,
+                position: 'fixed'
+            }}
             content={() => (
                 <div
                     style={{
@@ -24,6 +28,8 @@ const FormTooltip = ({ allowedExtensions }) => {
                         padding: '10px',
                         color: '#fff',
                         borderRadius: '10px',
+                        zIndex: 99999,
+                        position: 'relative'
                     }}
                 >
                     <strong>Supported extensions:</strong>

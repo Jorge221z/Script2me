@@ -481,7 +481,8 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
                         <FormTooltip allowedExtensions={allowedExtensions} />
 
                         <div
-                            className={`relative border-2 border-dashed border-emerald-400 ctbox dark:border-emerald-500 dark:bg-gray-50`}
+                            className={`border-2 border-dashed border-emerald-400 ctbox dark:border-emerald-500 dark:bg-gray-50`}
+                            style={{ overflow: 'visible', position: 'static', zIndex: 1 }}
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}
                             onDrop={handleDrop}
