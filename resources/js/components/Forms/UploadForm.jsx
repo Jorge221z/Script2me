@@ -25,6 +25,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
     const [recentlyExceededLimit, setRecentlyExceededLimit] = useState(false); // variable para controlar el warning del limite de archivos//
     const MAX_FILE_COUNT = 20; // Cantidad maxima de archivos por subida //
     const [isDragging, setIsDragging] = useState(false); //con esta variable manejaremos el estado del dragOver
+    const [duplicateWarning, setDuplicateWarning] = useState(false);
 
     // Con estas variables controlamos el estado del captcha//
     const [shouldShowCaptcha, setShouldShowCaptcha] = useState(false);
@@ -201,7 +202,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
         }
     }, [loading, processing, progressState]);
 
-    const validateFiles = (files, currentFileCount = 0) => {
+    const validateFiles = (files, currentFileCount = 0, existingFiles = []) => {
         const errors = [];
         const newInvalidFiles = [];
         const newFileErrors = {};
@@ -218,11 +219,15 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
             };
         }
 
+        // Detectar archivos duplicados por nombre (solo para filtrar, no para error)
+        const existingNames = existingFiles.map(f => f.name);
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             const ext = file.name.split('.').pop().toLowerCase();
             let fileIsInvalid = false;
             let fileErrorMessage = '';
+
+            // NO añadir error de duplicado aquí, solo filtrar después
 
             // Validación de extensión
             if (!allowedExtensions.includes(ext)) {
@@ -255,23 +260,28 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
     };
 
     const handleFileChange = (e) => {
+        setDuplicateWarning(false);
         const newFiles = Array.from(e.target.files);
+        // Detectar duplicados antes de validar
+        const duplicate = newFiles.some(f => data.files.some(existing => existing.name === f.name));
+        if (duplicate) {
+            setDuplicateWarning(true);
+        }
+        // Filtrar duplicados antes de validar
+        const filteredFiles = newFiles.filter(f => !data.files.some(existing => existing.name === f.name));
         const { errors: validationErrors, invalidFiles: newInvalidFiles, fileErrors: newFileErrors, exceedsMaxCount } =
-            validateFiles(newFiles, data.files.length);
+            validateFiles(filteredFiles, data.files.length, data.files);
 
         if (validationErrors.length > 0) {
             setLocalErrors(validationErrors);
         }
 
-        // actualizamos el warning pero no deshabilitamos el botón si ya tenemos archivos válidos
         if (exceedsMaxCount) {
             setRecentlyExceededLimit(true);
         }
 
-        // Solo añadir archivos si no excedemos el límite de 20//
         if (!exceedsMaxCount) {
-            // Añadir todos los archivos a la lista, válidos o no
-            setData('files', [...data.files, ...newFiles]);
+            setData('files', [...data.files, ...filteredFiles]);
             setInvalidFiles([...invalidFiles, ...newInvalidFiles]);
             setFileErrors({ ...fileErrors, ...newFileErrors });
         }
@@ -290,27 +300,30 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
     };
 
     const handleDrop = (e) => {
+        setDuplicateWarning(false);
         e.preventDefault();
 
         setIsDragging(false);
 
         const newFiles = Array.from(e.dataTransfer.files);
+        const duplicate = newFiles.some(f => data.files.some(existing => existing.name === f.name));
+        if (duplicate) {
+            setDuplicateWarning(true);
+        }
+        const filteredFiles = newFiles.filter(f => !data.files.some(existing => existing.name === f.name));
         const { errors: validationErrors, invalidFiles: newInvalidFiles, fileErrors: newFileErrors, exceedsMaxCount } =
-            validateFiles(newFiles, data.files.length);
+            validateFiles(filteredFiles, data.files.length, data.files);
 
         if (validationErrors.length > 0) {
             setLocalErrors(validationErrors);
         }
 
-        // actualizamos el warning pero no deshabilitamos el botón si ya tenemos archivos válidos
         if (exceedsMaxCount) {
             setRecentlyExceededLimit(true);
         }
 
-        // Solo añadir archivos si no excedemos el límite de 20//
         if (!exceedsMaxCount) {
-            // Añadir todos los archivos a la lista, válidos o no
-            setData('files', [...data.files, ...newFiles]);
+            setData('files', [...data.files, ...filteredFiles]);
             setInvalidFiles([...invalidFiles, ...newInvalidFiles]);
             setFileErrors({ ...fileErrors, ...newFileErrors });
         }
@@ -445,8 +458,14 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
     const extColumns = chunkArray(allowedExtensions, 10);
 
     const handleFilesDropped = (newFiles) => {
+        setDuplicateWarning(false);
+        const duplicate = newFiles.some(f => data.files.some(existing => existing.name === f.name));
+        if (duplicate) {
+            setDuplicateWarning(true);
+        }
+        const filteredFiles = newFiles.filter(f => !data.files.some(existing => existing.name === f.name));
         const { errors: validationErrors, invalidFiles: newInvalidFiles, fileErrors: newFileErrors, exceedsMaxCount } =
-            validateFiles(newFiles, data.files.length);
+            validateFiles(filteredFiles, data.files.length, data.files);
 
         if (validationErrors.length > 0) {
             setLocalErrors(validationErrors);
@@ -456,9 +475,9 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
             setRecentlyExceededLimit(true);
         }
 
-        // Only add files if we don't exceed the limit
+        // Only add files if we don't exceed the limit and not duplicates
         if (!exceedsMaxCount) {
-            setData('files', [...data.files, ...newFiles]);
+            setData('files', [...data.files, ...filteredFiles]);
             setInvalidFiles([...invalidFiles, ...newInvalidFiles]);
             setFileErrors({ ...fileErrors, ...newFileErrors });
         }
@@ -557,6 +576,12 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
                             {recentlyExceededLimit && data.files.length <= MAX_FILE_COUNT && (
                                 <div className="text-sm text-amber-400 dark:text-amber-500">
                                     ⚠️ Some files weren´t added because they exceed the {MAX_FILE_COUNT} file limit.
+                                </div>
+                            )}
+                            {/* Mostrar warning de duplicado */}
+                            {duplicateWarning && (
+                                <div className="text-sm text-amber-400 dark:text-amber-500">
+                                    ⚠️ Some files were not added because they have the same name as already selected files.
                                 </div>
                             )}
                         </div>
