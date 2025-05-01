@@ -10,7 +10,7 @@ const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
         <div
             className={`mb-2 flex flex-col max-w-2xl rounded-lg 
                 ${isInvalid 
-                    ? 'border border-red-200 bg-red-50 dark:border-red-400 dark:bg-red-950' 
+                ? 'border border-red-300 bg-red-200 dark:border-red-200 dark:bg-red-100 hover:bg-red-300 dark:hover:bg-red-200' 
                 : 'bg-gray-50 dark:bg-neutral-950'} 
                 p-2 transition-colors hover:bg-gray-300 dark:hover:bg-neutral-900`}
         >
@@ -19,7 +19,7 @@ const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
                     {getFileIcon(file.name.split('.').pop())}
                     <span className={`max-w-[325px] truncate text-sm 
                         ${isInvalid 
-                            ? 'font-medium text-red-700 dark:text-red-300' 
+                            ? 'font-medium text-red-600 dark:text-red-500' 
                             : 'text-gray-700 dark:text-gray-100'}`}>
                         {file.name}
                         {isInvalid && <FiAlertCircle className="ml-1 inline h-4 w-4 text-red-500 dark:text-red-300" />}
@@ -34,7 +34,7 @@ const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
                     <FiX className="h-4 w-4" />
                 </button>
             </div>
-            {isInvalid && errorMessage && <div className="mt-1 pl-7 text-xs text-red-600 dark:text-red-300">{errorMessage}</div>}
+            {isInvalid && errorMessage && <div className="mt-1 pl-7 text-xs text-red-600 dark:text-red-500">{errorMessage}</div>}
         </div>
     );
 };
