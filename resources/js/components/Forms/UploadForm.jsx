@@ -12,24 +12,7 @@ import GlobalDragOver from './GlobalDragOver';
 import FilePreview from './FilePreview';
 import AnimatedRemoveWrapper from './AnimatedRemoveWrapper';
 import FilesSentAnimation from './FilesSentAnimation';
-import LinearProgress from '@mui/material/LinearProgress';
-import { styled } from '@mui/material/styles';
-
-// Barra de progreso personalizada color esmeralda
-const EmeraldLinearProgress = styled(LinearProgress)(({ theme }) => ({
-    height: 10,
-    borderRadius: 10,
-    backgroundColor: '#ecfdf5', // emerald-50
-
-    boxShadow: 'inset 0 1px 2px rgba(0, 0, 0, 0.1)',
-
-    '& .MuiLinearProgress-bar': {
-        background: 'linear-gradient(90deg, #34d399, #10b981)', // degradado emerald-400 a 500
-        borderRadius: 10,
-        
-    },
-}));
-
+import EmeraldLinearProgress from './EmeraldLinearProgress';
 
 const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, progressSpeed = 100, progressMaxTime = 1200 }) => {
     const { data, setData, post, errors, processing } = useForm({ files: [] });
