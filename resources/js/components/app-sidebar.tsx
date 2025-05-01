@@ -6,23 +6,12 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { BookOpen, Github, LayoutGrid, Moon, Sun, Home, BookType, BrainCircuit } from 'lucide-react';
 import AppLogo from './app-logo';
-
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Home',
-        href: '/dashboard',
-        icon: Home,
-    },
-    {
-        title: 'AI Refactor',
-        href: '/refactor-dashboard',
-        icon: BrainCircuit,
-    }
-];
+import { useTranslation } from 'react-i18next';
 
 export function AppSidebar() {
     const { theme, toggleTheme } = useTheme();
     const { state } = useSidebar(); // Obtener el estado de la sidebar
+    const { t } = useTranslation(); // Inicializar traducción
 
     // Handler para el evento onClick
     const handleThemeToggle = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -31,24 +20,37 @@ export function AppSidebar() {
     };
 
     // Creamos los ítems de la barra lateral incluyendo el toggle de tema
+    const mainNavItems: NavItem[] = [
+        {
+            title: t('Home'),
+            href: '/dashboard',
+            icon: Home,
+        },
+        {
+            title: t('AI Refactor'),
+            href: '/refactor-dashboard',
+            icon: BrainCircuit,
+        }
+    ];
+
     const footerNavItems: NavItem[] = [
         {
-            title: 'Terms and Conditions',
+            title: t('Terms and Conditions'),
             href: '/terms',
             icon: BookType,
         },
         {
-            title: 'Repository',
+            title: t('Repository'),
             href: 'https://github.com/Jorge221z/script2me.git',
             icon: Github,
         },
         /*{
-            title: 'Documentation',
+            title: t('Documentation'),
             href: 'https://laravel.com/docs/starter-kits',
             icon: BookOpen,
         },*/
         {
-            title: theme === 'light' ? 'Dark' : 'Light',
+            title: theme === 'light' ? t('Dark') : t('Light'),
             href: '#',
             icon: theme === 'light' ? Moon : Sun,
             onClick: handleThemeToggle,

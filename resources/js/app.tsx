@@ -4,6 +4,8 @@ import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-theme';
 
+import './utils/i18n'; // Importar la configuración de traducción
+
 createInertiaApp({
     title: (title) => `Script2me - ${title}`,
     resolve: (name) => {
