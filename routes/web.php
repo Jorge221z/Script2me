@@ -16,6 +16,7 @@ Route::post('/process', [RefactorController::class, 'process'])->name('refactor.
 Route::post('/clear-session', [UploadController::class, 'clearSession'])->name('clear.session');
 Route::post('/clear-api-session', [RefactorController::class, 'clearApiSession'])->name('clear.apisession');
 
+Route::get('lang/{lang}', [App\Http\Controllers\LanguageController::class, 'switchLang'])->name('lang.switch');
 
 Route::get('/terms', function () {
     return Inertia::render('TAndC');

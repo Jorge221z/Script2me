@@ -1,0 +1,16 @@
+<?php
+
+return [
+    'dashboard_load_error' => 'Error al cargar dashboard: :msg',
+    'extension_not_allowed' => 'La extensión .:ext no está permitida.',
+    'files_required' => 'Debes subir al menos un archivo',
+    'files_file' => 'Cada elemento debe ser un archivo válido',
+    'files_max' => 'Los archivos no deben exceder 2MB',
+    'files_min' => 'Debes subir al menos un archivo',
+    'failed_parse_pdf' => 'Error al procesar el archivo PDF: :msg',
+    'failed_parse_docx' => 'Error al procesar el archivo DOCX: :msg',
+    'error_processing_file' => 'Error al procesar: :name',
+    'file_upload_success' => 'Archivo subido correctamente',
+    'files_upload_success' => ':count archivos subidos correctamente',
+    'history_cleared' => 'Historial limpiado',
+];

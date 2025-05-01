@@ -27,7 +27,7 @@ class UploadController extends Controller
             return Inertia::render('dashboard', [
                 'contents' => [],
                 'names' => [],
-                'error' => 'Error al cargar dashboard: ' . $e->getMessage()
+                'error' => __('messages.dashboard_load_error', ['msg' => $e->getMessage()])
             ]);
         }
     }
@@ -45,15 +45,15 @@ class UploadController extends Controller
                 function ($attribute, $value, $fail) use ($allowedExtensions) {
                     $extension = strtolower($value->getClientOriginalExtension());
                     if (!in_array($extension, $allowedExtensions)) {
-                        $fail("La extensión .$extension no está permitida.");
+                        $fail(__('messages.extension_not_allowed', ['ext' => $extension]));
                     }
                 }
             ]
         ], [
-            'files.required' => 'Debes subir al menos un archivo',
-            'files.*.file' => 'Cada elemento debe ser un archivo válido',
-            'files.*.max' => 'Los archivos no deben exceder 2MB',
-            'files.min' => 'Debes subir al menos un archivo'
+            'files.required' => __('messages.files_required'),
+            'files.*.file' => __('messages.files_file'),
+            'files.*.max' => __('messages.files_max'),
+            'files.min' => __('messages.files_min')
         ]);
 
         if ($validator->fails()) {
@@ -88,7 +88,7 @@ class UploadController extends Controller
                         $cleanText = implode("\n", $cleanLines);
                         $newContents[] = $cleanText;
                     } catch (Exception $e) {
-                        throw new Exception("Failed to parse the .pdf file: " . $e->getMessage());
+                        throw new Exception(__('messages.failed_parse_pdf', ['msg' => $e->getMessage()]));
                     }
                 } else if ($extension === 'docx') {
                     try {
@@ -119,7 +119,7 @@ class UploadController extends Controller
                         $cleanText = implode("\n", $lines);
                         $newContents[] = $cleanText;
                     } catch(Exception $e) {
-                        throw new Exception("Failed to parse the .docx file: " . $e->getMessage());
+                        throw new Exception(__('messages.failed_parse_docx', ['msg' => $e->getMessage()]));
                     }
                 } else {
                     //$cleanText = trim(preg_replace('/\s+/', ' ', $content));
@@ -131,7 +131,7 @@ class UploadController extends Controller
                 $file->storeAs('uploads', $timestampName, 'public');
                 $newNames[] = $file->getClientOriginalName();
             } catch (Exception $e) {
-                return back()->withErrors(['files' => 'Error al procesar: '.$file->getClientOriginalName()]);
+                return back()->withErrors(['files' => __('messages.error_processing_file', ['name' => $file->getClientOriginalName()])]);
             }
         }
 
@@ -148,7 +148,9 @@ class UploadController extends Controller
 
         $request->session()->save(); //guardamos la sesion de forma explicita //
 
-        return redirect()->back()->with('success', count($newNames) === 1 ? 'File upload successfully' : count($newNames) . ' files uploaded successfully');
+        return redirect()->back()->with('success', count($newNames) === 1
+            ? __('messages.file_upload_success')
+            : __('messages.files_upload_success', ['count' => count($newNames)]));
     }
 
     public function clearSession(Request $request)
@@ -156,7 +158,7 @@ class UploadController extends Controller
         $request->session()->forget(['contents', 'names']);
         $request->session()->save(); //guardamos la sesion de forma explicita //
         return redirect()->back()->with([
-            'success' => 'Historial cleared',
+            'success' => __('messages.history_cleared'),
         ]);
     }
 }
