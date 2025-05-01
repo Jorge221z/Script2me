@@ -171,7 +171,7 @@ ${content}
                                                     {contentLines.map((_, lineIndex) => (
                                                         <div
                                                             key={lineIndex}
-                                                            className="h-[1.5rem] w-10 px-2 flex items-center justify-end hover:bg-gray-300 dark:hover:bg-emerald-700/50 transition-colors"
+                                                            className="h-[2.1rem] w-10 px-2 flex items-center justify-end hover:bg-gray-300 dark:hover:bg-emerald-700/50 transition-colors"
                                                         >
                                                             <span className="text-emerald-400 dark:text-emerald-500">
                                                                 {lineIndex + 1}
@@ -186,7 +186,7 @@ ${content}
                                                         {contentLines.map((line, lineIndex) => (
                                                             <div
                                                                 key={lineIndex}
-                                                                className="h-[1.5rem] px-4 flex items-center hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+                                                                className="h-[2.1rem] px-4 flex items-center hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
                                                             >
                                                                 {line || ' '}
                                                             </div>
