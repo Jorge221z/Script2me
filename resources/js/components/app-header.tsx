@@ -72,45 +72,59 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
         <>
             <div className="border-sidebar-border/80 border-b bg-neutral-900 text-neutral-100">
                 <div className="mx-auto flex h-16 items-center px-2 sm:px-4 md:max-w-7xl">
-                    {/* Mobile: Menú hamburguesa a la izquierda, logo a la derecha */}
+                    {/* Mobile: Logo a la izquierda, menú hamburguesa a la derecha */}
                     <div className="flex md:hidden w-full items-center justify-between">
+                        {/* Logo visible en móvil, alineado a la izquierda, con margen izquierdo */}
+                        <Link href="/dashboard" prefetch className="flex items-center gap-0 group flex-shrink-0 ml-2">
+                            <AppLogo className="h-12 w-12 bg-transparent p-0 m-0" />
+                            <span className="text-xl font-bold tracking-tight group-hover:text-emerald-400 transition-colors -ml-1">Script2me</span>
+                        </Link>
+                        
                         <Sheet>
                             <SheetTrigger asChild>
                                 <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="ml-1 h-[44px] w-[44px] text-white border border-neutral-700 rounded-md flex items-center justify-center"
+                                    variant="outline"
+                                    className="mr-1 h-[44px] text-white border border-neutral-700 rounded-md flex items-center justify-center gap-2 bg-neutral-800 hover:bg-neutral-700 hover:text-emerald-400 transition-all"
                                     aria-label="Abrir menú de navegación principal"
                                 >
-                                    <Menu className="h-7 w-7" />
+                                    <Menu className="h-5 w-5" />
+                                    <span className="text-sm font-medium">Menú</span>
                                 </Button>
                             </SheetTrigger>
-                            <SheetContent side="left" className="bg-neutral-900 text-neutral-100 flex h-full w-64 flex-col items-stretch justify-between">
-                                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-                                <SheetHeader className="flex justify-start text-left">
+                            <SheetContent side="right" className="bg-neutral-900 text-neutral-100 flex h-full w-72 flex-col items-stretch justify-between border-l border-neutral-700">
+                                <SheetHeader className="flex justify-between text-left border-b border-neutral-800 pb-4">
                                     <div className="flex items-center gap-2">
                                         <AppLogo className="h-8 w-10 bg-transparent p-0 m-0" />
                                         <span className="text-lg font-bold tracking-tight">Script2me</span>
                                     </div>
                                 </SheetHeader>
-                                <div className="flex h-full flex-1 flex-col space-y-4 p-4">
+                                <div className="flex h-full flex-1 flex-col space-y-6 p-4 pt-6 overflow-y-auto">
                                     <div className="flex h-full flex-col justify-between text-sm">
-                                        <div className="flex flex-col space-y-4">
+                                        <div className="flex flex-col space-y-2">
+                                            <h3 className="text-xs uppercase text-neutral-500 font-semibold mb-2">Navegación</h3>
                                             {mainNavItems.map((item) => (
-                                                <Link key={item.title} href={item.href} className="flex items-center space-x-2 font-medium">
+                                                <Link 
+                                                    key={item.title} 
+                                                    href={item.href} 
+                                                    className={cn(
+                                                        "flex items-center space-x-2 font-medium py-2 px-3 rounded-md transition-colors",
+                                                        page.url === item.href ? "bg-neutral-800 text-emerald-400" : "hover:bg-neutral-800"
+                                                    )}
+                                                >
                                                     {item.icon && <Icon iconNode={item.icon} className="h-5 w-5" />}
                                                     <span>{item.title}</span>
                                                 </Link>
                                             ))}
                                         </div>
-                                        <div className="flex flex-col space-y-4">
+                                        <div className="flex flex-col space-y-2 mt-8">
+                                            <h3 className="text-xs uppercase text-neutral-500 font-semibold mb-2">Enlaces</h3>
                                             {footerNavItems.map((item) =>
                                                 item.href === '#' ? (
                                                     <a
                                                         key={item.title}
                                                         href={item.href}
                                                         onClick={item.onClick}
-                                                        className="flex items-center space-x-2 font-medium"
+                                                        className="flex items-center space-x-2 font-medium py-2 px-3 rounded-md hover:bg-neutral-800 transition-colors"
                                                     >
                                                         {item.icon && <Icon iconNode={item.icon} className="h-5 w-5" />}
                                                         <span>{item.title}</span>
@@ -121,13 +135,20 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                         href={item.href}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="flex items-center space-x-2 font-medium"
+                                                        className="flex items-center space-x-2 font-medium py-2 px-3 rounded-md hover:bg-neutral-800 transition-colors"
                                                     >
                                                         {item.icon && <Icon iconNode={item.icon} className="h-5 w-5" />}
                                                         <span>{item.title}</span>
                                                     </a>
                                                 ) : (
-                                                    <Link key={item.title} href={item.href} className="flex items-center space-x-2 font-medium">
+                                                    <Link 
+                                                        key={item.title} 
+                                                        href={item.href} 
+                                                        className={cn(
+                                                            "flex items-center space-x-2 font-medium py-2 px-3 rounded-md transition-colors",
+                                                            page.url === item.href ? "bg-neutral-800 text-emerald-400" : "hover:bg-neutral-800"
+                                                        )}
+                                                    >
                                                         {item.icon && <Icon iconNode={item.icon} className="h-5 w-5" />}
                                                         <span>{item.title}</span>
                                                     </Link>
@@ -138,11 +159,6 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 </div>
                             </SheetContent>
                         </Sheet>
-                        {/* Logo visible en móvil, alineado a la derecha, con margen derecho */}
-                        <Link href="/dashboard" prefetch className="flex items-center gap-0 group flex-shrink-0 mr-2">
-                            <AppLogo className="h-12 w-12 bg-transparent p-0 m-0" />
-                            <span className="text-xl font-bold tracking-tight group-hover:text-emerald-400 transition-colors -ml-1">Script2me</span>
-                        </Link>
                     </div>
 
                     {/* Logo y título en md+ */}
