@@ -140,15 +140,15 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                         </Sheet>
                         {/* Logo visible en móvil, alineado a la derecha, con margen derecho */}
                         <Link href="/dashboard" prefetch className="flex items-center gap-0 group flex-shrink-0 mr-2">
-                            <AppLogo className="h-12 w-16 bg-transparent p-0 m-0" />
-                            <span className="text-xl font-bold tracking-tight group-hover:text-emerald-400 transition-colors">Script2me</span>
+                            <AppLogo className="h-12 w-12 bg-transparent p-0 m-0" />
+                            <span className="text-xl font-bold tracking-tight group-hover:text-emerald-400 transition-colors -ml-1">Script2me</span>
                         </Link>
                     </div>
 
                     {/* Logo y título en md+ */}
                     <Link href="/dashboard" prefetch className="flex items-center gap-0 mr-2 sm:mr-4 group flex-shrink-0 hidden md:flex">
-                        <AppLogo className="h-12 w-16 bg-transparent p-0 m-0" />
-                        <span className="text-xl sm:text-2xl font-bold tracking-tight group-hover:text-emerald-400 transition-colors">Script2me</span>
+                        <AppLogo className="h-12 w-12 bg-transparent p-0 m-0" />
+                        <span className="text-xl sm:text-2xl font-bold tracking-tight group-hover:text-emerald-400 transition-colors -ml-1">Script2me</span>
                     </Link>
 
                     {/* Botones principales (sidebar) - visibles en md+ */}

@@ -4,7 +4,7 @@ export default function AppLogo(props: React.ComponentProps<'span'>) {
             <img
                 src="/images/logo.png"
                 alt="Logo"
-                className="h-12 w-16 rounded-lg object-cover
+                className="h-12 w-11 rounded-lg object-cover
                 transition-all duration-200 ease-in-out hover:scale-105"
                 onError={(e) => {
                     console.error('Error al cargar el logo');
