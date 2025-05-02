@@ -11,7 +11,7 @@ import { useInitials } from '@/hooks/use-initials';
 import { cn } from '@/lib/utils';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu, Search, BookType, Github, Home, BrainCircuit, Moon, Sun } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Menu, Search, BookType, Github, Home, BrainCircuit, Moon, Sun, Globe } from 'lucide-react';
 import { useTheme } from '@/hooks/use-theme';
 import { useTranslation } from 'react-i18next';
 import i18n from '../utils/i18n';
@@ -31,16 +31,20 @@ function LanguageSelector() {
         await fetch(`/lang/${newLang}`, { method: 'GET', credentials: 'same-origin' });
     };
     return (
-        <select
-            value={lang}
-            onChange={handleChange}
-            className="ml-2 px-2 py-1 rounded bg-neutral-800 text-neutral-100 border border-neutral-700"
-            style={{ minWidth: 56 }}
-            aria-label="Seleccionar idioma"
-        >
-            <option value="en">EN</option>
-            <option value="es">ES</option>
-        </select>
+        <div className="relative flex items-center ml-2">
+            <Globe className="h-5 w-5 text-neutral-400 mr-1" aria-hidden="true" />
+            <select
+                value={lang}
+                onChange={handleChange}
+                className="appearance-none bg-neutral-800 text-neutral-100 border border-neutral-700 rounded px-3 py-1 pr-7 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all cursor-pointer"
+                style={{ minWidth: 64 }}
+                aria-label="Seleccionar idioma"
+            >
+                <option value="en">English</option>
+                <option value="es">Español</option>
+            </select>
+            <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 text-xs">&#9662;</span>
+        </div>
     );
 }
 

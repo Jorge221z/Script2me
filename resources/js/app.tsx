@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-theme';
 import { useEffect, useState } from 'react';
 import i18n from './utils/i18n';
+import { Globe } from 'lucide-react';
 
 import './utils/i18n'; // Importar la configuración de traducción
 
@@ -19,7 +20,7 @@ function LanguageSelector() {
         await fetch(`/lang/${newLang}`, { method: 'GET', credentials: 'same-origin' });
     };
 
-    
+   
 }
 
 createInertiaApp({
