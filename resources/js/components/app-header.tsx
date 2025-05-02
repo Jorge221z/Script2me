@@ -177,8 +177,10 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 key={item.title}
                                 href={item.href}
                                 className={cn(
-                                    "flex items-center gap-2 px-2 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-neutral-800 hover:text-emerald-400",
-                                    page.url === item.href ? "bg-neutral-800 text-emerald-400" : "text-neutral-100"
+                                    "flex items-center gap-2 px-2 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                                    page.url === item.href
+                                        ? "bg-gray-100 hover:bg-gray-300 dark:bg-neutral-800 text-emerald-400"
+                                        : "dark:text-neutral-100 hover:bg-white dark:hover:bg-neutral-800 hover:text-gray-900 dark:hover:text-emerald-400"
                                 )}
                                 prefetch
                             >
@@ -195,40 +197,54 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                     {/* Botones de footer (sidebar) - visibles en lg+ */}
                     <div className="ml-auto flex items-center gap-1 sm:gap-2 flex-wrap">
                         <div className="hidden lg:flex items-center gap-1 sm:gap-2">
-                            {footerNavItems.map((item) =>
-                                item.href === '#' ? (
-                                    <a
-                                        key={item.title}
-                                        href={item.href}
-                                        onClick={item.onClick}
-                                        className="flex items-center gap-2 px-2 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-neutral-800 hover:text-emerald-400 text-neutral-100"
-                                    >
-                                        <item.icon className="h-4 w-4" />
-                                        <span className="hidden sm:inline">{item.title}</span>
-                                    </a>
-                                ) : item.href.startsWith('http') ? (
-                                    <a
-                                        key={item.title}
-                                        href={item.href}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-2 px-2 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-neutral-800 hover:text-emerald-400 text-neutral-100"
-                                    >
-                                        <item.icon className="h-4 w-4" />
-                                        <span className="hidden sm:inline">{item.title}</span>
-                                    </a>
-                                ) : (
-                                    <Link
-                                        key={item.title}
-                                        href={item.href}
-                                        className="flex items-center gap-2 px-2 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-neutral-800 hover:text-emerald-400 text-neutral-100"
-                                        prefetch
-                                    >
-                                        <item.icon className="h-4 w-4" />
-                                        <span className="hidden sm:inline">{item.title}</span>
-                                    </Link>
-                                )
-                            )}
+                            {footerNavItems.map((item) => {
+                                const isActive = page.url === item.href;
+                                const baseClasses = "flex items-center gap-2 px-2 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors";
+                                const activeClasses = "bg-gray-100 text-emerald-400 dark:bg-neutral-800 dark:text-emerald-400";
+                                const inactiveClasses = "dark:text-neutral-100 dark:hover:text-emerald-400 hover:text-gray-950 dark:hover:bg-neutral-800 hover:bg-gray-100";
+                                const className = cn(
+                                    baseClasses,
+                                    isActive ? activeClasses : inactiveClasses
+                                );
+                                if (item.href === '#') {
+                                    return (
+                                        <a
+                                            key={item.title}
+                                            href={item.href}
+                                            onClick={item.onClick}
+                                            className={className}
+                                        >
+                                            <item.icon className="h-4 w-4" />
+                                            <span className="hidden sm:inline">{item.title}</span>
+                                        </a>
+                                    );
+                                } else if (item.href.startsWith('http')) {
+                                    return (
+                                        <a
+                                            key={item.title}
+                                            href={item.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={className}
+                                        >
+                                            <item.icon className="h-4 w-4" />
+                                            <span className="hidden sm:inline">{item.title}</span>
+                                        </a>
+                                    );
+                                } else {
+                                    return (
+                                        <Link
+                                            key={item.title}
+                                            href={item.href}
+                                            className={className}
+                                            prefetch
+                                        >
+                                            <item.icon className="h-4 w-4" />
+                                            <span className="hidden sm:inline">{item.title}</span>
+                                        </Link>
+                                    );
+                                }
+                            })}
                         </div>
                         {/* Footer solo iconos en móvil (xs/sm) - ocultos */}
                         {/* <div className="flex md:hidden items-center gap-1">
@@ -236,40 +252,54 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                         </div> */}
                         {/* Footer solo iconos en tablet (md+) pero no en lg+ */}
                         <div className="hidden md:flex lg:hidden items-center gap-1">
-                            {footerNavItems.map((item) =>
-                                item.href === '#' ? (
-                                    <a
-                                        key={item.title}
-                                        href={item.href}
-                                        onClick={item.onClick}
-                                        className="flex items-center justify-center px-2 py-2 rounded-md text-sm font-medium transition-colors hover:bg-neutral-800 hover:text-emerald-400 text-neutral-100"
-                                        style={{ minWidth: 0 }}
-                                    >
-                                        <item.icon className="h-5 w-5" />
-                                    </a>
-                                ) : item.href.startsWith('http') ? (
-                                    <a
-                                        key={item.title}
-                                        href={item.href}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center justify-center px-2 py-2 rounded-md text-sm font-medium transition-colors hover:bg-neutral-800 hover:text-emerald-400 text-neutral-100"
-                                        style={{ minWidth: 0 }}
-                                    >
-                                        <item.icon className="h-5 w-5" />
-                                    </a>
-                                ) : (
-                                    <Link
-                                        key={item.title}
-                                        href={item.href}
-                                        className="flex items-center justify-center px-2 py-2 rounded-md text-sm font-medium transition-colors hover:bg-neutral-800 hover:text-emerald-400 text-neutral-100"
-                                        style={{ minWidth: 0 }}
-                                        prefetch
-                                    >
-                                        <item.icon className="h-5 w-5" />
-                                    </Link>
-                                )
-                            )}
+                            {footerNavItems.map((item) => {
+                                const isActive = page.url === item.href;
+                                const baseClasses = "flex items-center justify-center px-2 py-2 rounded-md text-sm font-medium transition-colors";
+                                const activeClasses = "bg-gray-100 text-emerald-400 dark:bg-neutral-800 dark:text-emerald-400";
+                                const inactiveClasses = "dark:text-neutral-100 hover:text-emerald-400 dark:hover:bg-neutral-800 hover:bg-gray-100";
+                                const className = cn(
+                                    baseClasses,
+                                    isActive ? activeClasses : inactiveClasses
+                                );
+                                if (item.href === '#') {
+                                    return (
+                                        <a
+                                            key={item.title}
+                                            href={item.href}
+                                            onClick={item.onClick}
+                                            className={className}
+                                            style={{ minWidth: 0 }}
+                                        >
+                                            <item.icon className="h-5 w-5" />
+                                        </a>
+                                    );
+                                } else if (item.href.startsWith('http')) {
+                                    return (
+                                        <a
+                                            key={item.title}
+                                            href={item.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={className}
+                                            style={{ minWidth: 0 }}
+                                        >
+                                            <item.icon className="h-5 w-5" />
+                                        </a>
+                                    );
+                                } else {
+                                    return (
+                                        <Link
+                                            key={item.title}
+                                            href={item.href}
+                                            className={className}
+                                            style={{ minWidth: 0 }}
+                                            prefetch
+                                        >
+                                            <item.icon className="h-5 w-5" />
+                                        </Link>
+                                    );
+                                }
+                            })}
                         </div>
                     </div>
                 </div>
