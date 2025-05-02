@@ -14,10 +14,35 @@ import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Menu, Search, BookType, Github, Home, BrainCircuit, Moon, Sun } from 'lucide-react';
 import { useTheme } from '@/hooks/use-theme';
 import { useTranslation } from 'react-i18next';
+import i18n from '../utils/i18n';
+import { useState } from 'react';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 
 const activeItemStyles = 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
+
+// Selector de idioma reutilizable
+function LanguageSelector() {
+    const [lang, setLang] = useState(i18n.language || 'en');
+    const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newLang = e.target.value;
+        setLang(newLang);
+        i18n.changeLanguage(newLang);
+        await fetch(`/lang/${newLang}`, { method: 'GET', credentials: 'same-origin' });
+    };
+    return (
+        <select
+            value={lang}
+            onChange={handleChange}
+            className="ml-2 px-2 py-1 rounded bg-neutral-800 text-neutral-100 border border-neutral-700"
+            style={{ minWidth: 56 }}
+            aria-label="Seleccionar idioma"
+        >
+            <option value="en">EN</option>
+            <option value="es">ES</option>
+        </select>
+    );
+}
 
 interface AppHeaderProps {
     breadcrumbs?: BreadcrumbItem[];
@@ -154,6 +179,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                     </Link>
                                                 )
                                             )}
+                                            <LanguageSelector />
                                         </div>
                                     </div>
                                 </div>
@@ -301,6 +327,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 }
                             })}
                         </div>
+                        <LanguageSelector />
                     </div>
                 </div>
             </div>
