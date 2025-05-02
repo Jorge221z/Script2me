@@ -77,6 +77,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                         <Sheet>
                             <SheetTrigger asChild>
                                 <Button variant="ghost" size="icon" className="mr-2 h-[34px] w-[34px] text-white">
+                                    {/* Solo el icono de menú hamburguesa */}
                                     <Menu className="h-5 w-5" />
                                 </Button>
                             </SheetTrigger>
@@ -84,7 +85,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                                 <SheetHeader className="flex justify-start text-left">
                                     <div className="flex items-center gap-2">
-                                        <AppLogoIcon className="h-8 w-8 fill-current text-white" />
+                                        <AppLogo className="h-8 w-10 bg-transparent p-0 m-0" />
                                         <span className="text-lg font-bold tracking-tight">Script2me</span>
                                     </div>
                                 </SheetHeader>
