@@ -71,7 +71,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     return (
         <>
             <div className="border-sidebar-border/80 border-b bg-neutral-900 text-neutral-100">
-                <div className="mx-auto flex h-16 items-center px-2 sm:px-4 md:max-w-7xl">
+                <div className="mx-auto flex h-16 items-center px-2 sm:px-4 md:max-w-8xl">
                     {/* Mobile: Logo a la izquierda, menú hamburguesa a la derecha */}
                     <div className="flex md:hidden w-full items-center justify-between">
                         {/* Logo visible en móvil, alineado a la izquierda, con margen izquierdo */}
@@ -166,6 +166,9 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                         <AppLogo className="h-12 w-12 bg-transparent p-0 m-0" />
                         <span className="text-xl sm:text-2xl font-bold tracking-tight group-hover:text-emerald-400 transition-colors -ml-1">Script2me</span>
                     </Link>
+
+                    {/* Separador flexible para empujar los botones a la derecha en md+ */}
+                    <div className="hidden md:block ml-18" />
 
                     {/* Botones principales (sidebar) - visibles en md+ */}
                     <nav className="ml-1 sm:ml-2 hidden md:flex items-center gap-2 flex-wrap">
