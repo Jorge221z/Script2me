@@ -30,18 +30,43 @@ function LanguageSelector() {
         i18n.changeLanguage(newLang);
         await fetch(`/lang/${newLang}`, { method: 'GET', credentials: 'same-origin' });
     };
+
+    const languages = [
+        { code: 'en', label: 'English' },
+        { code: 'es', label: 'Español' },
+    ];
+
     return (
         <div className="relative flex items-center ml-2">
-            <Globe className="h-5 w-5 text-neutral-400 mr-1" aria-hidden="true" />
+            {/* Icono Globe con fondo muy suave y borde difuso */}
+            <span
+                className="inline-flex items-center justify-center rounded-full bg-gray-100 p-1 mr-1 border border-emerald-200/40 shadow-sm"
+                style={{ boxShadow: '0 1px 6px 0 rgba(16,185,129,0.06)' }}
+            >
+                <Globe className="h-4 w-4 text-gray-950" aria-hidden="true" />
+            </span>
             <select
                 value={lang}
                 onChange={handleChange}
-                className="appearance-none bg-neutral-800 text-neutral-100 border border-neutral-700 rounded px-3 py-1 pr-7 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all cursor-pointer"
-                style={{ minWidth: 64 }}
+                className={cn(
+                    "appearance-none rounded-md px-3 py-1 pr-7 font-semibold transition-all cursor-pointer",
+                    "bg-neutral-800 text-neutral-100 border border-neutral-700",
+                    "focus:outline-none focus:ring-2 focus:ring-emerald-400",
+                    "hover:border-emerald-400",
+                    "shadow-sm"
+                )}
+                style={{ minWidth: 90 }}
                 aria-label="Seleccionar idioma"
             >
-                <option value="en">English</option>
-                <option value="es">Español</option>
+                {languages.map((l) => (
+                    <option
+                        key={l.code}
+                        value={l.code}
+                        className="bg-neutral-800 text-neutral-100"
+                    >
+                        {l.label}
+                    </option>
+                ))}
             </select>
             <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 text-xs">&#9662;</span>
         </div>
