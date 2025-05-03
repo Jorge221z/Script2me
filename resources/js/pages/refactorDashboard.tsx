@@ -9,6 +9,7 @@ import BackgroundPattern from '@/layouts/app/BackgroundPattern';
 import { useState } from 'react';
 import { FileText, File } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import i18n from '../utils/i18n';
 
 export default function Refactor() {
     const { ApiContents = [], ApiNames = [], flash } = usePage<{
@@ -20,6 +21,8 @@ export default function Refactor() {
     const { t } = useTranslation();
 
     const handleClearSession = () => {
+        // Guardar el idioma actual antes de recargar
+        sessionStorage.setItem('selectedLang', i18n.language);
         router.post('/clear-api-session', {}, {
             onSuccess: () => {
                 sessionStorage.setItem('flash.success', t('refactorDashboard.sessionCleared'));
@@ -31,6 +34,12 @@ export default function Refactor() {
     const [localContents, setLocalContents] = useState(ApiContents);
 
     useEffect(() => {
+        // Restaurar el idioma si está guardado en sessionStorage
+        const storedLang = sessionStorage.getItem('selectedLang');
+        if (storedLang && storedLang !== i18n.language) {
+            i18n.changeLanguage(storedLang);
+            sessionStorage.removeItem('selectedLang');
+        }
         setLocalContents(ApiContents);
 
         //para el flash de limpieza de sesión
