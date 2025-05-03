@@ -11,7 +11,7 @@ import { useInitials } from '@/hooks/use-initials';
 import { cn } from '@/lib/utils';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu, Search, BookType, Github, Home, BrainCircuit, Moon, Sun, Globe } from 'lucide-react';
+import {Menu, BookType, Github, Home, BrainCircuit, Moon, Sun, Globe, Pickaxe } from 'lucide-react';
 import { useTheme } from '@/hooks/use-theme';
 import { useTranslation } from 'react-i18next';
 import i18n from '../utils/i18n';
@@ -88,12 +88,12 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     // Botones principales (antes en sidebar)
     const mainNavItems = [
         {
-            title: t('Home'),
+            title: 'Prompt Builder',
             href: '/dashboard',
-            icon: Home,
+            icon: Pickaxe,
         },
         {
-            title: t('AI Refactor'),
+            title: 'AI Refactor',
             href: '/refactor-dashboard',
             icon: BrainCircuit,
         }
@@ -102,23 +102,23 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     // Botones de footer (antes en sidebar)
     const footerNavItems = [
         {
-            title: t('Terms and Conditions'),
+            title: t('T&C'),
             href: '/terms',
             icon: BookType,
         },
         {
-            title: t('Repository'),
-            href: 'https://github.com/Jorge221z/script2me.git',
-            icon: Github,
-        },
-        {
-            title: theme === 'light' ? t('Dark') : t('Light'),
+            title: theme === 'light' ? 'Dark' : 'Light',
             href: '#',
             icon: theme === 'light' ? Moon : Sun,
             onClick: (e: React.MouseEvent<HTMLAnchorElement>) => {
                 e.preventDefault();
                 toggleTheme();
             },
+        },
+        {
+            title: '',
+            href: 'https://github.com/Jorge221z/script2me.git',
+            icon: Github,
         },
     ];
 
@@ -180,8 +180,8 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                         onClick={item.onClick}
                                                         className="flex items-center space-x-2 font-medium py-2 px-3 rounded-md hover:bg-neutral-800 transition-colors"
                                                     >
-                                                        {item.icon && <Icon iconNode={item.icon} className="h-5 w-5" />}
-                                                        <span>{item.title}</span>
+                                                        <Icon iconNode={item.icon} className={item.title === '' ? "h-5 w-5 mx-auto" : "h-5 w-5"} />
+                                                        {item.title && <span>{item.title}</span>}
                                                     </a>
                                                 ) : item.href.startsWith('http') ? (
                                                     <a
@@ -191,8 +191,8 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                         rel="noopener noreferrer"
                                                         className="flex items-center space-x-2 font-medium py-2 px-3 rounded-md hover:bg-neutral-800 transition-colors"
                                                     >
-                                                        {item.icon && <Icon iconNode={item.icon} className="h-5 w-5" />}
-                                                        <span>{item.title}</span>
+                                                        <Icon iconNode={item.icon} className={item.title === '' ? "h-5 w-5 mx-auto" : "h-5 w-5"} />
+                                                        {item.title && <span>{item.title}</span>}
                                                     </a>
                                                 ) : (
                                                     <Link 
@@ -234,7 +234,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 className={cn(
                                     "flex items-center gap-2 px-2 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors",
                                     page.url === item.href
-                                        ? "bg-gray-100 hover:bg-gray-300 dark:bg-neutral-800 text-emerald-400"
+                                        ? "bg-gray-100 hover:bg-gray-300 dark:bg-neutral-800 text-emerald-600 dark:text-emerald-400"
                                         : "dark:text-neutral-100 hover:bg-white dark:hover:bg-neutral-800 hover:text-gray-900 dark:hover:text-emerald-400"
                                 )}
                                 prefetch
@@ -267,10 +267,10 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                             key={item.title}
                                             href={item.href}
                                             onClick={item.onClick}
-                                            className={className}
+                                            className={className + (item.title === '' ? ' flex items-center justify-center px-2 py-2' : '')}
                                         >
-                                            <item.icon className="h-4 w-4" />
-                                            <span className="hidden sm:inline">{item.title}</span>
+                                            <item.icon className="h-4 w-4 mx-auto" />
+                                            {item.title && <span className="hidden sm:inline">{item.title}</span>}
                                         </a>
                                     );
                                 } else if (item.href.startsWith('http')) {
@@ -280,10 +280,10 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                             href={item.href}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className={className}
+                                            className={className + (item.title === '' ? ' flex items-center justify-center px-2 py-2' : '')}
                                         >
-                                            <item.icon className="h-4 w-4" />
-                                            <span className="hidden sm:inline">{item.title}</span>
+                                            <item.icon className="h-4 w-4 mx-auto" />
+                                            {item.title && <span className="hidden sm:inline">{item.title}</span>}
                                         </a>
                                     );
                                 } else {
@@ -294,8 +294,8 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                             className={className}
                                             prefetch
                                         >
-                                            <item.icon className="h-4 w-4" />
-                                            <span className="hidden sm:inline">{item.title}</span>
+                                            <item.icon className="h-4 w-4 mx-auto" />
+                                            {item.title && <span className="hidden sm:inline">{item.title}</span>}
                                         </Link>
                                     );
                                 }
@@ -325,7 +325,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                             className={className}
                                             style={{ minWidth: 0 }}
                                         >
-                                            <item.icon className="h-5 w-5" />
+                                            <item.icon className="h-5 w-5 mx-auto" />
                                         </a>
                                     );
                                 } else if (item.href.startsWith('http')) {
@@ -338,7 +338,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                             className={className}
                                             style={{ minWidth: 0 }}
                                         >
-                                            <item.icon className="h-5 w-5" />
+                                            <item.icon className="h-5 w-5 mx-auto" />
                                         </a>
                                     );
                                 } else {
@@ -350,7 +350,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                             style={{ minWidth: 0 }}
                                             prefetch
                                         >
-                                            <item.icon className="h-5 w-5" />
+                                            <item.icon className="h-5 w-5 mx-auto" />
                                         </Link>
                                     );
                                 }

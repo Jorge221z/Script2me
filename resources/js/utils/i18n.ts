@@ -4,13 +4,6 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
-      'Home': 'Home',
-      'AI Refactor': 'AI Refactor',
-      'Terms and Conditions': 'Terms & Conditions',
-      'Repository': 'Repository',
-      'Documentation': 'Documentation',
-      'Dark': 'Dark',
-      'Light': 'Light',
       // Dashboard translations
       'dashboard.description': 'Turn code into optimized AI prompts. Upload, process, and enhance scripts—free & open-source.',
       'dashboard.headTitle': 'Code to AI prompts',
@@ -93,13 +86,6 @@ const resources = {
   },
   es: {
     translation: {
-      'Home': 'Inicio',
-      'AI Refactor': 'Refactorización IA',
-      'Terms and Conditions': 'Términos y Condiciones',
-      'Repository': 'Repositorio',
-      'Documentation': 'Documentación',
-      'Dark': 'Oscuro',
-      'Light': 'Claro',
       // Traducciones del dashboard
       'dashboard.description': 'Convierte código en prompts de IA optimizados. Sube, procesa y mejora scripts—gratis y open-source.',
       'dashboard.headTitle': 'Código a prompts de IA',
