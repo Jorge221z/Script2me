@@ -8,7 +8,9 @@ const TermsAndConditions = () => {
     return (
       <div className="max-w-4xl mx-auto p-6 bg-gray color shadow-md rounded-lg border-gray">
         <h1 className="text-3xl font-bold mb-6 text-center text-black dark:text-white">
-          <span className="text-emerald-600 dark:text-emerald-400 cursor-pointer">Script2me</span> {t('terms.title')}
+          <span className="text-emerald-600 dark:text-emerald-400 cursor-pointer">Script2me</span>
+          <span className="mx-2 text-gray-400">|</span>
+          {t('terms.title')}
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
           {t('terms.lastUpdated')}

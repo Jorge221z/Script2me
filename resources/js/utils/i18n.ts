@@ -6,7 +6,7 @@ const resources = {
     translation: {
       'Home': 'Home',
       'AI Refactor': 'AI Refactor',
-      'Terms and Conditions': 'Terms and Conditions',
+      'Terms and Conditions': 'Terms & Conditions',
       'Repository': 'Repository',
       'Documentation': 'Documentation',
       'Dark': 'Dark',
