@@ -8,14 +8,7 @@ import { useEffect } from 'react';
 import BackgroundPattern from '@/layouts/app/BackgroundPattern';
 import { useState } from 'react';
 import { FileText, File } from 'lucide-react';
-
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Turn code into optimized AI prompts. Upload, process, and enhance scripts—free & open-source.',
-        href: '/dashboard',
-    },
-];
+import { useTranslation } from 'react-i18next';
 
 export default function Dashboard() {
     const { contents = [], names = [], flash } = usePage<{
@@ -23,6 +16,8 @@ export default function Dashboard() {
         names: string[];
         flash: { success?: string; error?: string };
     }>().props;
+
+    const { t } = useTranslation();
 
     const handleClearSession = () => {
         router.post('/clear-session', {}, {
@@ -68,7 +63,12 @@ export default function Dashboard() {
     }, []); // Array de dependencias vacío
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout breadcrumbs={[
+            {
+                title: t('dashboard.description'),
+                href: '/dashboard',
+            },
+        ]}>
             <Toaster
                 position="bottom-center"
                 toastOptions={{
@@ -82,7 +82,7 @@ export default function Dashboard() {
                     },
                 }}
             />
-            <Head title="Code to AI prompts" />
+            <Head title={t('dashboard.headTitle')} />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
 
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative rounded-xl">
@@ -90,7 +90,7 @@ export default function Dashboard() {
                     <UploadForm
                         actionUrl="/upload"
                         loadingTime={1000}
-                        buttonText={""}
+                        buttonText={t('dashboard.uploadButton')}
                         showCaptcha={false}
                         progressSpeed={50}
                         progressMaxTime={800}
@@ -101,7 +101,7 @@ export default function Dashboard() {
                     {/* Botones de acción */}
                     <div className="flex justify-between mb-4 items-center">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                            Uploaded files {contents.length > 0 ? `(${contents.length})` : ''}
+                            {t('dashboard.uploadedFiles')} {contents.length > 0 ? `(${contents.length})` : ''}
                         </h2>
                         <div className="flex space-x-2">
                             {contents.length > 0 && (
@@ -111,7 +111,7 @@ export default function Dashboard() {
                                         className="flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
                                     >
                                         <FiTrash2 className="inline-block" />
-                                        Clear history
+                                        {t('dashboard.clearHistory')}
                                     </button>
                                     <button
                                         onClick={() => {
@@ -125,12 +125,12 @@ ${content}
                                             }).join('\n');
 
                                             navigator.clipboard.writeText(fullContent);
-                                            toast.success('¡Content copied to clipboard!');
+                                            toast.success(t('dashboard.contentCopied'));
                                         }}
                                         className="flex items-center gap-2 rounded-lg bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
                                     >
                                         <FiCopy className="inline-block" />
-                                        Copy all
+                                        {t('dashboard.copyAll')}
                                     </button>
                                 </>
                             )}
@@ -158,7 +158,7 @@ ${content}
                                             </div>
                                             <div className="flex-shrink-0 ml-2">
                                                 <span className="px-2.5 py-1 text-xs rounded-full bg-emerald-100 dark:bg-emerald-800 text-emerald-600 dark:text-emerald-300 font-medium">
-                                                    {contentLines.length} {contentLines.length === 1 ? 'línea' : 'líneas'}
+                                                    {contentLines.length} {contentLines.length === 1 ? t('dashboard.line') : t('dashboard.lines')}
                                                 </span>
                                             </div>
                                         </div>
@@ -205,7 +205,7 @@ ${content}
                                             </span>
                                             {/* Extensión al final */}
                                             <span className="truncate max-w-xs">
-                                                {fileName.includes('.') ? `.${fileName.split('.').pop()}` : 'Sin extensión'}
+                                                {fileName.includes('.') ? `.${fileName.split('.').pop()}` : t('dashboard.noExtension')}
                                             </span>
                                         </div>
                                     </div>
@@ -218,10 +218,10 @@ ${content}
                             <div className="relative">
                                 <FileText className="mx-auto h-15 w-15 text-gray-400 dark:text-gray-500 mb-4" />
                                 <p className="text-gray-600 dark:text-gray-400 font-medium">
-                                    There are no uploaded files yet
+                                    {t('dashboard.noFiles')}
                                 </p>
                                 <p className="text-gray-500 dark:text-gray-500 text-sm mt-1">
-                                    Add some to see them here
+                                    {t('dashboard.addFiles')}
                                 </p>
                             </div>
                         </div>

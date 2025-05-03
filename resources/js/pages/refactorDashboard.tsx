@@ -8,13 +8,7 @@ import { useEffect } from 'react';
 import BackgroundPattern from '@/layouts/app/BackgroundPattern';
 import { useState } from 'react';
 import { FileText, File } from 'lucide-react';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Optimize code using the Google Gemini API for smart processing and refactoring.',
-        href: '/refactor-dashboard',
-    },
-];
+import { useTranslation } from 'react-i18next';
 
 export default function Refactor() {
     const { ApiContents = [], ApiNames = [], flash } = usePage<{
@@ -22,6 +16,8 @@ export default function Refactor() {
         ApiNames: string[];
         flash: { success?: string; error?: string };
     }>().props;
+
+    const { t } = useTranslation();
 
     const handleClearSession = () => {
         router.post('/clear-api-session', {}, {
@@ -67,7 +63,12 @@ export default function Refactor() {
     }, []); // Array de dependencias vacío
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout breadcrumbs={[
+            {
+                title: t('refactorDashboard.description'),
+                href: '/refactor-dashboard',
+            },
+        ]}>
             <Toaster
                 position="bottom-center"
                 toastOptions={{
@@ -81,7 +82,7 @@ export default function Refactor() {
                     },
                 }}
             />
-            <Head title="AI-powered code processing" />
+            <Head title={t('refactorDashboard.headTitle')} />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
 
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative rounded-xl">
@@ -89,7 +90,7 @@ export default function Refactor() {
                     <UploadForm
                         actionUrl="/process"
                         loadingTime={100}
-                        buttonText={""}
+                        buttonText={t('refactorDashboard.uploadButton')}
                         showCaptcha={true}
                         progressSpeed={50}
                         progressMaxTime={15000}
@@ -100,7 +101,7 @@ export default function Refactor() {
                     {/* Botones de acción */}
                     <div className="flex justify-between mb-4 items-center">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                            Uploaded files {ApiContents.length > 0 ? `(${ApiContents.length})` : ''}
+                            {t('refactorDashboard.uploadedFiles')} {ApiContents.length > 0 ? `(${ApiContents.length})` : ''}
                         </h2>
                         <div className="flex space-x-2">
                             {ApiContents.length > 0 && (
@@ -110,7 +111,7 @@ export default function Refactor() {
                                         className="flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
                                     >
                                         <FiTrash2 className="inline-block" />
-                                        Clear history
+                                        {t('refactorDashboard.clearHistory')}
                                     </button>
                                     <button
                                         onClick={() => {
@@ -124,12 +125,12 @@ ${content}
                                             }).join('\n');
 
                                             navigator.clipboard.writeText(fullContent);
-                                            toast.success('¡Content copied to clipboard!');
+                                            toast.success(t('refactorDashboard.contentCopied'));
                                         }}
                                         className="flex items-center gap-2 rounded-lg bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
                                     >
                                         <FiCopy className="inline-block" />
-                                        Copy all
+                                        {t('refactorDashboard.copyAll')}
                                     </button>
                                 </>
                             )}
@@ -157,7 +158,7 @@ ${content}
                                             </div>
                                             <div className="flex-shrink-0 ml-2">
                                                 <span className="px-2.5 py-1 text-xs rounded-full bg-emerald-100 dark:bg-emerald-800 text-emerald-600 dark:text-emerald-300 font-medium">
-                                                    {contentLines.length} {contentLines.length === 1 ? 'línea' : 'líneas'}
+                                                    {contentLines.length} {contentLines.length === 1 ? t('refactorDashboard.line') : t('refactorDashboard.lines')}
                                                 </span>
                                             </div>
                                         </div>
@@ -199,12 +200,11 @@ ${content}
                                         <div className="flex justify-between items-center pr-6 py-2 border-t border-emerald-200 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30 text-xs text-emerald-500 dark:text-emerald-400">
                                             {/* Tamaño al principio */}
                                             <span className='pl-4'>
-                                                {/* calculamos en KB, con dos decimales */}
                                                 {(content.length / 1024).toFixed(2)} KB
                                             </span>
                                             {/* Extensión al final */}
                                             <span className="truncate max-w-xs">
-                                                {fileName.includes('.') ? `.${fileName.split('.').pop()}` : 'Sin extensión'}
+                                                {fileName.includes('.') ? `.${fileName.split('.').pop()}` : t('refactorDashboard.noExtension')}
                                             </span>
                                         </div>
                                     </div>
@@ -217,10 +217,10 @@ ${content}
                             <div className="relative">
                                 <FileText className="mx-auto h-15 w-15 text-gray-400 dark:text-gray-500 mb-4" />
                                 <p className="text-gray-600 dark:text-gray-400 font-medium">
-                                    There are no uploaded files yet
+                                    {t('refactorDashboard.noFiles')}
                                 </p>
                                 <p className="text-gray-500 dark:text-gray-500 text-sm mt-1">
-                                    Add some to see them here
+                                    {t('refactorDashboard.addFiles')}
                                 </p>
                             </div>
                         </div>

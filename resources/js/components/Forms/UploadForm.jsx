@@ -14,9 +14,12 @@ import AnimatedRemoveWrapper from './AnimatedRemoveWrapper';
 import FilesSentAnimation from './FilesSentAnimation';
 import EmeraldLinearProgress from './EmeraldLinearProgress';
 import ProgressBarDisplay from './ProgressBarDisplay';
+import { useTranslation } from 'react-i18next';
 
 const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, progressSpeed = 100, progressMaxTime = 1200 }) => {
     const { data, setData, post, errors, processing } = useForm({ files: [] });
+
+    const { t } = useTranslation();
 
     const [loading, setLoading] = useState(false);
     const [localErrors, setLocalErrors] = useState([]);
@@ -42,11 +45,11 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
     // Texto dinámico para la barra de progreso
     let progressText = '';
     if (progressState === 'uploading') {
-        progressText = 'Uploading...';
+        progressText = t('uploadForm.uploading');
     } else if (progressState === 'processing') {
-        progressText = 'Processing...';
+        progressText = t('uploadForm.processing');
     } else if (progressState === 'completed' && progress === 100) {
-        progressText = 'Completed!';
+        progressText = t('uploadForm.completed');
     }
 
     //manejo del estado del captcha//
@@ -210,7 +213,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
 
         // Verificar si el número total de archivos excede el límite//
         if (currentFileCount + files.length > MAX_FILE_COUNT) {
-            errors.push(`❌ It´s not possible to add more than ${MAX_FILE_COUNT} files (trying to add ${files.length} to the ${currentFileCount} existing ones)`);
+            errors.push(t('uploadForm.maxFilesError', { max: MAX_FILE_COUNT, adding: files.length, existing: currentFileCount }));
             return {
                 errors,
                 invalidFiles: newInvalidFiles,
@@ -231,16 +234,16 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
 
             // Validación de extensión
             if (!allowedExtensions.includes(ext)) {
-                const errorMsg = `Extension .${ext} doesn´t match the allowed ones`;
-                errors.push(`❌ Blocked file: ${file.name} (${errorMsg})`);
+                const errorMsg = t('uploadForm.extensionError', { ext });
+                errors.push(t('uploadForm.blockedFile', { name: file.name, error: errorMsg }));
                 fileIsInvalid = true;
                 fileErrorMessage = errorMsg;
             }
 
             // Validación de tamaño
             if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-                const errorMsg = `Excede ${MAX_SIZE_MB}MB`;
-                errors.push(`❌ Too big filesize: ${file.name} (${errorMsg})`);
+                const errorMsg = t('uploadForm.sizeError', { max: MAX_SIZE_MB });
+                errors.push(t('uploadForm.tooBigFile', { name: file.name, error: errorMsg }));
                 fileIsInvalid = true;
                 fileErrorMessage = fileErrorMessage ? `${fileErrorMessage}, ${errorMsg}` : errorMsg;
             }
@@ -360,7 +363,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
         const validFiles = data.files.filter((file) => !invalidFiles.includes(file.name));
 
         if (validFiles.length === 0) {
-            setLocalErrors([...localErrors.filter((e) => !e.includes('There are no valid files')), '❌ There are no valid files to upload']);
+            setLocalErrors([...localErrors.filter((e) => !e.includes(t('uploadForm.noValidFiles'))), t('uploadForm.noValidFiles')]);
             return;
         }
 
@@ -374,7 +377,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
         if (showCaptcha && shouldShowCaptcha) {
             const captchaResponse = window.grecaptcha.getResponse();
             if (!captchaResponse) {
-                toast.error('Please complete the captcha to proceed', {
+                toast.error(t('uploadForm.captchaRequired'), {
                     duration: 2000,
                     position: 'top-center',
                 });
@@ -495,7 +498,7 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
                 >
                     <div className="mb-1 w-full">
                         <label htmlFor="file-upload" data-tooltip-id="info-tooltip" className="mb-2 block text-sm font-bold text-gray-400 dark:text-gray-700">
-                            Drag or select your files<a className="ml-3 cursor-pointer text-lg">ℹ️</a>
+                            {t('uploadForm.dragOrSelect')}<a className="ml-3 cursor-pointer text-lg">ℹ️</a>
                         </label>
                         <FormTooltip allowedExtensions={allowedExtensions} />
 
@@ -527,9 +530,9 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
                                         />
                                     </svg>
                                     <p className="mb-5 text-sm text-gray-300 dark:text-gray-800">
-                                        <span className="font-semibold">Drag and drop</span> or click to upload
+                                        <span className="font-semibold">{t('uploadForm.dragAndDrop')}</span> {t('uploadForm.orClick')}
                                     </p>
-                                    <p className="text-xs text-gray-300 dark:text-gray-800 mt-3 ">By uploading a file, you accept our Terms & Conditions</p>
+                                    <p className="text-xs text-gray-300 dark:text-gray-800 mt-3 ">{t('uploadForm.acceptTerms')}</p>
                                 </div>
                                 <input id="file-upload" type="file" name="files" multiple onChange={handleFileChange} className="hidden" />
                             </label>
@@ -538,8 +541,8 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
                             {data.files.length > 0 && (
                                 <div className={`border-t pt-4 transition-all duration-400 ${filesFadeOut ? 'fade-out-files' : ''}`}>
                                     <h4 className="mb-2 text-sm font-medium text-gray-500">
-                                        Selected files ({data.files.length})
-                                        {invalidFiles.length > 0 && <span className="ml-2 text-red-500">({invalidFiles.length} with errors)</span>}
+                                        {t('uploadForm.selectedFiles', { count: data.files.length })}
+                                        {invalidFiles.length > 0 && <span className="ml-2 text-red-500">({invalidFiles.length} {t('uploadForm.withErrors')})</span>}
                                     </h4>
                                     <div className="max-h-[200px] overflow-y-auto">
                                         {data.files.map((file, index) => (
@@ -575,13 +578,13 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
                             {/* Solo mostrar este mensaje si se ha intentado exceder el límite recientemente */}
                             {recentlyExceededLimit && data.files.length <= MAX_FILE_COUNT && (
                                 <div className="text-sm text-amber-400 dark:text-amber-500">
-                                    ⚠️ Some files weren´t added because they exceed the {MAX_FILE_COUNT} file limit.
+                                    ⚠️ {t('uploadForm.someFilesNotAdded', { max: MAX_FILE_COUNT })}
                                 </div>
                             )}
                             {/* Mostrar warning de duplicado */}
                             {duplicateWarning && (
                                 <div className="text-sm text-amber-400 dark:text-amber-500">
-                                    ⚠️ Some files were not added because they have the same name as already selected files.
+                                    ⚠️ {t('uploadForm.duplicateFiles')}
                                 </div>
                             )}
                         </div>
@@ -609,19 +612,15 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
                     >
                         {loading || processing ? (
                             <div className="flex items-center justify-center">
-                                <HashLoader color="white" size={35} /*style={{ transform: 'translateX(-95px)' }} */ />
-                                {/* <span className="ml-2 animate-pulse">
-                                    {buttonText}
-                                    <span className="dots">...</span>
-                                </span> */}
+                                <HashLoader color="white" size={35} />
                             </div>
                         ) : shouldShowCaptcha && !captchaVerified ? (
-                            'Please complete the CAPTCHA'
+                            t('uploadForm.completeCaptcha')
                         ) : data.files.length > MAX_FILE_COUNT ? (
-                            `Demasiados archivos (máx. ${MAX_FILE_COUNT})`
+                            t('uploadForm.tooManyFiles', { max: MAX_FILE_COUNT })
                         ) : (
                             <span className="inline-flex items-center justify-center">
-                                Upload files
+                                {t('uploadForm.uploadFiles')}
                                 <CloudUpload className="ml-6 h-6 w-6" />
                             </span>
                         )}
