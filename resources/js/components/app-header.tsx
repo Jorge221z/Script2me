@@ -331,7 +331,9 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 }
                             })}
                         </div>
-                        <LanguageSelector />
+                        <div className="hidden md:flex">
+                            <LanguageSelector />
+                        </div>
                     </div>
                 </div>
             </div>
