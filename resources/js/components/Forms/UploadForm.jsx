@@ -1,4 +1,4 @@
-import { useForm } from '@inertiajs/react';
+import { useForm, Link } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { HashLoader } from 'react-spinners';
@@ -532,7 +532,16 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
                                     <p className="mb-5 text-sm text-gray-300 dark:text-gray-800">
                                         <span className="font-semibold">{t('uploadForm.dragAndDrop')}</span> {t('uploadForm.orClick')}
                                     </p>
-                                    <p className="text-xs text-gray-300 dark:text-gray-800 mt-3 ">{t('uploadForm.acceptTerms')}</p>
+                                    <p className="text-xs text-gray-300 dark:text-gray-800 mt-3 ">
+                                        {t('uploadForm.acceptTerms').split('Terms & Conditions')[0]}
+                                        <Link
+                                            href="/terms"
+                                            className="underline inline-block transition-transform duration-150 hover:scale-105"
+                                        >
+                                            Terms &amp; Conditions
+                                        </Link>
+                                        {t('uploadForm.acceptTerms').split('Terms & Conditions')[1]}
+                                    </p>
                                 </div>
                                 <input id="file-upload" type="file" name="files" multiple onChange={handleFileChange} className="hidden" />
                             </label>
