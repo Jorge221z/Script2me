@@ -4,6 +4,7 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
+      'Terms and Conditions': 'Terms & Conditions',
       // Dashboard translations
       'dashboard.description': 'Turn code into optimized AI prompts. Upload, process, and enhance scripts—free & open-source.',
       'dashboard.headTitle': 'Code to AI prompts',
@@ -73,7 +74,7 @@ const resources = {
       'uploadForm.dragOrSelect': 'Drag or select your files',
       'uploadForm.dragAndDrop': 'Drag and drop',
       'uploadForm.orClick': 'or click to upload',
-      'uploadForm.acceptTerms': 'By uploading a file, you accept our Terms & Conditions',
+      'uploadForm.acceptTerms': 'By uploading a file, you accept our <terms>Terms & Conditions</terms>',
       'uploadForm.selectedFiles': 'Selected files ({{count}})',
       'uploadForm.withErrors': 'with errors',
       'uploadForm.someFilesNotAdded': 'Some files weren\'t added because they exceed the {{max}} file limit.',
@@ -86,6 +87,7 @@ const resources = {
   },
   es: {
     translation: {
+      'Terms and Conditions': 'Términos y Condiciones',
       // Traducciones del dashboard
       'dashboard.description': 'Convierte código en prompts de IA optimizados. Sube, procesa y mejora scripts—gratis y open-source.',
       'dashboard.headTitle': 'Código a prompts de IA',
@@ -155,7 +157,7 @@ const resources = {
       'uploadForm.dragOrSelect': 'Arrastra o selecciona tus archivos',
       'uploadForm.dragAndDrop': 'Arrastra y suelta',
       'uploadForm.orClick': 'o haz clic para subir',
-      'uploadForm.acceptTerms': 'Al subir un archivo, aceptas nuestros Términos y Condiciones',
+      'uploadForm.acceptTerms': 'Al subir un archivo, aceptas nuestros <terms>Términos y Condiciones</terms>',
       'uploadForm.selectedFiles': 'Archivos seleccionados ({{count}})',
       'uploadForm.withErrors': 'con errores',
       'uploadForm.someFilesNotAdded': 'Algunos archivos no se añadieron porque superan el límite de {{max}} archivos.',
