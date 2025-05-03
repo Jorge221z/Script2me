@@ -32,7 +32,7 @@ class RefactorController extends Controller
             return Inertia::render('refactorDashboard', [
                 'ApiContents' => [],
                 'ApiNames' => [],
-                'error' => 'Error al cargar refactor: ' . $e->getMessage()
+                'error' => __('messages.dashboard_load_error', ['msg' => $e->getMessage()])
             ]);
         }
     }
@@ -114,13 +114,13 @@ EOD;
             if (strpos($response, 'interface') !== false || strpos($response, 'class') !== false || strpos($response, '=>') !== false) {
                 return response($response)->header('Content-Type', 'text/plain');
             } else {
-                throw new Exception(message: "La respuesta de Gemini no contiene código TypeScript válido: " . $response);
+                throw new Exception(message: __('messages.invalid_typescript_code', ['code' => $response]));
             }
 
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Error al procesar la solicitud con Gemini',
+                'message' => __('messages.gemini_process_error'),
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -167,7 +167,7 @@ EOD;
             $responseData = $response->json();
 
             if (!$responseData['success']) {
-                return redirect()->back()->with('error', 'Captcha verification failed. Please try again.');
+                return redirect()->back()->with('error', __('messages.captcha_failed'));
             }
         }
 
@@ -190,15 +190,15 @@ EOD;
                     function ($attribute, $value, $fail) use ($allowedExtensions) {
                         $extension = strtolower($value->getClientOriginalExtension());
                         if (!in_array($extension, $allowedExtensions)) {
-                            $fail("La extensión .$extension no está permitida.");
+                            $fail(__('messages.extension_not_allowed', ['ext' => $extension]));
                         }
                     }
                 ]
             ], [
-                'files.required' => 'Debes subir al menos un archivo',
-                'files.*.file' => 'Cada elemento debe ser un archivo válido',
-                'files.*.max' => 'Los archivos no deben exceder 2MB',
-                'files.min' => 'Debes subir al menos un archivo'
+                'files.required' => __('messages.files_required'),
+                'files.*.file' => __('messages.files_file'),
+                'files.*.max' => __('messages.files_max'),
+                'files.min' => __('messages.files_min')
             ]);
 
             if ($validator->fails()) {
@@ -233,7 +233,7 @@ EOD;
                             $cleanText = implode("\n", $cleanLines);
                             $newContents[] = $cleanText;
                         } catch (Exception $e) {
-                            throw new Exception("Failed to parse the .pdf file: " . $e->getMessage());
+                            throw new Exception(__('messages.failed_parse_pdf', ['msg' => $e->getMessage()]));
                         }
                     } else if ($extension === 'docx') {
                         try {
@@ -264,7 +264,7 @@ EOD;
                             $cleanText = implode("\n", $lines);
                             $newContents[] = $cleanText;
                         } catch (Exception $e) {
-                            throw new Exception("Failed to parse the .docx file: " . $e->getMessage());
+                            throw new Exception(__('messages.failed_parse_docx', ['msg' => $e->getMessage()]));
                         }
                     } else {
                         //$cleanText = trim(preg_replace('/\s+/', ' ', $content));
@@ -276,7 +276,7 @@ EOD;
                     $file->storeAs('uploads', $timestampName, 'public');
                     $newNames[] = $file->getClientOriginalName();
                 } catch (Exception $e) {
-                    return back()->withErrors(['files' => 'Error al procesar: ' . $file->getClientOriginalName()]);
+                    return back()->withErrors(['files' => __('messages.error_processing_file', ['name' => $file->getClientOriginalName()])]);
                 }
             }
             //Aqui vamos a manejar las llamadas a la API de Gemini y como lo integramos en los arrays de session//
@@ -299,7 +299,7 @@ EOD;
 
                     //Validamos el caso en el que la salida se quede vacia tras limpiarla //
                     if (empty($cleanedResponse)) {
-                        return redirect()->back()->with('error','The response from Gemini is empty. Please try again with other file.');
+                        return redirect()->back()->with('error', __('messages.gemini_empty_response'));
                     }
 
                     // Ahora almacenamos la salida en el arrray de la API//
@@ -307,7 +307,7 @@ EOD;
 
 
                 } catch (Exception $e) {
-                    return redirect()->back()->with('error', 'Error while trying to call the API: ' . $e->getMessage());
+                    return redirect()->back()->with('error', __('messages.gemini_api_error', ['msg' => $e->getMessage()]));
                 }
             }
 
@@ -325,7 +325,7 @@ EOD;
 
             $request->session()->save(); //guardamos la sesion de forma explicita //
 
-            return redirect()->back()->with('success', count($newNames) === 1 ? 'File processed successfully' : count($newNames) . ' files processed successfully');
+            return redirect()->back()->with('success', count($newNames) === 1 ? __('messages.file_upload_success') : __('messages.files_upload_success', ['count' => count($newNames)]));
         }
     }
 
@@ -335,7 +335,7 @@ EOD;
         $request->session()->forget(['ApiContents', 'ApiNames']);
         $request->session()->save(); //guardamos la sesion de forma explicita //
         return redirect()->back()->with([
-            'success' => 'Historial cleared',
+            'success' => __('messages.history_cleared'),
             '_sync' => now()->timestamp,
         ]);
     }

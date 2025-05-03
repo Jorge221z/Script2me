@@ -1,4 +1,5 @@
 import { Tooltip } from 'react-tooltip';
+import { useTranslation } from 'react-i18next';
 
 const chunkArray = (array, size) => {
     const result = [];
@@ -10,6 +11,7 @@ const chunkArray = (array, size) => {
 
 const FormTooltip = ({ allowedExtensions }) => {
     const extColumns = chunkArray(allowedExtensions, 10);
+    const { t } = useTranslation();
 
     return (
         <Tooltip
@@ -32,7 +34,7 @@ const FormTooltip = ({ allowedExtensions }) => {
                         position: 'relative'
                     }}
                 >
-                    <strong>Supported extensions:</strong>
+                    <strong>{t('formTooltip.supportedExtensions', 'Supported extensions:')}</strong>
                     <div
                         style={{
                             display: 'flex', // Usamos Flexbox para columnas

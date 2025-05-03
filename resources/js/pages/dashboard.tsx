@@ -22,7 +22,7 @@ export default function Dashboard() {
     const handleClearSession = () => {
         router.post('/clear-session', {}, {
             onSuccess: () => {
-                sessionStorage.setItem('flash.success', 'Session cleared successfully');
+                sessionStorage.setItem('flash.success', t('dashboard.sessionCleared'));
                 window.location.href = window.location.href; // Fuerza recarga completa
             }
         });
@@ -161,6 +161,7 @@ ${content}
                                                     {contentLines.length} {contentLines.length === 1 ? t('dashboard.line') : t('dashboard.lines')}
                                                 </span>
                                             </div>
+
                                         </div>
 
                                         {/* Contenedor del visor de código con manejo mejorado del scroll */}

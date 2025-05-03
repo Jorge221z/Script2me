@@ -24,6 +24,7 @@ const resources = {
       'dashboard.noExtension': 'No extension',
       'dashboard.noFiles': 'There are no uploaded files yet',
       'dashboard.addFiles': 'Add some to see them here',
+      'dashboard.sessionCleared': 'Session cleared successfully',
       // Refactor Dashboard translations
       'refactorDashboard.description': 'Optimize code using the Google Gemini API for smart processing and refactoring.',
       'refactorDashboard.headTitle': 'AI-powered code processing',
@@ -37,6 +38,7 @@ const resources = {
       'refactorDashboard.noExtension': 'No extension',
       'refactorDashboard.noFiles': 'There are no uploaded files yet',
       'refactorDashboard.addFiles': 'Add some to see them here',
+      'refactorDashboard.sessionCleared': 'Session cleared successfully',
       // Terms and Conditions
       'terms.title': 'Terms and Conditions',
       'terms.lastUpdated': 'Last updated: April 3, 2025',
@@ -86,6 +88,7 @@ const resources = {
       'uploadForm.completeCaptcha': 'Please complete the CAPTCHA',
       'uploadForm.tooManyFiles': 'Too many files (max. {{max}})',
       'uploadForm.uploadFiles': 'Upload files',
+      'formTooltip.supportedExtensions': 'Supported extensions:',
     }
   },
   es: {
@@ -110,6 +113,7 @@ const resources = {
       'dashboard.noExtension': 'Sin extensión',
       'dashboard.noFiles': 'Aún no hay archivos subidos',
       'dashboard.addFiles': 'Agrega algunos para verlos aquí',
+      'dashboard.sessionCleared': 'Sesión limpiada correctamente',
       // Traducciones del dashboard de refactorización
       'refactorDashboard.description': 'Optimiza código usando la API de Google Gemini para procesamiento y refactorización inteligente.',
       'refactorDashboard.headTitle': 'Procesamiento de código con IA',
@@ -123,6 +127,7 @@ const resources = {
       'refactorDashboard.noExtension': 'Sin extensión',
       'refactorDashboard.noFiles': 'Aún no hay archivos subidos',
       'refactorDashboard.addFiles': 'Agrega algunos para verlos aquí',
+      'refactorDashboard.sessionCleared': 'Sesión limpiada correctamente',
       // Términos y Condiciones
       'terms.title': 'Términos y Condiciones',
       'terms.lastUpdated': 'Última actualización: 3 de abril de 2025',
@@ -172,6 +177,7 @@ const resources = {
       'uploadForm.completeCaptcha': 'Por favor, completa el CAPTCHA',
       'uploadForm.tooManyFiles': 'Demasiados archivos (máx. {{max}})',
       'uploadForm.uploadFiles': 'Subir archivos',
+      'formTooltip.supportedExtensions': 'Extensiones soportadas:',
     }
   },
 };

@@ -22,7 +22,7 @@ export default function Refactor() {
     const handleClearSession = () => {
         router.post('/clear-api-session', {}, {
             onSuccess: () => {
-                sessionStorage.setItem('flash.success', 'Session cleared successfully');
+                sessionStorage.setItem('flash.success', t('refactorDashboard.sessionCleared'));
                 window.location.href = window.location.href; // Fuerza recarga completa
             }
         });

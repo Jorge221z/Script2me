@@ -13,4 +13,9 @@ return [
     'file_upload_success' => 'Archivo subido correctamente',
     'files_upload_success' => ':count archivos subidos correctamente',
     'history_cleared' => 'Historial limpiado',
+    'captcha_failed' => 'La verificación del captcha falló. Por favor, inténtalo de nuevo.',
+    'invalid_typescript_code' => 'La respuesta de Gemini no contiene código TypeScript válido: :code',
+    'gemini_process_error' => 'Error al procesar la solicitud con Gemini',
+    'gemini_empty_response' => 'La respuesta de Gemini está vacía. Por favor, intenta con otro archivo.',
+    'gemini_api_error' => 'Error al intentar llamar a la API: :msg',
 ];
