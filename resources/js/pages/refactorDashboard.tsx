@@ -94,6 +94,16 @@ export default function Refactor() {
             <Head title={t('refactorDashboard.headTitle')} />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
 
+                {/* Frase introductoria */}
+                <div className="mb-0 px-1 py-0.5 rounded bg-gradient-to-l from-emerald-100 via-emerald-50 to-white dark:from-emerald-900 dark:via-emerald-950 dark:to-black text-center border border-emerald-100 dark:border-emerald-900">
+                    <span className="text-[0.78rem] md:text-sm font-normal text-emerald-700 dark:text-emerald-300 leading-tight">
+                        Leverage Gemini's advanced AI to transform and enhance your code.<br />
+                        <span className="font-normal text-gray-700 dark:text-gray-200">
+                            Improve performance, structure, and maintainability with machine learning—effortlessly, with just one click.
+                        </span>
+                    </span>
+                </div>
+
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative rounded-xl pb-6">
                     {/* Formulario */}
                     <UploadForm
