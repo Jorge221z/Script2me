@@ -98,7 +98,7 @@
 }
 
 .custom-border {
-    border: hidden !important;
+    border: 1px groove #bebebe !important;
 }
 
 .dark .custom-border {
@@ -122,24 +122,6 @@
 }
 
 
-
-@keyframes dotAnimation {
-    0% {
-        opacity: 0.2;
-    }
-
-    20% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0.2;
-    }
-}
-
-.dots {
-    animation: dotAnimation 2s infinite ease-in-out;
-}
 
 .fade-out-files {
     opacity: 0;
