@@ -96,10 +96,10 @@ export default function Refactor() {
 
                 {/* Frase introductoria */}
                 <div className="mb-0 px-1 py-0.5 rounded bg-gradient-to-br from-cyan-100 via-white to-blue-100 dark:from-cyan-900 dark:via-black dark:to-blue-900 text-center border border-cyan-200 dark:border-cyan-800 shadow-lg">
-                    <span className="text-[0.85rem] md:text-base font-semibold bg-gradient-to-r from-cyan-500 via-blue-400 to-fuchsia-400 dark:from-cyan-300 dark:via-blue-400 dark:to-fuchsia-400 bg-[length:200%_200%] bg-clip-text text-transparent animate-gradient-x drop-shadow-md">
+                    <span className="text-[0.85rem] md:text-base font-semibold bg-gradient-to-r from-cyan-500 via-blue-400 to-fuchsia-400 dark:from-cyan-300 dark:via-blue-400 dark:to-fuchsia-400 bg-clip-text text-transparent animate-gradient-x drop-shadow-md">
                         {t('refactorDashboard.introLine1')}
                         <br />
-                        <span className="font-normal bg-gradient-to-r from-gray-700 via-cyan-600 to-blue-500 dark:from-gray-200 dark:via-cyan-200 dark:to-blue-400 bg-clip-text text-transparent animate-gradient-x">
+                        <span className="font-normal text-xs md:text-sm text-gray-700 dark:text-gray-200">
                             {t('refactorDashboard.introLine2')}
                         </span>
                     </span>

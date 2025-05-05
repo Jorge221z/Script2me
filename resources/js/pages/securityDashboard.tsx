@@ -142,10 +142,10 @@ export default function Security() {
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 {/* Intro text */}
                 <div className="mb-0 px-1 py-0.5 rounded bg-gradient-to-br from-amber-100 via-white to-pink-100 dark:from-amber-900 dark:via-black dark:to-pink-900 text-center border border-amber-200 dark:border-amber-800 shadow-lg">
-                    <span className="text-[0.85rem] md:text-base font-semibold bg-gradient-to-r from-amber-500 via-pink-400 to-fuchsia-400 dark:from-amber-300 dark:via-pink-400 dark:to-fuchsia-400 bg-[length:200%_200%] bg-clip-text text-transparent animate-gradient-x drop-shadow-md">
+                    <span className="text-[0.85rem] md:text-base font-semibold bg-gradient-to-r from-amber-500 via-pink-400 to-fuchsia-400 dark:from-amber-300 dark:via-pink-400 dark:to-fuchsia-400 bg-clip-text text-transparent animate-gradient-x drop-shadow-md">
                         {t('securityDashboard.introLine1')}
                         <br />
-                        <span className="font-normal bg-gradient-to-r from-gray-700 via-amber-600 to-pink-500 dark:from-gray-200 dark:via-amber-200 dark:to-pink-400 bg-clip-text text-transparent animate-gradient-x">
+                        <span className="font-normal text-xs md:text-sm text-gray-700 dark:text-gray-200 bg-gradient-to-r from-gray-700 via-amber-600 to-pink-500 dark:from-gray-200 dark:via-amber-200 dark:to-pink-400 bg-clip-text text-transparent animate-gradient-x">
                             {t('securityDashboard.introLine2')}
                         </span>
                     </span>
