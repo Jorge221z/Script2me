@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RefactorController;
+use App\Http\Controllers\SecurityController;
 use App\Http\Controllers\UploadController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -12,9 +13,11 @@ Route::get('/refactor-dashboard', [RefactorController::class, 'index'])->name('r
 
 Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
 Route::post('/process', [RefactorController::class, 'process'])->name('refactor.process');
+Route::post('/scan', [SecurityController::class, 'scan'])->name('security.scan');
 
 Route::post('/clear-session', [UploadController::class, 'clearSession'])->name('clear.session');
 Route::post('/clear-api-session', [RefactorController::class, 'clearApiSession'])->name('clear.apisession');
+Route::post('/clear-sec-session', [SecurityController ::class, 'clearSecSession'])->name('clear.secsession');
 
 Route::get('lang/{lang}', [App\Http\Controllers\LanguageController::class, 'switchLang'])->name('lang.switch');
 

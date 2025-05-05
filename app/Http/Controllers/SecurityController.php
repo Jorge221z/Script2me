@@ -249,7 +249,7 @@ EOT;
     }
 
 
-    public function clearApiSession(Request $request)
+    public function clearSecSession(Request $request)
     {
         $request->session()->forget(['SecContents', 'SecNames']);
         $request->session()->save(); //guardamos la sesion de forma explicita //
