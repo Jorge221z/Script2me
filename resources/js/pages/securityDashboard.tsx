@@ -9,7 +9,7 @@ import AppLayout from '@/layouts/app-layout';
 import UploadForm from '../components/Forms/UploadForm';
 import { Head } from '@inertiajs/react';
 import BackgroundPattern from '@/layouts/app/BackgroundPattern';
-import { FileText } from 'lucide-react';
+import { FileText, Expand } from 'lucide-react';
 
 interface Vulnerability {
     line: number;
@@ -34,6 +34,9 @@ export default function Security() {
     const { SecContents = [], SecNames = [], flash } = usePage<SecResponse>().props;
     const { t } = useTranslation();
     const [localResults, setLocalResults] = useState<Array<{ filename: string; result: SecurityResult }>>([]);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalVulns, setModalVulns] = useState<Vulnerability[]>([]);
+    const [modalFile, setModalFile] = useState<string>('');
 
     // Clear session handler
     const handleClearSession = () => {
@@ -89,6 +92,51 @@ export default function Security() {
             ]}
         >
             <Toaster position="bottom-center" />
+            {/* Modal for vulnerabilities */}
+            {modalOpen && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+                    onClick={() => setModalOpen(false)}
+                >
+                    <div
+                        className="bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative transition-all duration-200"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <button
+                            className="absolute top-3 right-4 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-2xl font-bold transition-colors"
+                            onClick={() => setModalOpen(false)}
+                            aria-label="Close"
+                        >
+                            ×
+                        </button>
+                        <h3 className="text-xl font-bold mb-2 text-amber-800 dark:text-amber-200 truncate">
+                            {modalFile}
+                        </h3>
+                        <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-6 text-lg">
+                            {t('securityDashboard.allVulnerabilities')}
+                        </h4>
+                        <ul className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+                            {modalVulns.map((v, i) => (
+                                <li key={i} className="border-l-4 pl-4 border-amber-400 bg-amber-50 dark:bg-amber-950/20 rounded py-3 shadow-sm">
+                                    <div className="mb-1">
+                                        <span className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+                                            {t('securityDashboard.line')} {v.line}
+                                        </span>
+                                    </div>
+                                    <div className="text-gray-700 dark:text-gray-300 text-base">
+                                        {v.issue}
+                                    </div>
+                                    {v.suggestion && (
+                                        <div className="text-md text-green-700 dark:text-green-300 mt-2">
+                                            <span className="font-semibold">{t('securityDashboard.suggestion')}:</span> {v.suggestion}
+                                        </div>
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            )}
             <Head title={t('securityDashboard.headTitle')} />
 
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
@@ -164,10 +212,19 @@ export default function Security() {
                                         </ul>
                                         {item.result.vulnerabilities.length > 3 && (
                                             <button
-                                                onClick={() => toast(t('securityDashboard.showAll'))}
-                                                className="mt-2 text-xs text-blue-500 hover:underline"
+                                                onClick={() => {
+                                                    setModalVulns(item.result.vulnerabilities);
+                                                    setModalFile(item.filename);
+                                                    setModalOpen(true);
+                                                }}
+                                                className="group mt-2 text-xs font-semibold px-4 py-2 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 text-white shadow-lg border-0 transition-all duration-200 hover:from-blue-500 hover:to-blue-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300 active:scale-95 flex items-center gap-2"
+                                                aria-label={t('securityDashboard.showAll')}
+                                                title={t('securityDashboard.showAll')}
                                             >
-                                                {t('securityDashboard.showAll')}
+                                                <span className="inline-flex items-center gap-1">
+                                                    <span className="drop-shadow-sm">{t('securityDashboard.showAll')}</span>
+                                                    <Expand className="w-4 h-4 text-white group-hover:scale-110 transition-transform duration-200" />
+                                                </span>
                                             </button>
                                         )}
                                     </div>
