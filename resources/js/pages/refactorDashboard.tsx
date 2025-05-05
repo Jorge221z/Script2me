@@ -3,13 +3,14 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, usePage, router } from '@inertiajs/react';
 import UploadForm from '../components/Forms/UploadForm';
 import { FiCopy, FiTrash2 } from 'react-icons/fi';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useEffect } from 'react';
 import BackgroundPattern from '@/layouts/app/BackgroundPattern';
 import { useState } from 'react';
 import { FileText, File } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import i18n from '../utils/i18n';
+import CustomToast from '../components/CustomToast';
 
 export default function Refactor() {
     const { ApiContents = [], ApiNames = [], flash } = usePage<{
@@ -78,19 +79,7 @@ export default function Refactor() {
                 href: '/refactor-dashboard',
             },
         ]}>
-            <Toaster
-                position="bottom-center"
-                toastOptions={{
-                    className: 'my-custom-toast',
-                    style: {
-                        background: '#1e3a5c', // azul oscuro
-                        color: '#fff',
-                        borderRadius: '8px',
-                        padding: '20px 28px',
-                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                    },
-                }}
-            />
+            <CustomToast />
             <Head title={t('refactorDashboard.headTitle')} />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
 

@@ -3,13 +3,14 @@ import { type BreadcrumbItem, Vulnerability, SecurityResult, SecResponse } from 
 import { usePage, router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { FiTrash2 } from 'react-icons/fi';
 import AppLayout from '@/layouts/app-layout';
 import UploadForm from '../components/Forms/UploadForm';
 import { Head } from '@inertiajs/react';
 import BackgroundPattern from '@/layouts/app/BackgroundPattern';
 import { FileText, Expand } from 'lucide-react';
+import CustomToast from '../components/CustomToast';
 
 export default function Security() {
     const { SecContents = [], SecNames = [], flash } = usePage<SecResponse>().props;
@@ -72,7 +73,7 @@ export default function Security() {
                 },
             ]}
         >
-            <Toaster position="bottom-center" />
+            <CustomToast />
             {/* Modal for vulnerabilities */}
             {modalOpen && (
                 <div
