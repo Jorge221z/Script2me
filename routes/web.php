@@ -10,6 +10,7 @@ use Inertia\Inertia;
 Route::get('/', [UploadController::class, 'index'])->name('home');
 Route::get('/dashboard', [UploadController::class, 'index'])->name('dashboard');
 Route::get('/refactor-dashboard', [RefactorController::class, 'index'])->name('refactor.index');
+Route::get('/security-dashboard', [SecurityController::class, 'index'])->name('security.index');
 
 Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
 Route::post('/process', [RefactorController::class, 'process'])->name('refactor.process');

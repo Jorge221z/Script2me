@@ -11,7 +11,7 @@ import { useInitials } from '@/hooks/use-initials';
 import { cn } from '@/lib/utils';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import {Menu, BookType, Github, Home, BrainCircuit, Moon, Sun, Globe, Pickaxe } from 'lucide-react';
+import { Menu, BookType, Github, Home, BrainCircuit, Moon, Sun, Globe, Pickaxe, Radar } from 'lucide-react';
 import { useTheme } from '@/hooks/use-theme';
 import { useTranslation } from 'react-i18next';
 import i18n from '../utils/i18n';
@@ -96,6 +96,11 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
             title: 'AI Refactor',
             href: '/refactor-dashboard',
             icon: BrainCircuit,
+        },
+        {
+            title: 'AI Scanner',
+            href: '/security-dashboard',
+            icon: Radar,
         }
     ];
 

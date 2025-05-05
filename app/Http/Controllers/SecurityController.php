@@ -230,14 +230,14 @@ class SecurityController extends Controller
     {
         return <<<EOT
             You are a security expert. Analyze the following code for potential security issues. 
-            Highlight the most critical vulnerabilities, suggest mitigations, and provide a risk score from 0 (safe) to 10 (critical).
+            Highlight the most critical vulnerabilities, suggest mitigations, and provide a risk score from 0 (safe) to 100 (critical).
 
             Code:
             {$code}
 
 Output format:
 {
-"score": 16,
+"score": 64,
 "summary": "...",
 "critical_lines": [23, 47],
 "vulnerabilities": [
