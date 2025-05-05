@@ -34,6 +34,7 @@ const resources = {
       'refactorDashboard.addFiles': 'Add some to see them here',
       'refactorDashboard.sessionCleared': 'Session cleared successfully',
       'refactorDashboard.processFiles': 'Process files',
+      'refactorDashboard.processing': 'Processing...',
       // Terms and Conditions
       'terms.title': 'Terms and Conditions',
       'terms.lastUpdated': 'Last updated: April 3, 2025',
@@ -100,6 +101,7 @@ const resources = {
       'securityDashboard.noResults': 'No files have been scanned yet',
       'securityDashboard.addFilesPrompt': 'Upload some to scan them',
       'securityDashboard.scanFiles': 'Scan files',
+      'securityDashboard.scanning': 'Scanning...',
     }
   },
   es: {
@@ -134,6 +136,7 @@ const resources = {
       'refactorDashboard.addFiles': 'Agrega algunos para verlos aquí',
       'refactorDashboard.sessionCleared': 'Sesión limpiada correctamente',
       'refactorDashboard.processFiles': 'Procesar archivos',
+      'refactorDashboard.processing': 'Procesando...',
       // Términos y Condiciones
       'terms.title': 'Términos y Condiciones',
       'terms.lastUpdated': 'Última actualización: 3 de abril de 2025',
@@ -200,6 +203,7 @@ const resources = {
       'securityDashboard.noResults': 'Aún no se han escaneado archivos',
       'securityDashboard.addFilesPrompt': 'Sube archivos para escanearlos',
       'securityDashboard.scanFiles': 'Escanear archivos',
+      'securityDashboard.scanning': 'Escaneando...',
     }
   },
 };

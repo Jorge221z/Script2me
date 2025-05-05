@@ -161,6 +161,7 @@ export default function Security() {
                         progressSpeed={50}
                         progressMaxTime={15000}
                         submitButtonText={t('securityDashboard.scanFiles')}
+                        processingText={t('securityDashboard.scanning')}
                     />
                 </div>
 

@@ -23,7 +23,8 @@ const UploadForm = ({
     showCaptcha = false,
     progressSpeed = 100,
     progressMaxTime = 1200,
-    submitButtonText, // <-- nueva prop
+    submitButtonText,
+    processingText, // <-- nueva prop
 }) => {
     const { data, setData, post, errors, processing } = useForm({ files: [] });
 
@@ -55,7 +56,7 @@ const UploadForm = ({
     if (progressState === 'uploading') {
         progressText = t('uploadForm.uploading');
     } else if (progressState === 'processing') {
-        progressText = t('uploadForm.processing');
+        progressText = processingText || t('uploadForm.processing');
     } else if (progressState === 'completed' && progress === 100) {
         progressText = t('uploadForm.completed');
     }

@@ -114,6 +114,7 @@ export default function Refactor() {
                         progressSpeed={50}
                         progressMaxTime={15000}
                         submitButtonText={t('refactorDashboard.processFiles')}
+                        processingText={t('refactorDashboard.processing')}
                     />
                 </div>
                 {/* Zona de vista previa */}
