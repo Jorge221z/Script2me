@@ -18,4 +18,8 @@ return [
     'gemini_process_error' => 'Error processing the request with Gemini',
     'gemini_empty_response' => 'The response from Gemini is empty. Please try again with another file.',
     'gemini_api_error' => 'Error while trying to call the API: :msg',
+    'file_refactor_success' => 'File processed successfully',
+    'files_refactor_success' => ':count files processed successfully',
+    'file_security_success' => 'File scanned successfully',
+    'files_security_success' => ':count files scanned successfully',
 ];

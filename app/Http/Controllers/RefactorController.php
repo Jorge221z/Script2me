@@ -325,7 +325,7 @@ EOD;
 
             $request->session()->save(); //guardamos la sesion de forma explicita //
 
-            return redirect()->back()->with('success', count($newNames) === 1 ? __('messages.file_upload_success') : __('messages.files_upload_success', ['count' => count($newNames)]));
+            return redirect()->back()->with('success', count($newNames) === 1 ? __('messages.file_refactor_success') : __('messages.file_refactor_success', ['count' => count($newNames)]));
         }
     }
 
