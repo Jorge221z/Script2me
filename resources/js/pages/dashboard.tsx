@@ -113,6 +113,7 @@ export default function Dashboard() {
                         showCaptcha={false}
                         progressSpeed={50}
                         progressMaxTime={800}
+                        // submitButtonText no se pasa, se usa el valor por defecto
                     />
                 </div>
                 {/* Zona de vista previa */}

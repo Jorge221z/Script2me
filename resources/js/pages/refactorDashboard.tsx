@@ -113,6 +113,7 @@ export default function Refactor() {
                         showCaptcha={true}
                         progressSpeed={50}
                         progressMaxTime={15000}
+                        submitButtonText={t('refactorDashboard.processFiles')}
                     />
                 </div>
                 {/* Zona de vista previa */}

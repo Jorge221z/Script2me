@@ -16,7 +16,15 @@ import EmeraldLinearProgress from './EmeraldLinearProgress';
 import ProgressBarDisplay from './ProgressBarDisplay';
 import { useTranslation, Trans } from 'react-i18next';
 
-const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, progressSpeed = 100, progressMaxTime = 1200 }) => {
+const UploadForm = ({
+    actionUrl,
+    loadingTime,
+    buttonText,
+    showCaptcha = false,
+    progressSpeed = 100,
+    progressMaxTime = 1200,
+    submitButtonText, // <-- nueva prop
+}) => {
     const { data, setData, post, errors, processing } = useForm({ files: [] });
 
     const { t } = useTranslation();
@@ -632,7 +640,8 @@ const UploadForm = ({ actionUrl, loadingTime, buttonText, showCaptcha = false, p
                             t('uploadForm.tooManyFiles', { max: MAX_FILE_COUNT })
                         ) : (
                             <span className="inline-flex items-center justify-center">
-                                {t('uploadForm.uploadFiles')}
+                                {/* Usar el texto personalizado si se pasa, si no el valor por defecto */}
+                                {submitButtonText || t('uploadForm.uploadFiles')}
                                 <CloudUpload className="ml-6 h-6 w-6" />
                             </span>
                         )}

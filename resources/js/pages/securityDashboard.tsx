@@ -160,6 +160,7 @@ export default function Security() {
                         showCaptcha={true}
                         progressSpeed={50}
                         progressMaxTime={15000}
+                        submitButtonText={t('securityDashboard.scanFiles')}
                     />
                 </div>
 
