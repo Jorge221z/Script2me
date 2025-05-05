@@ -83,7 +83,7 @@ export default function Refactor() {
                 toastOptions={{
                     className: 'my-custom-toast',
                     style: {
-                        background: '#363636',
+                        background: '#1e3a5c', // azul oscuro
                         color: '#fff',
                         borderRadius: '8px',
                         padding: '20px 28px',
@@ -95,8 +95,8 @@ export default function Refactor() {
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
 
                 {/* Frase introductoria */}
-                <div className="mb-0 px-1 py-0.5 rounded bg-gradient-to-l from-emerald-100 via-emerald-50 to-white dark:from-emerald-900 dark:via-emerald-950 dark:to-black text-center border border-emerald-100 dark:border-emerald-900">
-                    <span className="text-[0.78rem] md:text-sm font-normal text-emerald-700 dark:text-emerald-300 leading-tight">
+                <div className="mb-0 px-1 py-0.5 rounded bg-gradient-to-l from-cyan-100 via-cyan-50 to-white dark:from-cyan-900 dark:via-cyan-950 dark:to-black text-center border border-cyan-100 dark:border-cyan-900">
+                    <span className="text-[0.78rem] md:text-sm font-normal text-cyan-700 dark:text-cyan-300 leading-tight">
                         {t('refactorDashboard.introLine1')}
                         <br />
                         <span className="font-normal text-gray-700 dark:text-gray-200">
@@ -105,7 +105,7 @@ export default function Refactor() {
                     </span>
                 </div>
 
-                <div className="border-sidebar-border/70 dark:border-sidebar-border relative rounded-xl pb-6">
+                <div className="border-blue-200 dark:border-blue-900 relative rounded-xl pb-6">
                     {/* Formulario */}
                     <UploadForm
                         actionUrl="/process"
@@ -130,7 +130,7 @@ export default function Refactor() {
                                 <>
                                     <button
                                         onClick={handleClearSession}
-                                        className="flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
+                                        className="flex items-center gap-2 rounded-lg bg-cyan-500 px-4 py-2 text-sm text-white hover:bg-cyan-600 dark:bg-cyan-600 dark:hover:bg-cyan-700"
                                     >
                                         <FiTrash2 className="inline-block" />
                                         {t('refactorDashboard.clearHistory')}
@@ -167,19 +167,19 @@ ${content}
                                 const normalizedContent = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
                                 const contentLines = normalizedContent.split('\n');
                                 return (
-                                    <div key={index} className="rounded-xl border border-emerald-100 dark:border-gray-300 shadow-sm dark:shadow-none bg-white dark:bg-black">
+                                    <div key={index} className="rounded-xl border border-cyan-100 dark:border-blue-300 shadow-sm dark:shadow-none bg-white dark:bg-black">
                                         {/* Cabecera del archivo */}
-                                        <div className="flex items-center justify-between px-2 py-3 bg-emerald-50 dark:bg-emerald-950/0 border border-emerald-200 dark:border-t-white border-l-white rounded-t-xl">
+                                        <div className="flex items-center justify-between px-2 py-3 bg-cyan-50 dark:bg-cyan-950/0 border border-cyan-200 dark:border-t-white border-l-white rounded-t-xl">
                                             <div className="flex items-center gap-2 min-w-0">
-                                                <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/50">
-                                                    <File className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                                                <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-cyan-100 dark:bg-cyan-900/50">
+                                                    <File className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                                                 </div>
-                                                <h3 className="font-medium text-emerald-800 dark:text-emerald-200 truncate">
+                                                <h3 className="font-medium text-cyan-800 dark:text-cyan-200 truncate">
                                                     {fileName}
                                                 </h3>
                                             </div>
                                             <div className="flex-shrink-0 ml-2">
-                                                <span className="px-2.5 py-1 text-xs rounded-full bg-emerald-100 dark:bg-emerald-800 text-emerald-600 dark:text-emerald-300 font-medium">
+                                                <span className="px-2.5 py-1 text-xs rounded-full bg-cyan-100 dark:bg-cyan-800 text-cyan-600 dark:text-cyan-300 font-medium">
                                                     {contentLines.length} {contentLines.length === 1 ? t('refactorDashboard.line') : t('refactorDashboard.lines')}
                                                 </span>
                                             </div>
@@ -189,13 +189,13 @@ ${content}
                                         <div className="relative max-h-[300px] overflow-y-auto">
                                             <div className="flex w-full min-w-fit">
                                                 {/* Columna de números de línea */}
-                                                <div className="sticky left-0 z-10 select-none py-2 text-right font-mono text-xs bg-emerald-50 dark:bg-emerald-950/30 border-r border-emerald-200 dark:border-emerald-500 flex-shrink-0">
+                                                <div className="sticky left-0 z-10 select-none py-2 text-right font-mono text-xs bg-cyan-50 dark:bg-cyan-950/30 border-r border-cyan-200 dark:border-cyan-500 flex-shrink-0">
                                                     {contentLines.map((_, lineIndex) => (
                                                         <div
                                                             key={lineIndex}
-                                                            className="h-[2.1rem] w-10 px-2 flex items-center justify-end hover:bg-gray-300 dark:hover:bg-emerald-700/50 transition-colors"
+                                                            className="h-[2.1rem] w-10 px-2 flex items-center justify-end hover:bg-blue-200 dark:hover:bg-cyan-700/50 transition-colors"
                                                         >
-                                                            <span className="text-emerald-400 dark:text-emerald-500">
+                                                            <span className="text-cyan-400 dark:text-cyan-500">
                                                                 {lineIndex + 1}
                                                             </span>
                                                         </div>
@@ -208,7 +208,7 @@ ${content}
                                                         {contentLines.map((line, lineIndex) => (
                                                             <div
                                                                 key={lineIndex}
-                                                                className="h-[2.1rem] px-4 flex items-center hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+                                                                className="h-[2.1rem] px-4 flex items-center hover:bg-cyan-50 dark:hover:bg-cyan-900/20 transition-colors"
                                                             >
                                                                 {line || ' '}
                                                             </div>
@@ -219,7 +219,7 @@ ${content}
                                         </div>
 
                                         {/* Pie del visor */}
-                                        <div className="flex justify-between items-center pr-6 py-2 border-t border-emerald-200 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30 text-xs text-emerald-500 dark:text-emerald-400">
+                                        <div className="flex justify-between items-center pr-6 py-2 border-t border-cyan-200 dark:border-cyan-700 bg-cyan-50 dark:bg-cyan-950/30 text-xs text-cyan-500 dark:text-cyan-400">
                                             {/* Tamaño al principio */}
                                             <span className='pl-4'>
                                                 {(content.length / 1024).toFixed(2)} KB
@@ -234,7 +234,7 @@ ${content}
                             })}
                         </div>
                     ) : (
-                        <div className="relative text-center py-12 px-4 h-auto min-h-[50vh] max-h-screen rounded-xl custom-border dark:border-gray-700 bg-gray-200 dark:bg-neutral-950/20">
+                        <div className="relative text-center py-12 px-4 h-auto min-h-[50vh] max-h-screen rounded-xl custom-border dark:border-blue-700 bg-gray-200 dark:bg-neutral-950/20">
                             <BackgroundPattern />
                             <div className="relative">
                                 <FileText className="mx-auto h-15 w-15 text-gray-400 dark:text-gray-500 mb-4" />
