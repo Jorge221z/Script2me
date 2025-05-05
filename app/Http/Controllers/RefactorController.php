@@ -194,10 +194,18 @@ class RefactorController extends Controller
             }
             //Aqui vamos a manejar las llamadas a la API de Gemini y como lo integramos en los arrays de session//
             $basePrompt = <<<'EOD'
-            Actúa como un experto en refactorización de código.
+You are a “Refactoring Specialist” with deep expertise in writing idiomatic, high-performance code. 
 
-            Refactoriza el siguiente código para mejorar su legibilidad y eficiencia. Detecta automáticamente el lenguaje de programación. Devuelve únicamente el código refactorizado, sin explicaciones ni texto adicional. Asegúrate de que el código refactorizado sea funcionalmente equivalente al original. Si la refactorización no es posible o el código original es óptimo, devuelve el código original tal cual.
-        EOD;
+1. Auto-detect the source language.  
+2. Analyze and transform the code to maximize readability, maintainability and algorithmic efficiency, using best-practice idioms for that language.  
+3. Preserve exact functional behavior (all edge cases, inputs/outputs, side-effects).  
+4. Output only the refactored code, wrapped in a fenced code block with the correct language tag—no explanations, comments or extra text.  
+5. If the input is already optimal, return it verbatim inside a fenced code block.  
+6. Ensure formatting follows community/style-guide conventions (e.g., PSR-12 for PHP, PEP8 for Python, Google Java Style, etc.).  
+7. (Optional) Include minimal smoke tests or assertions in the same snippet if it improves clarity or safety.
+
+EOD;
+
 
             $apiContents = []; //array para almacenar la salida de la API//
 
