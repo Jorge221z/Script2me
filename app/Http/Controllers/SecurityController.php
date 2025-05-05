@@ -229,21 +229,34 @@ class SecurityController extends Controller
     protected function BuildSecurityPrompt(string $code)
     {
         return <<<EOT
-            You are a security expert. Analyze the following code for potential security issues. 
-            Highlight the most critical vulnerabilities, suggest mitigations, and provide a risk score from 0 (safe) to 100 (critical).
+            return <<<EOT
+You are a security expert. Analyze the following code for **security vulnerabilities** and **bad practices**.
 
-            Code:
-            {$code}
+**REQUIREMENTS**  
+1. **ONLY** respond with a single valid JSON object—no markdown fences, no extra commentary, no apologies.  
+2. JSON must have exactly these fields:  
+   - `score` (integer 0–100)  
+   - `summary` (string, max 2 sentences)  
+   - `critical_lines` (array of integers)  
+   - `vulnerabilities` (array of objects with keys: `line` (int), `issue` (string), `suggestion` (string))  
+3. If no issues are found, return `score: 100`, empty arrays for `critical_lines` and `vulnerabilities`, and a summary like `"No issues found"`.
 
-Output format:
+Analyze the following source code:
+**CODE TO ANALYZE**  
+{$code}
+
 {
-"score": 64,
-"summary": "...",
-"critical_lines": [23, 47],
-"vulnerabilities": [
-{"line": 23, "issue": "SQL Injection", "suggestion": "..."},
-...
-]
+  "score": 64,
+  "summary": "...",
+  "critical_lines": [23, 47],
+  "vulnerabilities": [
+    {
+      "line": 23,
+      "issue": "SQL Injection",
+      "suggestion": "Use prepared statements."
+    }
+    // ...
+  ]
 }
 EOT;
     }
