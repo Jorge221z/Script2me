@@ -83,6 +83,18 @@ const resources = {
       'uploadForm.tooManyFiles': 'Too many files (max. {{max}})',
       'uploadForm.uploadFiles': 'Upload files',
       'formTooltip.supportedExtensions': 'Supported extensions:',
+      //Security Dashboard
+      'securityDashboard.description': 'Scan your code for vulnerabilities and security issues using the Google Gemini API.',
+      'securityDashboard.headTitle': 'Security Dashboard',
+      'securityDashboard.introLine1': 'Scan your code for vulnerabilities and security issues using the Google Gemini API.',
+      'securityDashboard.introLine2': 'This tool is designed to help you identify potential security risks in your code and improve its overall security posture.',
+      'securityDashboard.resultsTitle': 'Scanned Results',
+      'securityDashboard.clearHistory': 'Results copied to clipboard!',
+      'securityDashboard.score': 'Score',
+      'securityDashboard.criticalIssues': 'Critical Issues',
+      'securityDashboard.showAll': 'Show all',
+      'securityDashboard.noResults': 'No files have been scanned yet',
+      'securityDashboard.addFilesPrompt': 'Upload some to scan them',
     }
   },
   es: {
@@ -166,6 +178,18 @@ const resources = {
       'uploadForm.tooManyFiles': 'Demasiados archivos (máx. {{max}})',
       'uploadForm.uploadFiles': 'Subir archivos',
       'formTooltip.supportedExtensions': 'Extensiones soportadas:',
+      //Security Dashboard
+      'securityDashboard.description': 'Escanea tu código en busca de vulnerabilidades y problemas de seguridad utilizando la API de Google Gemini.',
+      'securityDashboard.headTitle': 'Tablero de Seguridad',
+      'securityDashboard.introLine1': 'Escanea tu código en busca de vulnerabilidades y problemas de seguridad utilizando la API de Google Gemini.',
+      'securityDashboard.introLine2': 'Esta herramienta está diseñada para ayudarte a identificar posibles riesgos de seguridad en tu código y mejorar su postura de seguridad general.',
+      'securityDashboard.resultsTitle': 'Resultados Escaneados',
+      'securityDashboard.clearHistory': 'Resultados copiados al portapapeles!',
+      'securityDashboard.score': 'Puntuación',
+      'securityDashboard.criticalIssues': 'Problemas Críticos',
+      'securityDashboard.showAll': 'Mostrar todo',
+      'securityDashboard.noResults': 'Aún no se han escaneado archivos',
+      'securityDashboard.addFilesPrompt': 'Sube archivos para escanearlos',
     }
   },
 };

@@ -106,7 +106,7 @@ export default function Security() {
                 {/* Upload section */}
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative rounded-xl pb-6">
                     <UploadForm
-                        actionUrl="/security-audit"
+                        actionUrl="/scan"
                         loadingTime={100}
                         buttonText={t('securityDashboard.uploadButton')}
                         showCaptcha={true}
@@ -146,7 +146,7 @@ export default function Security() {
                                             {item.filename}
                                         </h3>
                                         <span className="text-sm font-semibold">
-                                            {t('securityDashboard.score')}: {item.result.score}/10
+                                            {t('securityDashboard.score')}: {item.result.score}/100
                                         </span>
                                     </div>
 
