@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem, Vulnerability, SecurityResult, SecResponse } from '@/types';
 import { usePage, router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
@@ -10,25 +10,6 @@ import UploadForm from '../components/Forms/UploadForm';
 import { Head } from '@inertiajs/react';
 import BackgroundPattern from '@/layouts/app/BackgroundPattern';
 import { FileText, Expand } from 'lucide-react';
-
-interface Vulnerability {
-    line: number;
-    issue: string;
-    suggestion?: string;
-}
-
-interface SecurityResult {
-    score: number;
-    summary?: string;
-    critical_lines?: number[];
-    vulnerabilities: Vulnerability[];
-}
-
-interface SecResponse extends Record<string, any> {
-    SecContents: SecurityResult[];
-    SecNames: string[];
-    flash: { success?: string; error?: string };
-}
 
 export default function Security() {
     const { SecContents = [], SecNames = [], flash } = usePage<SecResponse>().props;
@@ -145,7 +126,7 @@ export default function Security() {
                     <span className="text-[0.85rem] md:text-base font-semibold bg-gradient-to-r from-amber-500 via-pink-400 to-fuchsia-400 dark:from-amber-300 dark:via-pink-400 dark:to-fuchsia-400 bg-clip-text text-transparent animate-gradient-x drop-shadow-md">
                         {t('securityDashboard.introLine1')}
                         <br />
-                        <span className="font-normal text-xs md:text-sm text-gray-700 dark:text-gray-200 bg-gradient-to-r from-gray-700 via-amber-600 to-pink-500 dark:from-gray-200 dark:via-amber-200 dark:to-pink-400 bg-clip-text text-transparent animate-gradient-x">
+                        <span className="font-normal text-xs md:text-sm text-gray-700-transparent dark:text-gray-200 bg-gradient-to-r from-gray-700 via-amber-600 to-pink-500 dark:from-gray-200 dark:via-amber-200 dark:to-pink-400 bg-clip-text animate-gradient-x">
                             {t('securityDashboard.introLine2')}
                         </span>
                     </span>
