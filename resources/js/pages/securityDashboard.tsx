@@ -46,7 +46,7 @@ export default function Security() {
             {},
             {
                 onSuccess: () => {
-                    sessionStorage.setItem('flash.success', t('securityDashboard.sessionCleared'));
+                    sessionStorage.setItem('flash.success', t('dashboard.sessionCleared'));
                     window.location.reload();
                 },
             }
@@ -141,11 +141,11 @@ export default function Security() {
 
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 {/* Intro text */}
-                <div className="mb-0 px-1 py-0.5 rounded bg-gradient-to-l from-amber-100 via-amber-50 to-white dark:from-amber-900 dark:via-amber-950 dark:to-black text-center border border-amber-100 dark:border-amber-900">
-                    <span className="text-[0.78rem] md:text-sm font-normal text-amber-700 dark:text-amber-300 leading-tight">
+                <div className="mb-0 px-1 py-0.5 rounded bg-gradient-to-br from-amber-100 via-white to-pink-100 dark:from-amber-900 dark:via-black dark:to-pink-900 text-center border border-amber-200 dark:border-amber-800 shadow-lg">
+                    <span className="text-[0.85rem] md:text-base font-semibold bg-gradient-to-r from-amber-500 via-pink-400 to-fuchsia-400 dark:from-amber-300 dark:via-pink-400 dark:to-fuchsia-400 bg-[length:200%_200%] bg-clip-text text-transparent animate-gradient-x drop-shadow-md">
                         {t('securityDashboard.introLine1')}
                         <br />
-                        <span className="font-normal text-gray-700 dark:text-gray-200">
+                        <span className="font-normal bg-gradient-to-r from-gray-700 via-amber-600 to-pink-500 dark:from-gray-200 dark:via-amber-200 dark:to-pink-400 bg-clip-text text-transparent animate-gradient-x">
                             {t('securityDashboard.introLine2')}
                         </span>
                     </span>
@@ -177,7 +177,7 @@ export default function Security() {
                                     onClick={handleClearSession}
                                     className="flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600"
                                 >
-                                    <FiTrash2 /> {t('securityDashboard.clearHistory')}
+                                    <FiTrash2 /> {t('refactorDashboard.clearHistory')}
                                 </button>
                             )}
                         </div>

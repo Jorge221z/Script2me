@@ -95,11 +95,11 @@ export default function Dashboard() {
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
 
                 {/* Frase introductoria */}
-                <div className="mb-0 px-1 py-0.5 rounded bg-gradient-to-r from-emerald-100 via-emerald-50 to-white dark:from-emerald-900 dark:via-emerald-950 dark:to-black text-center border border-emerald-100 dark:border-emerald-900">
-                    <span className="text-[0.78rem] md:text-sm font-normal text-emerald-700 dark:text-emerald-300 leading-tight">
+                <div className="mb-0 px-1 py-0.5 rounded bg-gradient-to-br from-emerald-100 via-white to-cyan-100 dark:from-emerald-900 dark:via-black dark:to-cyan-900 text-center border border-emerald-200 dark:border-emerald-800 shadow-lg">
+                    <span className="text-[0.85rem] md:text-base font-semibold bg-gradient-to-r from-emerald-500 via-cyan-400 to-blue-400 dark:from-emerald-300 dark:via-cyan-400 dark:to-blue-400 bg-[length:200%_200%] bg-clip-text text-transparent animate-gradient-x drop-shadow-md">
                         {t('dashboard.introLine1')}
                         <br />
-                        <span className="font-normal text-gray-700 dark:text-gray-200">
+                        <span className="font-normal bg-gradient-to-r from-gray-700 via-emerald-600 to-cyan-500 dark:from-gray-200 dark:via-emerald-200 dark:to-cyan-400 bg-clip-text text-transparent animate-gradient-x">
                             {t('dashboard.introLine2')}
                         </span>
                     </span>

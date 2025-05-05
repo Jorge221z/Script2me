@@ -95,11 +95,11 @@ export default function Refactor() {
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
 
                 {/* Frase introductoria */}
-                <div className="mb-0 px-1 py-0.5 rounded bg-gradient-to-l from-cyan-100 via-cyan-50 to-white dark:from-cyan-900 dark:via-cyan-950 dark:to-black text-center border border-cyan-100 dark:border-cyan-900">
-                    <span className="text-[0.78rem] md:text-sm font-normal text-cyan-700 dark:text-cyan-300 leading-tight">
+                <div className="mb-0 px-1 py-0.5 rounded bg-gradient-to-br from-cyan-100 via-white to-blue-100 dark:from-cyan-900 dark:via-black dark:to-blue-900 text-center border border-cyan-200 dark:border-cyan-800 shadow-lg">
+                    <span className="text-[0.85rem] md:text-base font-semibold bg-gradient-to-r from-cyan-500 via-blue-400 to-fuchsia-400 dark:from-cyan-300 dark:via-blue-400 dark:to-fuchsia-400 bg-[length:200%_200%] bg-clip-text text-transparent animate-gradient-x drop-shadow-md">
                         {t('refactorDashboard.introLine1')}
                         <br />
-                        <span className="font-normal text-gray-700 dark:text-gray-200">
+                        <span className="font-normal bg-gradient-to-r from-gray-700 via-cyan-600 to-blue-500 dark:from-gray-200 dark:via-cyan-200 dark:to-blue-400 bg-clip-text text-transparent animate-gradient-x">
                             {t('refactorDashboard.introLine2')}
                         </span>
                     </span>
@@ -130,10 +130,10 @@ export default function Refactor() {
                                 <>
                                     <button
                                         onClick={handleClearSession}
-                                        className="flex items-center gap-2 rounded-lg bg-cyan-500 px-4 py-2 text-sm text-white hover:bg-cyan-600 dark:bg-cyan-600 dark:hover:bg-cyan-700"
+                                        className="flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
                                     >
                                         <FiTrash2 className="inline-block" />
-                                        {t('refactorDashboard.clearHistory')}
+                                        {t('dashboard.clearHistory')}
                                     </button>
                                     <button
                                         onClick={() => {
