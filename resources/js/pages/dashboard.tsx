@@ -97,9 +97,10 @@ export default function Dashboard() {
                 {/* Frase introductoria */}
                 <div className="mb-0 px-1 py-0.5 rounded bg-gradient-to-r from-emerald-100 via-emerald-50 to-white dark:from-emerald-900 dark:via-emerald-950 dark:to-black text-center border border-emerald-100 dark:border-emerald-900">
                     <span className="text-[0.78rem] md:text-sm font-normal text-emerald-700 dark:text-emerald-300 leading-tight">
-                        Transform your code files into optimized prompts for AI assistants.<br />
+                        {t('dashboard.introLine1')}
+                        <br />
                         <span className="font-normal text-gray-700 dark:text-gray-200">
-                            Upload, process, and enhance your scripts with a single click—completely free & open-source.
+                            {t('dashboard.introLine2')}
                         </span>
                     </span>
                 </div>

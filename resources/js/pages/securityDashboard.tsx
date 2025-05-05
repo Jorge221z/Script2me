@@ -166,7 +166,7 @@ export default function Security() {
                 </div>
 
                 {/* Results section */}
-                <div className="border-sidebar-border dark:border-sidebar-border relative flex-1 rounded-xl border p-4 overflow-y-auto">
+                <div className="border-sidebar-border dark:border-sidebar-border relative flex-1 rounded-xl border p-4 overflow-y-auto ml-6 mr-6">
                     <div className="flex justify-between mb-4 items-center">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
                             {t('securityDashboard.resultsTitle')} {localResults.length > 0 && `(${localResults.length})`}
@@ -234,7 +234,7 @@ export default function Security() {
                             ))}
                         </div>
                     ) : (
-                        <div className="relative text-center py-12 px-4 min-h-[50vh] rounded-xl border dark:border-gray-700 bg-gray-200 dark:bg-neutral-950/20">
+                            <div className="relative text-center py-12 px-4 min-h-[50vh] rounded-xl border custom-border dark:border-gray-700 bg-gray-200 dark:bg-neutral-950/20">
                             <BackgroundPattern />
                             <div className="relative">
                                 <FileText className="mx-auto h-15 w-15 text-gray-400 dark:text-gray-500 mb-4" />
