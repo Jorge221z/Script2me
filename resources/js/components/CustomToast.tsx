@@ -38,6 +38,29 @@ export default function CustomToast() {
                             </svg>
                         </span>
                     ),
+                    error: {
+                        style: {
+                            background: 'linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%)',
+                            border: '1.5px solid #ef4444',
+                            boxShadow: '0 4px 18px 0 rgba(239,68,68,0.15), 0 1px 4px 0 rgba(248,113,113,0.08)',
+                        },
+                        icon: (
+                            <span style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                background: '#7f1d1d',
+                                borderRadius: '50%',
+                                width: 28,
+                                height: 28,
+                                marginRight: 12,
+                            }}>
+                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+                                    <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                            </span>
+                        ),
+                    },
                 }}
             />
             <style>

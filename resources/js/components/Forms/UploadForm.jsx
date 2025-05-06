@@ -213,6 +213,22 @@ const UploadForm = ({
         }
     }, [loading, processing, progressState]);
 
+    // Función para mostrar errores en toast
+    const showErrorToast = (message) => {
+        toast.error(message, {
+            duration: 1300,
+        });
+    };
+
+    // Función para mostrar múltiples errores en toasts
+    const showErrorToasts = (errorMessages) => {
+        errorMessages.forEach((message, index) => {
+            setTimeout(() => {
+                showErrorToast(message);
+            }, index * 300); // Reducido de 300 a 200ms para mostrar más rápido múltiples errores
+        });
+    };
+
     const validateFiles = (files, currentFileCount = 0, existingFiles = []) => {
         const errors = [];
         const newInvalidFiles = [];
@@ -221,7 +237,10 @@ const UploadForm = ({
 
         // Verificar si el número total de archivos excede el límite//
         if (currentFileCount + files.length > MAX_FILE_COUNT) {
-            errors.push(t('uploadForm.maxFilesError', { max: MAX_FILE_COUNT, adding: files.length, existing: currentFileCount }));
+            const errorMsg = t('uploadForm.maxFilesError', { max: MAX_FILE_COUNT, adding: files.length, existing: currentFileCount });
+            errors.push(errorMsg);
+            // Eliminar el showErrorToast de aquí para evitar duplicación
+
             return {
                 errors,
                 invalidFiles: newInvalidFiles,
@@ -243,17 +262,23 @@ const UploadForm = ({
             // Validación de extensión
             if (!allowedExtensions.includes(ext)) {
                 const errorMsg = t('uploadForm.extensionError', { ext });
-                errors.push(t('uploadForm.blockedFile', { name: file.name, error: errorMsg }));
+                const fileErrorWithName = t('uploadForm.blockedFile', { name: file.name, error: errorMsg });
+                errors.push(fileErrorWithName);
                 fileIsInvalid = true;
                 fileErrorMessage = errorMsg;
+                // Mostrar error en toast
+                showErrorToast(fileErrorWithName);
             }
 
             // Validación de tamaño
             if (file.size > MAX_SIZE_MB * 1024 * 1024) {
                 const errorMsg = t('uploadForm.sizeError', { max: MAX_SIZE_MB });
-                errors.push(t('uploadForm.tooBigFile', { name: file.name, error: errorMsg }));
+                const fileErrorWithName = t('uploadForm.tooBigFile', { name: file.name, error: errorMsg });
+                errors.push(fileErrorWithName);
                 fileIsInvalid = true;
                 fileErrorMessage = fileErrorMessage ? `${fileErrorMessage}, ${errorMsg}` : errorMsg;
+                // Mostrar error en toast
+                showErrorToast(fileErrorWithName);
             }
 
             if (fileIsInvalid) {
@@ -277,6 +302,7 @@ const UploadForm = ({
         const duplicate = newFiles.some(f => data.files.some(existing => existing.name === f.name));
         if (duplicate) {
             setDuplicateWarning(true);
+            showErrorToast(t('uploadForm.duplicateFiles'));
         }
         // Filtrar duplicados antes de validar
         const filteredFiles = newFiles.filter(f => !data.files.some(existing => existing.name === f.name));
@@ -289,6 +315,7 @@ const UploadForm = ({
 
         if (exceedsMaxCount) {
             setRecentlyExceededLimit(true);
+            showErrorToast(t('uploadForm.someFilesNotAdded', { max: MAX_FILE_COUNT }));
         }
 
         if (!exceedsMaxCount) {
@@ -320,6 +347,7 @@ const UploadForm = ({
         const duplicate = newFiles.some(f => data.files.some(existing => existing.name === f.name));
         if (duplicate) {
             setDuplicateWarning(true);
+            showErrorToast(t('uploadForm.duplicateFiles'));
         }
         const filteredFiles = newFiles.filter(f => !data.files.some(existing => existing.name === f.name));
         const { errors: validationErrors, invalidFiles: newInvalidFiles, fileErrors: newFileErrors, exceedsMaxCount } =
@@ -331,6 +359,7 @@ const UploadForm = ({
 
         if (exceedsMaxCount) {
             setRecentlyExceededLimit(true);
+            showErrorToast(t('uploadForm.someFilesNotAdded', { max: MAX_FILE_COUNT }));
         }
 
         if (!exceedsMaxCount) {
@@ -371,7 +400,9 @@ const UploadForm = ({
         const validFiles = data.files.filter((file) => !invalidFiles.includes(file.name));
 
         if (validFiles.length === 0) {
-            setLocalErrors([...localErrors.filter((e) => !e.includes(t('uploadForm.noValidFiles'))), t('uploadForm.noValidFiles')]);
+            const errorMsg = t('uploadForm.noValidFiles');
+            setLocalErrors([...localErrors.filter((e) => !e.includes(errorMsg)), errorMsg]);
+            showErrorToast(errorMsg);
             return;
         }
 
@@ -386,7 +417,7 @@ const UploadForm = ({
             const captchaResponse = window.grecaptcha.getResponse();
             if (!captchaResponse) {
                 toast.error(t('uploadForm.captchaRequired'), {
-                    duration: 2000,
+                    duration: 1200,
                     position: 'top-center',
                 });
                 return;
@@ -415,7 +446,7 @@ const UploadForm = ({
                 onSuccess: (page) => {
                     if (page.props.flash && page.props.flash.success) { //mostramos los mensajes flash que nos envia el backend //
                         toast.success(page.props.flash.success, {
-                            duration: loadingTime,
+                            duration: Math.min(loadingTime, 1000), // No más de 1000ms
                             position: 'top-center',
                         });
                     }
@@ -432,7 +463,9 @@ const UploadForm = ({
                     }
                 },
                 onError: (errors) => {
-                    setLocalErrors(Object.values(errors).flat());
+                    const errorMessages = Object.values(errors).flat();
+                    setLocalErrors(errorMessages);
+                    showErrorToasts(errorMessages);
                 },
             });
         } finally {
@@ -473,6 +506,7 @@ const UploadForm = ({
         const duplicate = newFiles.some(f => data.files.some(existing => existing.name === f.name));
         if (duplicate) {
             setDuplicateWarning(true);
+            showErrorToast(t('uploadForm.duplicateFiles'));
         }
         const filteredFiles = newFiles.filter(f => !data.files.some(existing => existing.name === f.name));
         const { errors: validationErrors, invalidFiles: newInvalidFiles, fileErrors: newFileErrors, exceedsMaxCount } =
@@ -484,6 +518,7 @@ const UploadForm = ({
 
         if (exceedsMaxCount) {
             setRecentlyExceededLimit(true);
+            showErrorToast(t('uploadForm.someFilesNotAdded', { max: MAX_FILE_COUNT }));
         }
 
         // Only add files if we don't exceed the limit and not duplicates
@@ -583,28 +618,6 @@ const UploadForm = ({
                                             </AnimatedRemoveWrapper>
                                         ))}
                                     </div>
-                                </div>
-                            )}
-                        </div>
-                        <div className="mt-4 space-y-2">
-                            {localErrors.length > 0 &&
-                                localErrors.map((error, index) => (
-                                    <div key={index} className="text-sm text-red-400 dark:text-red-600">
-                                        ⚠️ {error}
-                                    </div>
-                                ))}
-                            {errors.files && <div className="text-sm text-red-400 dark:text-red-600">⚠️ {errors.files}</div>}
-
-                            {/* Solo mostrar este mensaje si se ha intentado exceder el límite recientemente */}
-                            {recentlyExceededLimit && data.files.length <= MAX_FILE_COUNT && (
-                                <div className="text-sm text-amber-400 dark:text-amber-500">
-                                    ⚠️ {t('uploadForm.someFilesNotAdded', { max: MAX_FILE_COUNT })}
-                                </div>
-                            )}
-                            {/* Mostrar warning de duplicado */}
-                            {duplicateWarning && (
-                                <div className="text-sm text-amber-400 dark:text-amber-500">
-                                    ⚠️ {t('uploadForm.duplicateFiles')}
                                 </div>
                             )}
                         </div>
