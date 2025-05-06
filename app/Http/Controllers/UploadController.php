@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 use function Laravel\Prompts\clear;
 use function PHPUnit\Framework\throwException;
 use PhpOffice\PhpWord\IOFactory;
@@ -34,18 +35,84 @@ class UploadController extends Controller
 
     public function store(Request $request)
     {
-        $allowedExtensions = ['pdf', 'docx', 'c', 'cpp', 'h', 'cs', 'java', 'kt', 'kts', 'swift', 'go', 'rs', 'dart', 'py', 'rb', 'pl', 'php', 'ts', 'tsx', 'html', 'htm', 'css', 'scss', 'sass', 'less', 'js', 'jsx', 'vue', 'svelte', 'sql', 'db', 'sqlite', 'sqlite3', 'mdb', 'accdb', 'json', 'xml', 'yaml', 'yml', 'toml', 'ini', 'env', 'sh', 'bat', 'ps1', 'twig', 'ejs', 'pug', 'md', 'ipynb', 'r', 'mat', 'asm', 'f90', 'f95', 'txt'];
+        // Definir las extensiones permitidas y sus tipos MIME correspondientes
+        $allowedExtensions = [
+            'pdf' => 'application/pdf',
+            'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'c' => 'text/x-c',
+            'cpp' => 'text/x-c++',
+            'h' => 'text/x-h',
+            'cs' => 'text/plain',
+            'java' => 'text/x-java',
+            'kt' => 'text/plain',
+            'kts' => 'text/plain',
+            'swift' => 'text/x-swift',
+            'go' => 'text/x-go',
+            'rs' => 'text/x-rust',
+            'dart' => 'text/x-dart',
+            'py' => 'text/x-python',
+            'rb' => 'text/x-ruby',
+            'pl' => 'text/x-perl',
+            'php' => 'text/x-php',
+            'ts' => 'text/typescript',
+            'tsx' => 'text/typescript',
+            'html' => 'text/html',
+            'htm' => 'text/html',
+            'css' => 'text/css',
+            'scss' => 'text/x-scss',
+            'sass' => 'text/x-sass',
+            'less' => 'text/x-less',
+            'js' => 'application/javascript',
+            'jsx' => 'text/jsx',
+            'vue' => 'text/x-vue',
+            'svelte' => 'text/plain',
+            'sql' => 'text/x-sql',
+            'db' => 'application/octet-stream',
+            'sqlite' => 'application/x-sqlite3',
+            'sqlite3' => 'application/x-sqlite3',
+            'mdb' => 'application/x-msaccess',
+            'accdb' => 'application/x-msaccess',
+            'json' => 'application/json',
+            'xml' => 'application/xml',
+            'yaml' => 'text/x-yaml',
+            'yml' => 'text/x-yaml',
+            'toml' => 'text/x-toml',
+            'ini' => 'text/x-ini',
+            'env' => 'text/plain',
+            'sh' => 'application/x-sh',
+            'bat' => 'application/x-bat',
+            'ps1' => 'application/x-powershell',
+            'twig' => 'text/x-twig',
+            'ejs' => 'text/plain',
+            'pug' => 'text/x-pug',
+            'md' => 'text/markdown',
+            'ipynb' => 'application/x-ipynb+json',
+            'r' => 'text/x-r',
+            'mat' => 'application/x-matlab-data',
+            'asm' => 'text/x-asm',
+            'f90' => 'text/x-fortran',
+            'f95' => 'text/x-fortran',
+            'txt' => 'text/plain'
+        ];
 
+        // Validar los archivos subidos con límite de 10 archivos y comprobación de tipo MIME
         $validator = Validator::make($request->all(), [
-            'files' => 'required|array|min:1',
+            'files' => 'required|array|min:1|max:10',
             'files.*' => [
                 'required',
                 'file',
                 'max:2048',
                 function ($attribute, $value, $fail) use ($allowedExtensions) {
                     $extension = strtolower($value->getClientOriginalExtension());
-                    if (!in_array($extension, $allowedExtensions)) {
+                    if (!array_key_exists($extension, $allowedExtensions)) {
                         $fail(__('messages.extension_not_allowed', ['ext' => $extension]));
+                        return;
+                    }
+
+                    $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                    $mimeType = $finfo->file($value->getRealPath());
+                    if ($mimeType !== $allowedExtensions[$extension]) {
+                        $fail(__('messages.invalid_mime_type', ['ext' => $extension, 'mime' => $mimeType]));
                     }
                 }
             ]
@@ -53,7 +120,8 @@ class UploadController extends Controller
             'files.required' => __('messages.files_required'),
             'files.*.file' => __('messages.files_file'),
             'files.*.max' => __('messages.files_max'),
-            'files.min' => __('messages.files_min')
+            'files.min' => __('messages.files_min'),
+            'files.max' => __('messages.files_max_count', ['count' => 10])
         ]);
 
         if ($validator->fails()) {
@@ -67,7 +135,12 @@ class UploadController extends Controller
             try {
                 // Leer el contenido ANTES de almacenar y/o procesar
                 $content = file_get_contents($file->getRealPath());
-                $extension = strtolower($file->getClientOriginalExtension()); //para comparar extensiones de forma sencilla//
+                $extension = strtolower($file->getClientOriginalExtension());
+
+                // Sanitizar el contenido según el tipo de archivo
+                if (in_array($extension, ['txt', 'md', 'html', 'htm', 'css', 'js', 'json', 'xml', 'yaml', 'yml'])) {
+                    $content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
+                }
 
                 if ($extension === 'pdf') {
                     try {
@@ -88,7 +161,8 @@ class UploadController extends Controller
                         $cleanText = implode("\n", $cleanLines);
                         $newContents[] = $cleanText;
                     } catch (Exception $e) {
-                        throw new Exception(__('messages.failed_parse_pdf', ['msg' => $e->getMessage()]));
+                        Log::error('Error parsing PDF: ' . $e->getMessage());
+                        throw new Exception(__('messages.failed_parse_pdf'));
                     }
                 } else if ($extension === 'docx') {
                     try {
@@ -118,19 +192,21 @@ class UploadController extends Controller
                         }
                         $cleanText = implode("\n", $lines);
                         $newContents[] = $cleanText;
-                    } catch(Exception $e) {
-                        throw new Exception(__('messages.failed_parse_docx', ['msg' => $e->getMessage()]));
+                    } catch (Exception $e) {
+                        Log::error('Error parsing DOCX: ' . $e->getMessage());
+                        throw new Exception(__('messages.failed_parse_docx'));
                     }
                 } else {
-                    //$cleanText = trim(preg_replace('/\s+/', ' ', $content));
                     $newContents[] = $content;
                 }
 
-                $timestampName = time().'_'.$file->getClientOriginalName();
+                // Almacenar el archivo en un directorio no público
+                $timestampName = time() . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('uploads', $timestampName, 'local');
 
-                $file->storeAs('uploads', $timestampName, 'public');
                 $newNames[] = $file->getClientOriginalName();
             } catch (Exception $e) {
+                Log::error('Error processing file: ' . $e->getMessage());
                 return back()->withErrors(['files' => __('messages.error_processing_file', ['name' => $file->getClientOriginalName()])]);
             }
         }
@@ -152,6 +228,7 @@ class UploadController extends Controller
             ? __('messages.file_upload_success')
             : __('messages.files_upload_success', ['count' => count($newNames)]));
     }
+
 
     public function clearSession(Request $request)
     {
