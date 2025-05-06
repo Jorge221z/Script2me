@@ -138,7 +138,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                             <AppLogo className="h-12 w-12 bg-transparent p-0 m-0" />
                             <span className="text-xl font-bold tracking-tight group-hover:text-emerald-400 transition-colors -ml-1">Script2me</span>
                         </Link>
-                        
+
                         <Sheet>
                             <SheetTrigger asChild>
                                 <Button
@@ -162,9 +162,9 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                         <div className="flex flex-col space-y-2">
                                             <h3 className="text-xs uppercase text-neutral-500 font-semibold mb-2">Navegación</h3>
                                             {mainNavItems.map((item) => (
-                                                <Link 
-                                                    key={item.title} 
-                                                    href={item.href} 
+                                                <Link
+                                                    key={item.title}
+                                                    href={item.href}
                                                     className={cn(
                                                         "flex items-center space-x-2 font-medium py-2 px-3 rounded-md transition-colors",
                                                         page.url === item.href ? "bg-neutral-800 text-emerald-400" : "hover:bg-neutral-800"
@@ -189,20 +189,34 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                         {item.title && <span>{item.title}</span>}
                                                     </a>
                                                 ) : item.href.startsWith('http') ? (
-                                                    <a
+                                                    item.icon === Github ? (
+                                                        // GitHub: icono a la izquierda, texto "Repositorio" a la derecha SOLO en sidebar móvil
+                                                        <a
+                                                            key="github"
+                                                            href={item.href}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="flex items-center space-x-2 font-medium py-2 px-3 rounded-md hover:bg-neutral-800 transition-colors"
+                                                        >
+                                                            <Icon iconNode={item.icon} className="h-5 w-5" />
+                                                            <span>GitHub</span>
+                                                        </a>
+                                                    ) : (
+                                                        <a
+                                                            key={item.title}
+                                                            href={item.href}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="flex items-center space-x-2 font-medium py-2 px-3 rounded-md hover:bg-neutral-800 transition-colors"
+                                                        >
+                                                            <Icon iconNode={item.icon} className={item.title === '' ? "h-5 w-5 mx-auto" : "h-5 w-5"} />
+                                                            {item.title && <span>{item.title}</span>}
+                                                        </a>
+                                                    )
+                                                ) : (
+                                                    <Link
                                                         key={item.title}
                                                         href={item.href}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="flex items-center space-x-2 font-medium py-2 px-3 rounded-md hover:bg-neutral-800 transition-colors"
-                                                    >
-                                                        <Icon iconNode={item.icon} className={item.title === '' ? "h-5 w-5 mx-auto" : "h-5 w-5"} />
-                                                        {item.title && <span>{item.title}</span>}
-                                                    </a>
-                                                ) : (
-                                                    <Link 
-                                                        key={item.title} 
-                                                        href={item.href} 
                                                         className={cn(
                                                             "flex items-center space-x-2 font-medium py-2 px-3 rounded-md transition-colors",
                                                             page.url === item.href ? "bg-neutral-800 text-emerald-400" : "hover:bg-neutral-800"
@@ -245,10 +259,11 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 prefetch
                             >
                                 <item.icon className="h-5 w-5" />
-                                <span className="hidden md:inline">{item.title}</span>
+                                <span className="hidden lg:inline">{item.title}</span>
                             </Link>
                         ))}
                     </nav>
+
                     {/* Botones principales solo iconos en móvil (xs/sm) - ocultos */}
                     {/* <nav className="ml-1 flex md:hidden items-center gap-1 flex-wrap">
                         ...eliminado en móvil...

@@ -25,7 +25,7 @@ const resources = {
       'refactorDashboard.description': 'Optimize code using the Google Gemini API for smart processing and refactoring.',
       'refactorDashboard.headTitle': 'AI-powered code processing',
       'refactorDashboard.uploadButton': 'Upload',
-      'refactorDashboard.uploadedFiles': 'Uploaded files',
+      'refactorDashboard.uploadedFiles': 'Processed files',
       'refactorDashboard.clearHistory': 'Clear history',
       'refactorDashboard.copyAll': 'Copy all',
       'refactorDashboard.contentCopied': 'Content copied to clipboard!',
