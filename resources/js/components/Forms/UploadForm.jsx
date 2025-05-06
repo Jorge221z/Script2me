@@ -7,7 +7,6 @@ import FormTooltip from './FormTooltip';
 import { allowedExtensions } from './allowedExtensions';
 import RecaptchaContainer from './RecaptchaContainer';
 import { CloudUpload } from 'lucide-react';
-import DragOverAnimation from './DragOverAnimation';
 import GlobalDragOver from './GlobalDragOver';
 import FilePreview from './FilePreview';
 import AnimatedRemoveWrapper from './AnimatedRemoveWrapper';
@@ -518,7 +517,7 @@ const UploadForm = ({
                             onDragLeave={handleDragLeave}
                             onDrop={handleDrop}
                         >
-                            <DragOverAnimation isDragging={isDragging} />
+
                             <label
                                 htmlFor="file-upload"
                                 className="flex h-38 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-0 bg-transparent hover:bg-[#303030]/50 dark:hover:bg-gray-300/50"
