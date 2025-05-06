@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use App\Services\GeminiService;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Http;
+use finfo;
 
 class RefactorController extends Controller
 {
@@ -92,7 +93,65 @@ class RefactorController extends Controller
 
         // Definir las extensiones permitidas
         {
-            $allowedExtensions = ['pdf', 'docx', 'c', 'cpp', 'h', 'cs', 'java', 'kt', 'kts', 'swift', 'go', 'rs', 'dart', 'py', 'rb', 'pl', 'php', 'ts', 'tsx', 'html', 'htm', 'css', 'scss', 'sass', 'less', 'js', 'jsx', 'vue', 'svelte', 'sql', 'db', 'sqlite', 'sqlite3', 'mdb', 'accdb', 'json', 'xml', 'yaml', 'yml', 'toml', 'ini', 'env', 'sh', 'bat', 'ps1', 'twig', 'ejs', 'pug', 'md', 'ipynb', 'r', 'mat', 'asm', 'f90', 'f95', 'txt'];
+            // Definir las extensiones permitidas y sus tipos MIME correspondientes para garantizar la seguridad//
+            $allowedExtensions = [
+                'pdf' => 'application/pdf',
+                'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'c' => 'text/x-c',
+                'cpp' => 'text/x-c++',
+                'h' => 'text/x-h',
+                'cs' => 'text/plain',
+                'java' => 'text/x-java',
+                'kt' => 'text/plain',
+                'kts' => 'text/plain',
+                'swift' => 'text/x-swift',
+                'go' => 'text/x-go',
+                'rs' => 'text/x-rust',
+                'dart' => 'text/x-dart',
+                'py' => 'text/x-python',
+                'rb' => 'text/x-ruby',
+                'pl' => 'text/x-perl',
+                'php' => 'text/x-php',
+                'ts' => 'text/typescript',
+                'tsx' => 'text/typescript',
+                'html' => 'text/html',
+                'htm' => 'text/html',
+                'css' => 'text/css',
+                'scss' => 'text/x-scss',
+                'sass' => 'text/x-sass',
+                'less' => 'text/x-less',
+                'js' => 'application/javascript',
+                'jsx' => 'text/jsx',
+                'vue' => 'text/x-vue',
+                'svelte' => 'text/plain',
+                'sql' => 'text/x-sql',
+                'db' => 'application/octet-stream',
+                'sqlite' => 'application/x-sqlite3',
+                'sqlite3' => 'application/x-sqlite3',
+                'mdb' => 'application/x-msaccess',
+                'accdb' => 'application/x-msaccess',
+                'json' => 'application/json',
+                'xml' => 'application/xml',
+                'yaml' => 'text/x-yaml',
+                'yml' => 'text/x-yaml',
+                'toml' => 'text/x-toml',
+                'ini' => 'text/x-ini',
+                'env' => 'text/plain',
+                'sh' => 'application/x-sh',
+                'bat' => 'application/x-bat',
+                'ps1' => 'application/x-powershell',
+                'twig' => 'text/x-twig',
+                'ejs' => 'text/plain',
+                'pug' => 'text/x-pug',
+                'md' => 'text/markdown',
+                'ipynb' => 'application/x-ipynb+json',
+                'r' => 'text/x-r',
+                'mat' => 'application/x-matlab-data',
+                'asm' => 'text/x-asm',
+                'f90' => 'text/x-fortran',
+                'f95' => 'text/x-fortran',
+                'txt' => 'text/plain'
+            ];
 
             $validator = Validator::make($request->all(), [
                 'files' => 'required|array|min:1',
@@ -102,8 +161,15 @@ class RefactorController extends Controller
                     'max:2048',
                     function ($attribute, $value, $fail) use ($allowedExtensions) {
                         $extension = strtolower($value->getClientOriginalExtension());
-                        if (!in_array($extension, $allowedExtensions)) {
+                        if (!array_key_exists($extension, $allowedExtensions)) {
                             $fail(__('messages.extension_not_allowed', ['ext' => $extension]));
+                            return;
+                        }
+
+                        $finfo = new finfo(FILEINFO_MIME_TYPE);
+                        $mimeType = $finfo->file($value->getRealPath());
+                        if ($mimeType !== $allowedExtensions[$extension]) {
+                            $fail(__('messages.invalid_mime_type', ['ext' => $extension, 'mime' => $mimeType]));
                         }
                     }
                 ]
@@ -126,6 +192,11 @@ class RefactorController extends Controller
                     // Leer el contenido ANTES de almacenar y/o procesar
                     $content = file_get_contents($file->getRealPath());
                     $extension = strtolower($file->getClientOriginalExtension()); //para comparar extensiones de forma sencilla//
+
+                    // Sanitizar el contenido según el tipo de archivo
+                if (in_array($extension, ['txt', 'md', 'html', 'htm', 'css', 'js', 'json', 'xml', 'yaml', 'yml'])) {
+                    $content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
+                }
 
                     if ($extension === 'pdf') {
                         try {
@@ -186,7 +257,7 @@ class RefactorController extends Controller
 
                     $timestampName = time() . '_' . $file->getClientOriginalName();
 
-                    $file->storeAs('uploads', $timestampName, 'public');
+                    $file->storeAs('uploads', $timestampName, 'local');
                     $newNames[] = $file->getClientOriginalName();
                 } catch (Exception $e) {
                     return back()->withErrors(['files' => __('messages.error_processing_file', ['name' => $file->getClientOriginalName()])]);
@@ -225,8 +296,6 @@ EOD;
 
                     // Ahora almacenamos la salida en el arrray de la API//
                     $apiContents[] = $cleanedResponse;
-
-
                 } catch (Exception $e) {
                     return redirect()->back()->with('error', __('messages.gemini_api_error', ['msg' => $e->getMessage()]));
                 }
@@ -260,5 +329,4 @@ EOD;
             '_sync' => now()->timestamp,
         ]);
     }
-
 }
