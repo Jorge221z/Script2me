@@ -22,4 +22,6 @@ return [
     'files_refactor_success' => ':count files processed successfully',
     'file_security_success' => 'File scanned successfully',
     'files_security_success' => ':count files scanned successfully',
+    'invalid_mime_type' => 'The MIME type ":mime" is not valid for the extension .:ext.',
+    'files_max_count' => 'You cannot upload more than :count files.',
 ];

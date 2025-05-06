@@ -9,7 +9,10 @@ use Exception;
 use App\Services\GeminiService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\Element\Text;
+use PhpOffice\PhpWord\Element\TextRun;
 
 class SecurityController extends Controller
 {
@@ -34,15 +37,14 @@ class SecurityController extends Controller
 
 
 
-    public function scan(Request $request, GeminiService $geminiService) //le pasamos tambien el servicio de gemini//
+    public function scan(Request $request, GeminiService $geminiService)
     {
-        //validamos el captcha solo si fue enviado
+        // Validamos el captcha solo si fue enviado
         if ($request->has('captcha')) {
             $this->validate($request, [
                 'captcha' => 'required|string'
             ]);
 
-            // Verificamos el captcha
             $captchaResponse = $request->input('captcha');
             $secretKey = env('RECAPTCHA_SECRET_KEY');
 
@@ -59,160 +61,215 @@ class SecurityController extends Controller
             }
         }
 
-        // Validar los archivos subidos
-        $this->validate($request, [
-            'files' => 'required|array|min:1',
-            'files.*' => 'required|file|max:2048'
+        // Definir las extensiones permitidas y sus tipos MIME correspondientes
+        $allowedExtensions = [
+            'pdf' => 'application/pdf',
+            'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'c' => 'text/x-c',
+            'cpp' => 'text/x-c++',
+            'h' => 'text/x-h',
+            'cs' => 'text/plain',
+            'java' => 'text/x-java',
+            'kt' => 'text/plain',
+            'kts' => 'text/plain',
+            'swift' => 'text/x-swift',
+            'go' => 'text/x-go',
+            'rs' => 'text/x-rust',
+            'dart' => 'text/x-dart',
+            'py' => 'text/x-python',
+            'rb' => 'text/x-ruby',
+            'pl' => 'text/x-perl',
+            'php' => 'text/x-php',
+            'ts' => 'text/typescript',
+            'tsx' => 'text/typescript',
+            'html' => 'text/html',
+            'htm' => 'text/html',
+            'css' => 'text/css',
+            'scss' => 'text/x-scss',
+            'sass' => 'text/x-sass',
+            'less' => 'text/x-less',
+            'js' => 'application/javascript',
+            'jsx' => 'text/jsx',
+            'vue' => 'text/x-vue',
+            'svelte' => 'text/plain',
+            'sql' => 'text/x-sql',
+            'db' => 'application/octet-stream',
+            'sqlite' => 'application/x-sqlite3',
+            'sqlite3' => 'application/x-sqlite3',
+            'mdb' => 'application/x-msaccess',
+            'accdb' => 'application/x-msaccess',
+            'json' => 'application/json',
+            'xml' => 'application/xml',
+            'yaml' => 'text/x-yaml',
+            'yml' => 'text/x-yaml',
+            'toml' => 'text/x-toml',
+            'ini' => 'text/x-ini',
+            'env' => 'text/plain',
+            'sh' => 'application/x-sh',
+            'bat' => 'application/x-bat',
+            'ps1' => 'application/x-powershell',
+            'twig' => 'text/x-twig',
+            'ejs' => 'text/plain',
+            'pug' => 'text/x-pug',
+            'md' => 'text/markdown',
+            'ipynb' => 'application/x-ipynb+json',
+            'r' => 'text/x-r',
+            'mat' => 'application/x-matlab-data',
+            'asm' => 'text/x-asm',
+            'f90' => 'text/x-fortran',
+            'f95' => 'text/x-fortran',
+            'txt' => 'text/plain'
+        ];
+
+        // Validar los archivos subidos con límite de 10 archivos y comprobación de tipo MIME
+        $validator = Validator::make($request->all(), [
+            'files' => 'required|array|min:1|max:20',
+            'files.*' => [
+                'required',
+                'file',
+                'max:2048',
+                function ($attribute, $value, $fail) use ($allowedExtensions) {
+                    $extension = strtolower($value->getClientOriginalExtension());
+                    if (!array_key_exists($extension, $allowedExtensions)) {
+                        $fail(__('messages.extension_not_allowed', ['ext' => $extension]));
+                        return;
+                    }
+
+                    $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                    $mimeType = $finfo->file($value->getRealPath());
+                    if ($mimeType !== $allowedExtensions[$extension]) {
+                        $fail(__('messages.invalid_mime_type', ['ext' => $extension, 'mime' => $mimeType]));
+                    }
+                }
+            ]
+        ], [
+            'files.required' => __('messages.files_required'),
+            'files.*.file' => __('messages.files_file'),
+            'files.*.max' => __('messages.files_max'),
+            'files.min' => __('messages.files_min'),
+            'files.max' => __('messages.files_max_count', ['count' => 10])
         ]);
 
-        // Definir las extensiones permitidas
-        {
-            $allowedExtensions = ['pdf', 'docx', 'c', 'cpp', 'h', 'cs', 'java', 'kt', 'kts', 'swift', 'go', 'rs', 'dart', 'py', 'rb', 'pl', 'php', 'ts', 'tsx', 'html', 'htm', 'css', 'scss', 'sass', 'less', 'js', 'jsx', 'vue', 'svelte', 'sql', 'db', 'sqlite', 'sqlite3', 'mdb', 'accdb', 'json', 'xml', 'yaml', 'yml', 'toml', 'ini', 'env', 'sh', 'bat', 'ps1', 'twig', 'ejs', 'pug', 'md', 'ipynb', 'r', 'mat', 'asm', 'f90', 'f95', 'txt'];
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
 
-            $validator = Validator::make($request->all(), [
-                'files' => 'required|array|min:1',
-                'files.*' => [
-                    'required',
-                    'file',
-                    'max:2048',
-                    function ($attribute, $value, $fail) use ($allowedExtensions) {
-                        $extension = strtolower($value->getClientOriginalExtension());
-                        if (!in_array($extension, $allowedExtensions)) {
-                            $fail(__('messages.extension_not_allowed', ['ext' => $extension]));
-                        }
-                    }
-                ]
-            ], [
-                'files.required' => __('messages.files_required'),
-                'files.*.file' => __('messages.files_file'),
-                'files.*.max' => __('messages.files_max'),
-                'files.min' => __('messages.files_min')
-            ]);
+        $newContents = [];
+        $newNames = [];
 
-            if ($validator->fails()) {
-                return back()->withErrors($validator);
-            }
+        foreach ($request->file('files') as $file) {
+            try {
+                $content = file_get_contents($file->getRealPath());
+                $extension = strtolower($file->getClientOriginalExtension());
 
-            $newContents = [];
-            $newNames = [];
+                if (in_array($extension, ['txt', 'md', 'html', 'htm', 'css', 'js', 'json', 'xml', 'yaml', 'yml'])) {
+                    $content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
+                }
 
-            foreach ($request->file('files') as $file) {
-                try {
-                    // Leer el contenido ANTES de almacenar y/o procesar
-                    $content = file_get_contents($file->getRealPath());
-                    $extension = strtolower($file->getClientOriginalExtension()); //para comparar extensiones de forma sencilla//
+                if ($extension === 'pdf') {
+                    try {
+                        $parser = new \Smalot\PdfParser\Parser();
+                        $pdf = $parser->parseContent($content);
+                        $text = $pdf->getText();
 
-                    if ($extension === 'pdf') {
-                        try {
-                            $parser = new \Smalot\PdfParser\Parser();
-                            $pdf = $parser->parseContent($content);
-                            $text = $pdf->getText();
+                        $lines = explode("\n", $text);
+                        $cleanLines = [];
 
-                            $lines = explode("\n", $text);
-                            $cleanLines = [];
-
-                            foreach ($lines as $line) {
-                                $trimmedLine = trim(preg_replace('/\s+/', ' ', $line));
-                                if ($trimmedLine !== '') {
-                                    $cleanLines[] = $trimmedLine;
-                                }
+                        foreach ($lines as $line) {
+                            $trimmedLine = trim(preg_replace('/\s+/', ' ', $line));
+                            if ($trimmedLine !== '') {
+                                $cleanLines[] = $trimmedLine;
                             }
-
-                            $cleanText = implode("\n", $cleanLines);
-                            $newContents[] = $cleanText;
-                        } catch (Exception $e) {
-                            throw new Exception(__('messages.failed_parse_pdf', ['msg' => $e->getMessage()]));
                         }
-                    } else if ($extension === 'docx') {
-                        try {
-                            $phpWord = IOFactory::load($file->getRealPath());
-                            $lines = [];
 
-                            foreach ($phpWord->getSections() as $section) {
-                                foreach ($section->getElements() as $element) {
-                                    if ($element instanceof Text) {
-                                        $line = trim(preg_replace('/[ \t]+/', ' ', $element->getText()));
-                                        if ($line !== '') {
-                                            $lines[] = $line;
+                        $cleanText = implode("\n", $cleanLines);
+                        $newContents[] = $cleanText;
+                    } catch (Exception $e) {
+                        Log::error('Error parsing PDF: ' . $e->getMessage());
+                        throw new Exception(__('messages.failed_parse_pdf'));
+                    }
+                } else if ($extension === 'docx') {
+                    try {
+                        $phpWord = IOFactory::load($file->getRealPath());
+                        $lines = [];
+
+                        foreach ($phpWord->getSections() as $section) {
+                            foreach ($section->getElements() as $element) {
+                                if ($element instanceof Text) {
+                                    $line = trim(preg_replace('/[ \t]+/', ' ', $element->getText()));
+                                    if ($line !== '') {
+                                        $lines[] = $line;
+                                    }
+                                } elseif ($element instanceof TextRun) {
+                                    $textRunLine = '';
+                                    foreach ($element->getElements() as $child) {
+                                        if ($child instanceof Text) {
+                                            $textRunLine .= $child->getText() . ' ';
                                         }
-                                    } elseif ($element instanceof TextRun) {
-                                        $textRunLine = '';
-                                        foreach ($element->getElements() as $child) {
-                                            if ($child instanceof Text) {
-                                                $textRunLine .= $child->getText() . ' ';
-                                            }
-                                        }
-                                        $line = trim(preg_replace('/[ \t]+/', ' ', $textRunLine));
-                                        if ($line !== '') {
-                                            $lines[] = $line;
-                                        }
+                                    }
+                                    $line = trim(preg_replace('/[ \t]+/', ' ', $textRunLine));
+                                    if ($line !== '') {
+                                        $lines[] = $line;
                                     }
                                 }
                             }
-                            $cleanText = implode("\n", $lines);
-                            $newContents[] = $cleanText;
-                        } catch (Exception $e) {
-                            throw new Exception(__('messages.failed_parse_docx', ['msg' => $e->getMessage()]));
                         }
-                    } else {
-                        //$cleanText = trim(preg_replace('/\s+/', ' ', $content));
-                        $newContents[] = $content;
+                        $cleanText = implode("\n", $lines);
+                        $newContents[] = $cleanText;
+                    } catch (Exception $e) {
+                        Log::error('Error parsing DOCX: ' . $e->getMessage());
+                        throw new Exception(__('messages.failed_parse_docx'));
                     }
-
-                    $timestampName = time() . '_' . $file->getClientOriginalName();
-
-                    $file->storeAs('uploads', $timestampName, 'public');
-                    $newNames[] = $file->getClientOriginalName();
-                } catch (Exception $e) {
-                    return back()->withErrors(['files' => __('messages.error_processing_file', ['name' => $file->getClientOriginalName()])]);
+                } else {
+                    $newContents[] = $content;
                 }
+
+                $timestampName = time() . '_' . $file->getClientOriginalName();
+                $file->storeAs('uploads', $timestampName, 'local');
+                $newNames[] = $file->getClientOriginalName();
+            } catch (Exception $e) {
+                Log::error('Error processing file: ' . $e->getMessage());
+                return back()->withErrors(['files' => __('messages.error_processing_file', ['name' => $file->getClientOriginalName()])]);
             }
-            //Aqui vamos a manejar las llamadas a la API de Gemini y como lo integramos en los arrays de session//
-
-            $SecContents = []; //array para almacenar las respuestas de la API//
-
-            foreach ($newContents as $content) {
-                try {
-                    $completePrompt = $this->BuildSecurityPrompt($content);
-                    $rawResponse = $geminiService->generateText($completePrompt);
-                    // Ahora extraemos el contenido del JSON //
-                    $jsonResponse = $this->extractJsonFromResponse($rawResponse);
-
-                    // Validamos el caso en el que la salida se quede vacia tras limpiarla //
-                    if (empty($jsonResponse) || !isset($jsonResponse['score'])) {
-                        return redirect()->back()->with('error', __('messages.gemini_empty_response'));
-                    }
-
-                    // Ahora almacenamos la salida en el arrray de la API//
-                    $SecContents[] = $jsonResponse;
-
-
-                } catch (Exception $e) {
-                    $SecContents[] = [
-                        'filename' => $content['filename'],
-                        'error' => $e->getMessage()
-                    ];
-                    continue;
-                }
-            }
-
-            // Actualizamos arrays de sesion
-            $request->session()->put('SecContents', array_merge(
-                $request->session()->get('SecContents', []),
-                $SecContents
-            ));
-
-            $request->session()->put('SecNames', array_merge(
-                $request->session()->get('SecNames', []),
-                $newNames
-            ));
-
-            $request->session()->save(); //guardamos la sesion de forma explicita //
-
-            // Redirigimos a la vista de seguridad con los resultados
-            return redirect()->back()->with('success', count($newNames) === 1 ? __('messages.file_security_success') : __('messages.files_security_success', ['count' => count($newNames)]));
         }
 
+        $SecContents = [];
+
+        foreach ($newContents as $content) {
+            try {
+                $completePrompt = $this->BuildSecurityPrompt($content);
+                $rawResponse = $geminiService->generateText($completePrompt);
+                $jsonResponse = $this->extractJsonFromResponse($rawResponse);
+
+                if (empty($jsonResponse) || !isset($jsonResponse['score']) || json_last_error() !== JSON_ERROR_NONE) {
+                    Log::error('Invalid JSON response from Gemini');
+                    return redirect()->back()->with('error', __('messages.gemini_empty_response'));
+                }
+
+                $SecContents[] = $jsonResponse;
+            } catch (Exception $e) {
+                Log::error('Error in Gemini API call: ' . $e->getMessage());
+                $SecContents[] = [
+                    'filename' => 'unknown',
+                    'error' => __('messages.gemini_api_error')
+                ];
+                continue;
+            }
+        }
+
+        $request->session()->put('SecContents', array_merge(
+            $request->session()->get('SecContents', []),
+            $SecContents
+        ));
+
+        $request->session()->put('SecNames', array_merge(
+            $request->session()->get('SecNames', []),
+            $newNames
+        ));
+
+        $request->session()->save();
+
+        return redirect()->back()->with('success', count($newNames) === 1 ? __('messages.file_security_success') : __('messages.files_security_success', ['count' => count($newNames)]));
     }
 
 

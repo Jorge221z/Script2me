@@ -95,9 +95,9 @@ class UploadController extends Controller
             'txt' => 'text/plain'
         ];
 
-        // Validar los archivos subidos con límite de 10 archivos y comprobación de tipo MIME
+        // Validar los archivos subidos con límite de 20 archivos y comprobación de tipo MIME
         $validator = Validator::make($request->all(), [
-            'files' => 'required|array|min:1|max:10',
+            'files' => 'required|array|min:1|max:20',
             'files.*' => [
                 'required',
                 'file',

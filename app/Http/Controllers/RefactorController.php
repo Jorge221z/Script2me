@@ -154,7 +154,7 @@ class RefactorController extends Controller
             ];
 
             $validator = Validator::make($request->all(), [
-                'files' => 'required|array|min:1',
+                'files' => 'required|array|min:1|max:20',
                 'files.*' => [
                     'required',
                     'file',

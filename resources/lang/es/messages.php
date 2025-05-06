@@ -22,4 +22,7 @@ return [
     'files_refactor_success' => ':count archivos procesados correctamente',
     'file_security_success' => 'Archivo escaneado correctamente',
     'files_security_success' => ':count archivos escaneados correctamente',
+    // NUEVAS CLAVES
+    'invalid_mime_type' => 'El tipo MIME ":mime" no es válido para la extensión .:ext.',
+    'files_max_count' => 'No puedes subir más de :count archivos.',
 ];
