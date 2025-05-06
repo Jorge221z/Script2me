@@ -210,7 +210,7 @@ class SecurityController extends Controller
             $request->session()->save(); //guardamos la sesion de forma explicita //
 
             // Redirigimos a la vista de seguridad con los resultados
-            return redirect()->back()->with('success', count($newNames) === 1 ? __('messages.file_security_success') : __('messages.file_security_success', ['count' => count($newNames)]));
+            return redirect()->back()->with('success', count($newNames) === 1 ? __('messages.file_security_success') : __('messages.files_security_success', ['count' => count($newNames)]));
         }
 
     }
@@ -232,17 +232,17 @@ class SecurityController extends Controller
             return <<<EOT
 You are a security expert. Analyze the following code for **security vulnerabilities** and **bad practices**.
 
-**REQUIREMENTS**  
-1. **ONLY** respond with a single valid JSON object—no markdown fences, no extra commentary, no apologies.  
-2. JSON must have exactly these fields:  
-   - `score` (integer 0–100)  
-   - `summary` (string, max 2 sentences)  
-   - `critical_lines` (array of integers)  
-   - `vulnerabilities` (array of objects with keys: `line` (int), `issue` (string), `suggestion` (string))  
+**REQUIREMENTS**
+1. **ONLY** respond with a single valid JSON object—no markdown fences, no extra commentary, no apologies.
+2. JSON must have exactly these fields:
+   - `score` (integer 0–100)
+   - `summary` (string, max 2 sentences)
+   - `critical_lines` (array of integers)
+   - `vulnerabilities` (array of objects with keys: `line` (int), `issue` (string), `suggestion` (string))
 3. If no issues are found, return `score: 100`, empty arrays for `critical_lines` and `vulnerabilities`, and a summary like `"No issues found"`.
 
 Analyze the following source code:
-**CODE TO ANALYZE**  
+**CODE TO ANALYZE**
 {$code}
 
 {

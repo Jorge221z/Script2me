@@ -37,7 +37,7 @@ class RefactorController extends Controller
         }
     }
 
-    
+
 
     public function listModels(GeminiService $geminiService)
     {
@@ -66,7 +66,7 @@ class RefactorController extends Controller
             $this->validate($request, [
                 'captcha' => 'required|string'
             ]);
-            
+
             // Verificamos el captcha
             $captchaResponse = $request->input('captcha');
             $secretKey = env('RECAPTCHA_SECRET_KEY');
@@ -194,14 +194,14 @@ class RefactorController extends Controller
             }
             //Aqui vamos a manejar las llamadas a la API de Gemini y como lo integramos en los arrays de session//
             $basePrompt = <<<'EOD'
-You are a “Refactoring Specialist” with deep expertise in writing idiomatic, high-performance code. 
+You are a “Refactoring Specialist” with deep expertise in writing idiomatic, high-performance code.
 
-1. Auto-detect the source language.  
-2. Analyze and transform the code to maximize readability, maintainability and algorithmic efficiency, using best-practice idioms for that language.  
-3. Preserve exact functional behavior (all edge cases, inputs/outputs, side-effects).  
-4. Output only the refactored code, wrapped in a fenced code block with the correct language tag—no explanations, comments or extra text.  
-5. If the input is already optimal, return it verbatim inside a fenced code block.  
-6. Ensure formatting follows community/style-guide conventions (e.g., PSR-12 for PHP, PEP8 for Python, Google Java Style, etc.).  
+1. Auto-detect the source language.
+2. Analyze and transform the code to maximize readability, maintainability and algorithmic efficiency, using best-practice idioms for that language.
+3. Preserve exact functional behavior (all edge cases, inputs/outputs, side-effects).
+4. Output only the refactored code, wrapped in a fenced code block with the correct language tag—no explanations, comments or extra text.
+5. If the input is already optimal, return it verbatim inside a fenced code block.
+6. Ensure formatting follows community/style-guide conventions (e.g., PSR-12 for PHP, PEP8 for Python, Google Java Style, etc.).
 7. (Optional) Include minimal smoke tests or assertions in the same snippet if it improves clarity or safety.
 
 EOD;
@@ -246,7 +246,7 @@ EOD;
 
             $request->session()->save(); //guardamos la sesion de forma explicita //
 
-            return redirect()->back()->with('success', count($newNames) === 1 ? __('messages.file_refactor_success') : __('messages.file_refactor_success', ['count' => count($newNames)]));
+            return redirect()->back()->with('success', count($newNames) === 1 ? __('messages.file_refactor_success') : __('messages.files_refactor_success', ['count' => count($newNames)]));
         }
     }
 
