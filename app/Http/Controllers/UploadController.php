@@ -199,9 +199,11 @@ class UploadController extends Controller
                 } else {
                     $newContents[] = $content;
                 }
+                //antes de guardar el archivo, se sanitiza el nombre del archivo
+                $sanitizedName = preg_replace('/[^a-zA-Z0-9_\-.]/', '_', $file->getClientOriginalName());
 
                 // Almacenar el archivo en un directorio no público
-                $timestampName = time() . '_' . $file->getClientOriginalName();
+                $timestampName = time() . '_' . $sanitizedName;
                 $path = $file->storeAs('uploads', $timestampName, 'local');
 
                 $newNames[] = $file->getClientOriginalName();
