@@ -48,7 +48,14 @@ class SecurityController extends Controller
             $captchaResponse = $request->input('captcha');
             $secretKey = env('RECAPTCHA_SECRET_KEY');
 
-            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            // Implementación de protección SSRF
+            // Validar que la URL del servicio es segura antes de realizar la petición
+            $recaptchaUrl = 'https://www.google.com/recaptcha/api/siteverify';
+            if (!$this->isUrlSafe($recaptchaUrl)) {
+                return redirect()->back()->with('error', __('messages.security_url_not_allowed'));
+            }
+
+            $response = Http::asForm()->post($recaptchaUrl, [
                 'secret' => $secretKey,
                 'response' => $captchaResponse,
                 'remoteip' => $request->ip(),
@@ -273,6 +280,84 @@ class SecurityController extends Controller
         $request->session()->save();
 
         return redirect()->back()->with('success', count($newNames) === 1 ? __('messages.file_security_success') : __('messages.files_security_success', ['count' => count($newNames)]));
+    }
+
+
+    /**
+     * Verifica si una URL es segura contra ataques SSRF
+     * 
+     * @param string $url La URL a verificar
+     * @return bool True si la URL es segura, false en caso contrario
+     */
+    protected function isUrlSafe(string $url): bool
+    {
+        $parsedUrl = parse_url($url);
+        
+        // Lista de dominios permitidos
+        $allowedDomains = [
+            'www.google.com',
+            'googleapis.com',
+            'api.openai.com',
+            // Añadir otros dominios confiables según sea necesario
+        ];
+        
+        // Lista de IPs y rangos bloqueados
+        $blockedIPs = [
+            '127.0.0.1',
+            '0.0.0.0',
+            '::1',
+            'localhost',
+            '169.254.',
+            '10.',
+            '172.16.',
+            '172.17.',
+            '172.18.',
+            '172.19.',
+            '172.20.',
+            '172.21.',
+            '172.22.',
+            '172.23.',
+            '172.24.',
+            '172.25.',
+            '172.26.',
+            '172.27.',
+            '172.28.',
+            '172.29.',
+            '172.30.',
+            '172.31.',
+            '192.168.'
+        ];
+        
+        // Obtener el host de la URL
+        $host = $parsedUrl['host'] ?? '';
+        
+        // Si el host está vacío, no es seguro
+        if (empty($host)) {
+            return false;
+        }
+        
+        // Verificar si el host es una dirección IP
+        $isIP = filter_var($host, FILTER_VALIDATE_IP);
+        
+        // Verificar si el host está en la lista de IPs/rangos bloqueados
+        if ($isIP) {
+            foreach ($blockedIPs as $blockedIP) {
+                if (strpos($host, $blockedIP) === 0) {
+                    return false;
+                }
+            }
+        }
+        
+        // Verificar si el host es un dominio permitido
+        $isDomainAllowed = false;
+        foreach ($allowedDomains as $domain) {
+            if ($host === $domain || substr($host, -(strlen($domain) + 1)) === ".$domain") {
+                $isDomainAllowed = true;
+                break;
+            }
+        }
+        
+        return $isDomainAllowed;
     }
 
 
