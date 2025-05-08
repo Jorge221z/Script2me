@@ -25,4 +25,6 @@ return [
     // NUEVAS CLAVES
     'invalid_mime_type' => 'El tipo MIME ":mime" no es válido para la extensión .:ext.',
     'files_max_count' => 'No puedes subir más de :count archivos.',
+    'empty_file' => 'No se permite un archivo vacío',
+    'security_url_not_allowed' => 'La URL solicitada no está permitida por razones de seguridad',
 ];

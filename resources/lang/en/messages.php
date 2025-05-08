@@ -24,4 +24,6 @@ return [
     'files_security_success' => ':count files scanned successfully',
     'invalid_mime_type' => 'The MIME type ":mime" is not valid for the extension .:ext.',
     'files_max_count' => 'You cannot upload more than :count files.',
+    'empty_file' => 'Empty file is not allowed',
+    'security_url_not_allowed' => 'The requested URL is not allowed for security reasons',
 ];
