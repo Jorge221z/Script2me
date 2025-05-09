@@ -219,6 +219,7 @@ class SecurityController extends Controller
                         ]
                     ];
                 } else {
+                    Log::info('Gemini API response: ' . json_encode($jsonResponse));
                     $SecContents[] = $jsonResponse;
                 }
             } catch (Exception $e) {
@@ -262,8 +263,6 @@ class SecurityController extends Controller
         $allowedDomains = [
             'www.google.com',
             'googleapis.com',
-            'api.openai.com',
-            // Añadir otros dominios confiables según sea necesario
         ];
 
         // Lista de IPs y rangos bloqueados
@@ -338,36 +337,59 @@ class SecurityController extends Controller
     protected function BuildSecurityPrompt(string $code)
     {
         return <<<EOT
-You are a security expert. Analyze the following code for **security vulnerabilities** and **bad practices**.
+You are a senior security expert.
 
-**REQUIREMENTS**
-1. **ONLY** respond with a single valid JSON object—no markdown fences, no extra commentary, no apologies.
-2. JSON must have exactly these fields:
-   - `score` (integer 0–100)
-   - `summary` (string, max 2 sentences)
-   - `critical_lines` (array of integers)
-   - `vulnerabilities` (array of objects with keys: `line` (int), `issue` (string), `suggestion` (string))
-3. If no issues are found, return `score: 100`, empty arrays for `critical_lines` and `vulnerabilities`, and a summary like `"No issues found"`.
+Your task is to analyze the following content and determine whether it is actual **source code** (such as PHP, JavaScript, Python, etc.) or not.
 
-Analyze the following source code:
-**CODE TO ANALYZE**
+**IMPORTANT INSTRUCTIONS**
+1. First, check if the content looks like source code based on syntax, structure, or known programming patterns (e.g., `<?php`, `function`, `class`, `{}`, imports, etc.).
+   - If it is **not source code** (e.g., plain text, config files, logs), return:
+     ```json
+     {
+       "score": 100,
+       "summary": "Not a source code file. No scan performed.",
+       "critical_lines": [],
+       "vulnerabilities": []
+     }
+     ```
+     and stop—do not perform any further analysis.
+
+2. If it **is source code**, perform a detailed static analysis to detect **security vulnerabilities** and **bad practices**. Focus on:
+   - SQL Injection
+   - Cross-site Scripting (XSS)
+   - Insecure file handling
+   - Command injection
+   - Input validation issues
+   - Hardcoded secrets
+   - Use of unsafe functions (`eval`, `exec`, etc.)
+
+3. Be strictly factual. **Do not mention improvements, regressions, or historical context.** Only evaluate the code as it is in this input.
+
+4. Respond using **only** a valid JSON object with these exact fields:
+   - `score`: integer from 0 to 100 (100 means no issues, 0 means critically vulnerable)
+   - `summary`: short factual description (max 2 sentences).  
+     - If no issues, use `"No issues found."`
+   - `critical_lines`: array of integers indicating risky lines
+   - `vulnerabilities`: array of objects with:
+     - `line`: integer
+     - `issue`: short description of the problem
+     - `suggestion`: how to fix or mitigate
+
+5. If **no vulnerabilities** are found in valid code, return:
+   ```json
+   {
+     "score": 100,
+     "summary": "No issues found.",
+     "critical_lines": [],
+     "vulnerabilities": []
+   }
+
+Now analyze the following content:
+CODE TO ANALYZE
 {$code}
-
-{
-  "score": 64,
-  "summary": "...",
-  "critical_lines": [23, 47],
-  "vulnerabilities": [
-    {
-      "line": 23,
-      "issue": "SQL Injection",
-      "suggestion": "Use prepared statements."
-    }
-    // ...
-  ]
-}
 EOT;
     }
+
 
     public function clearSecSession(Request $request)
     {
