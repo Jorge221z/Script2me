@@ -102,7 +102,7 @@ export default function Refactor() {
                         buttonText={t('refactorDashboard.uploadButton')}
                         showCaptcha={true}
                         progressSpeed={50}
-                        progressMaxTime={15000}
+                        progressMaxTime={12000}
                         submitButtonText={t('refactorDashboard.processFiles')}
                         processingText={t('refactorDashboard.processing')}
                     />

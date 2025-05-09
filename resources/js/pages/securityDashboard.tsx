@@ -141,7 +141,7 @@ export default function Security() {
                         buttonText={t('securityDashboard.uploadButton')}
                         showCaptcha={true}
                         progressSpeed={50}
-                        progressMaxTime={15000}
+                        progressMaxTime={9000}
                         submitButtonText={t('securityDashboard.scanFiles')}
                         processingText={t('securityDashboard.scanning')}
                     />
@@ -223,27 +223,29 @@ export default function Security() {
                                                     <ul className="list-disc pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-400">
                                                         {item.result.vulnerabilities.slice(0, 3).map((v, i) => (
                                                             <li key={i}>
-                                                                <span className="font-medium">Line {v.line}:</span> {v.issue}
+                                                                <span className="font-medium"> {t('securityDashboard.line')} {v.line}:</span> {v.issue}
                                                             </li>
                                                         ))}
                                                     </ul>
-                                                    {item.result.vulnerabilities.length > 3 && (
-                                                        <button
-                                                            onClick={() => {
-                                                                setModalVulns(item.result.vulnerabilities);
-                                                                setModalFile(item.filename);
-                                                                setModalOpen(true);
-                                                            }}
-                                                            className="group mt-2 text-xs font-semibold px-4 py-2 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 text-white shadow-lg border-0 transition-all duration-200 hover:from-blue-500 hover:to-blue-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300 active:scale-95 flex items-center gap-2"
-                                                            aria-label={t('securityDashboard.showAll')}
-                                                            title={t('securityDashboard.showAll')}
-                                                        >
-                                                            <span className="inline-flex items-center gap-1">
-                                                                <span className="drop-shadow-sm">{t('securityDashboard.showAll')}</span>
-                                                                <Expand className="w-4 h-4 text-white group-hover:scale-110 transition-transform duration-200" />
+                                                    <button
+                                                        onClick={() => {
+                                                            setModalVulns(item.result.vulnerabilities);
+                                                            setModalFile(item.filename);
+                                                            setModalOpen(true);
+                                                        }}
+                                                        className="group mt-3 text-sm font-semibold px-4 py-1.5 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 text-white shadow-lg border-0 transition-all duration-200 hover:from-blue-500 hover:to-blue-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300 active:scale-95 flex items-center gap-2 w-auto"
+                                                        aria-label={t('securityDashboard.viewDetails')}
+                                                        title={t('securityDashboard.viewDetails')}
+                                                    >
+                                                        <span className="inline-flex items-center gap-1">
+                                                            <span className="drop-shadow-sm">
+                                                                {item.result.vulnerabilities.length > 3 
+                                                                    ? t('securityDashboard.showAll') 
+                                                                    : t('securityDashboard.viewDetails', 'View Details')}
                                                             </span>
-                                                        </button>
-                                                    )}
+                                                            <Expand className="w-4 h-4 text-white group-hover:scale-110 transition-transform duration-200" />
+                                                        </span>
+                                                    </button>
                                                 </>
                                             ) : (
                                                 <div className="flex items-center gap-2 py-2">

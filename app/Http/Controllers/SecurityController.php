@@ -336,8 +336,19 @@ class SecurityController extends Controller
 
     protected function BuildSecurityPrompt(string $code)
     {
+        $locale = app()->getLocale();
+        
+        if ($locale === 'es') {
+            return $this->BuildSecurityPromptSpanish($code);
+        } else {
+            return $this->BuildSecurityPromptEnglish($code);
+        }
+    }
+    
+    protected function BuildSecurityPromptEnglish(string $code)
+    {
         return <<<EOT
-You are a senior security expert.
+You are a senior application security expert specialized in secure code review and static analysis.
 
 Your task is to analyze the following content and determine whether it is actual **source code** (such as PHP, JavaScript, Python, etc.) or not.
 
@@ -390,6 +401,61 @@ CODE TO ANALYZE
 EOT;
     }
 
+    protected function BuildSecurityPromptSpanish(string $code)
+    {
+        return <<<EOT
+Eres un experto senior en **seguridad de aplicaciones**, especializado en revisión de código seguro y análisis estático.
+
+Tu tarea es analizar el siguiente contenido y determinar si es **código fuente** real (como PHP, JavaScript, Python, etc.) o no.
+
+**INSTRUCCIONES IMPORTANTES**
+1. Primero, verifica si el contenido parece código fuente basándose en la sintaxis, estructura o patrones de programación conocidos (p.ej., `<?php`, `function`, `class`, `{}`, importaciones, etc.).
+   - Si **no es código fuente** (p.ej., texto plano, archivos de configuración, registros), devuelve:
+     ```json
+     {
+       "score": 100,
+       "summary": "No es un archivo de código fuente. No se realizó escaneo.",
+       "critical_lines": [],
+       "vulnerabilities": []
+     }
+     ```
+     y detente—no realices ningún análisis adicional.
+
+2. Si **es código fuente**, realiza un análisis estático detallado para detectar **vulnerabilidades de seguridad** y **malas prácticas**. Concéntrate en:
+   - Inyección SQL
+   - Cross-site Scripting (XSS)
+   - Manejo inseguro de archivos
+   - Inyección de comandos
+   - Problemas de validación de entrada
+   - Secretos codificados en el código
+   - Uso de funciones inseguras (`eval`, `exec`, etc.)
+
+3. Sé estrictamente objetivo. **No menciones mejoras, regresiones o contexto histórico.** Solo evalúa el código tal como está en esta entrada.
+
+4. Responde usando **únicamente** un objeto JSON válido con estos campos exactos:
+   - `score`: entero de 0 a 100 (100 significa sin problemas, 0 significa críticamente vulnerable)
+   - `summary`: descripción factual breve (máx. 2 frases).  
+     - Si no hay problemas, usa `"No se encontraron problemas."`
+   - `critical_lines`: array de enteros indicando líneas riesgosas
+   - `vulnerabilities`: array de objetos con:
+     - `line`: entero
+     - `issue`: descripción corta del problema
+     - `suggestion`: cómo arreglar o mitigar
+
+5. Si **no se encuentran vulnerabilidades** en código válido, devuelve:
+   ```json
+   {
+     "score": 100,
+     "summary": "No se encontraron problemas.",
+     "critical_lines": [],
+     "vulnerabilities": []
+   }
+
+Ahora analiza el siguiente contenido:
+CÓDIGO A ANALIZAR
+{$code}
+EOT;
+    }
 
     public function clearSecSession(Request $request)
     {

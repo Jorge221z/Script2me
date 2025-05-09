@@ -109,6 +109,7 @@ const resources = {
       'securityDashboard.summary': 'Summary',
       'securityDashboard.fileSecure': 'This file is secure! No vulnerabilities detected.',
       'securityDashboard.notScriptFile': 'Not a script file. No security scan needed.',
+      'securityDashboard.viewDetails': 'View Details',
     }
   },
   es: {
@@ -217,7 +218,8 @@ const resources = {
       'securityDashboard.scanning': 'Escaneando...',
       'securityDashboard.summary': 'Resumen',
       'securityDashboard.fileSecure': '¡Este archivo es seguro! No se detectaron vulnerabilidades.',
-      'securityDashboard.notScriptFile': 'No es un archivo de código(script). No necesita escaneo de seguridad.',
+      'securityDashboard.notScriptFile': 'No es un archivo de código (script). No necesita escaneo de seguridad.',
+      'securityDashboard.viewDetails': 'Ver detalles',
     }
   },
 };
