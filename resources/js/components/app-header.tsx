@@ -14,21 +14,28 @@ import { Link, usePage } from '@inertiajs/react';
 import { Menu, BookType, Github, Home, BrainCircuit, Moon, Sun, Globe, Pickaxe, Radar } from 'lucide-react';
 import { useTheme } from '@/hooks/use-theme';
 import { useTranslation } from 'react-i18next';
-import i18n from '../utils/i18n';
 import { useState } from 'react';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
+import { useLanguage } from '@/contexts/language-context';
 
 const activeItemStyles = 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
 
-// Selector de idioma reutilizable
+// Selector de idioma mejorado
 function LanguageSelector() {
-    const [lang, setLang] = useState(i18n.language || 'en');
+    const { currentLanguage, changeLanguage } = useLanguage();
+    const [isChanging, setIsChanging] = useState(false);
+
     const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newLang = e.target.value;
-        setLang(newLang);
-        i18n.changeLanguage(newLang);
-        await fetch(`/lang/${newLang}`, { method: 'GET', credentials: 'same-origin' });
+        if (newLang === currentLanguage) return;
+        
+        setIsChanging(true);
+        try {
+            await changeLanguage(newLang);
+        } finally {
+            setIsChanging(false);
+        }
     };
 
     const languages = [
@@ -38,22 +45,26 @@ function LanguageSelector() {
 
     return (
         <div className="relative flex items-center ml-2">
-            {/* Icono Globe con fondo muy suave y borde difuso */}
             <span
-                className="inline-flex items-center justify-center rounded-full bg-gray-100 p-1 mr-1 border border-emerald-200/40 shadow-sm"
+                className={cn(
+                    "inline-flex items-center justify-center rounded-full bg-gray-100 p-1 mr-1 border border-emerald-200/40 shadow-sm",
+                    isChanging && "animate-pulse"
+                )}
                 style={{ boxShadow: '0 1px 6px 0 rgba(16,185,129,0.06)' }}
             >
                 <Globe className="h-4 w-4 text-gray-950" aria-hidden="true" />
             </span>
             <select
-                value={lang}
+                value={currentLanguage}
                 onChange={handleChange}
+                disabled={isChanging}
                 className={cn(
                     "appearance-none rounded-md px-3 py-1 pr-7 font-semibold transition-all cursor-pointer",
                     "bg-neutral-800 text-neutral-100 border border-neutral-700",
                     "focus:outline-none focus:ring-2 focus:ring-emerald-400",
                     "hover:border-emerald-400",
-                    "shadow-sm"
+                    "shadow-sm",
+                    isChanging && "opacity-70"
                 )}
                 style={{ minWidth: 90 }}
                 aria-label="Seleccionar idioma"

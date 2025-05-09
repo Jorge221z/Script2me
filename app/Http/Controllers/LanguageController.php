@@ -12,7 +12,18 @@ class LanguageController extends Controller
     {
         if (in_array($lang, ['en', 'es'])) {
             Session::put('locale', $lang);
+            App::setLocale($lang);
+            
+            // Si es una petición AJAX, devuelve una respuesta JSON
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Language changed successfully',
+                    'locale' => $lang
+                ]);
+            }
         }
+        
         return redirect()->back();
     }
 }
