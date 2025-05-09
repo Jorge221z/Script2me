@@ -106,6 +106,9 @@ const resources = {
       'securityDashboard.addFilesPrompt': 'Upload some to scan them',
       'securityDashboard.scanFiles': 'Scan files',
       'securityDashboard.scanning': 'Scanning...',
+      'securityDashboard.summary': 'Summary',
+      'securityDashboard.fileSecure': 'This file is secure! No vulnerabilities detected.',
+      'securityDashboard.notScriptFile': 'Not a script file. No security scan needed.',
     }
   },
   es: {
@@ -212,6 +215,9 @@ const resources = {
       'securityDashboard.addFilesPrompt': 'Sube archivos para escanearlos',
       'securityDashboard.scanFiles': 'Escanear archivos',
       'securityDashboard.scanning': 'Escaneando...',
+      'securityDashboard.summary': 'Resumen',
+      'securityDashboard.fileSecure': '¡Este archivo es seguro! No se detectaron vulnerabilidades.',
+      'securityDashboard.notScriptFile': 'No es un archivo de código(script). No necesita escaneo de seguridad.',
     }
   },
 };

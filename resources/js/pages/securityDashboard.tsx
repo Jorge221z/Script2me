@@ -9,7 +9,7 @@ import AppLayout from '@/layouts/app-layout';
 import UploadForm from '../components/Forms/UploadForm';
 import { Head } from '@inertiajs/react';
 import BackgroundPattern from '@/layouts/app/BackgroundPattern';
-import { FileText, Expand } from 'lucide-react';
+import { FileText, Expand, ShieldCheck } from 'lucide-react';
 import CustomToast from '../components/CustomToast';
 
 export default function Security() {
@@ -167,56 +167,106 @@ export default function Security() {
 
                     {localResults.length > 0 ? (
                         <div className="space-y-6">
-                            {localResults.map((item, idx) => (
-                                <div
-                                    key={idx}
-                                    className="rounded-xl border border-amber-200 dark:border-amber-700 shadow-sm bg-white dark:bg-black"
-                                >
-                                    {/* File header & score */}
-                                    <div className="flex items-center justify-between px-4 py-3 bg-amber-50 dark:bg-amber-950/10 border-b border-amber-200 dark:border-amber-700 rounded-t-xl">
-                                        <h3 className="font-medium text-amber-800 dark:text-amber-200 truncate">
-                                            {item.filename}
-                                        </h3>
-                                        <span className="text-sm font-semibold">
-                                            {t('securityDashboard.score')}: {item.result.score}/100
-                                        </span>
-                                    </div>
-
-                                    {/* Critical issues preview */}
-                                    <div className="px-4 py-3">
-                                        <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            {t('securityDashboard.criticalIssues')}
-                                        </h4>
-                                        <ul className="list-disc pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-400">
-                                            {item.result.vulnerabilities.slice(0, 3).map((v, i) => (
-                                                <li key={i}>
-                                                    <span className="font-medium">Line {v.line}:</span> {v.issue}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                        {item.result.vulnerabilities.length > 3 && (
-                                            <button
-                                                onClick={() => {
-                                                    setModalVulns(item.result.vulnerabilities);
-                                                    setModalFile(item.filename);
-                                                    setModalOpen(true);
-                                                }}
-                                                className="group mt-2 text-xs font-semibold px-4 py-2 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 text-white shadow-lg border-0 transition-all duration-200 hover:from-blue-500 hover:to-blue-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300 active:scale-95 flex items-center gap-2"
-                                                aria-label={t('securityDashboard.showAll')}
-                                                title={t('securityDashboard.showAll')}
+                            {localResults.map((item, idx) => {
+                                // Score color logic (solid, subtle backgrounds)
+                                let scoreBg = "bg-gray-200 text-gray-800";
+                                if (item.result.score < 60) {
+                                    scoreBg = "bg-red-100 text-red-800 border border-red-200";
+                                } else if (item.result.score < 80) {
+                                    scoreBg = "bg-yellow-100 text-yellow-900 border border-yellow-200";
+                                } else {
+                                    scoreBg = "bg-green-100 text-green-900 border border-green-200";
+                                }
+                                return (
+                                    <div
+                                        key={idx}
+                                        className="rounded-xl border border-amber-200 dark:border-amber-700 shadow-sm bg-white dark:bg-black"
+                                    >
+                                        {/* File header & score */}
+                                        <div className="flex items-center justify-between px-4 py-3 bg-amber-50 dark:bg-amber-950/10 border-b border-amber-200 dark:border-amber-700 rounded-t-xl">
+                                            <h3 className="font-medium text-amber-800 dark:text-amber-200 truncate">
+                                                {item.filename}
+                                            </h3>
+                                            <span
+                                                className={`text-sm font-semibold px-3 py-1 rounded-lg transition-colors duration-200 ${scoreBg}`}
+                                                title={t('securityDashboard.score')}
+                                                style={{ minWidth: 90, textAlign: 'center' }}
                                             >
-                                                <span className="inline-flex items-center gap-1">
-                                                    <span className="drop-shadow-sm">{t('securityDashboard.showAll')}</span>
-                                                    <Expand className="w-4 h-4 text-white group-hover:scale-110 transition-transform duration-200" />
+                                                {t('securityDashboard.score')}: {item.result.score}/100
+                                            </span>
+                                        </div>
+
+                                        {/* Summary section */}
+                                        {item.result.summary && (
+                                            <div className="px-4 py-3 flex items-start gap-2 bg-gradient-to-r from-amber-50/60 via-white/80 to-amber-100/60 dark:from-amber-950/20 dark:via-black/40 dark:to-amber-900/20 rounded-b-none rounded-t-none mb-2">
+                                                <span className="mt-1 text-amber-500 dark:text-amber-300">
+                                                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm.75 15h-1.5v-1.5h1.5V17zm0-3h-1.5V7h1.5v7z"/></svg>
                                                 </span>
-                                            </button>
+                                                <div>
+                                                    <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                        {t('securityDashboard.summary', 'Summary')}
+                                                    </h4>
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+                                                        {item.result.summary}
+                                                    </p>
+                                                </div>
+                                            </div>
                                         )}
+                                        
+                                        {/* Critical issues preview or secure message */}
+                                        <div className="px-4 py-3">
+                                            {item.result.vulnerabilities && item.result.vulnerabilities.length > 0 ? (
+                                                <>
+                                                    <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                        {t('securityDashboard.criticalIssues')}
+                                                    </h4>
+                                                    <ul className="list-disc pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                                                        {item.result.vulnerabilities.slice(0, 3).map((v, i) => (
+                                                            <li key={i}>
+                                                                <span className="font-medium">Line {v.line}:</span> {v.issue}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                    {item.result.vulnerabilities.length > 3 && (
+                                                        <button
+                                                            onClick={() => {
+                                                                setModalVulns(item.result.vulnerabilities);
+                                                                setModalFile(item.filename);
+                                                                setModalOpen(true);
+                                                            }}
+                                                            className="group mt-2 text-xs font-semibold px-4 py-2 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 text-white shadow-lg border-0 transition-all duration-200 hover:from-blue-500 hover:to-blue-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300 active:scale-95 flex items-center gap-2"
+                                                            aria-label={t('securityDashboard.showAll')}
+                                                            title={t('securityDashboard.showAll')}
+                                                        >
+                                                            <span className="inline-flex items-center gap-1">
+                                                                <span className="drop-shadow-sm">{t('securityDashboard.showAll')}</span>
+                                                                <Expand className="w-4 h-4 text-white group-hover:scale-110 transition-transform duration-200" />
+                                                            </span>
+                                                        </button>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <div className="flex items-center gap-2 py-2">
+                                                    {item.result.summary && item.result.summary.includes('Not a source code file') ? (
+                                                        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                                                            <FileText className="h-5 w-5" />
+                                                            <p className="font-medium">{t('securityDashboard.notScriptFile')}</p>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
+                                                            <ShieldCheck className="h-5 w-5" />
+                                                            <p className="font-medium">{t('securityDashboard.fileSecure')}</p>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     ) : (
-                            <div className="relative text-center py-12 px-4 min-h-[50vh] rounded-xl border custom-border dark:border-gray-700 bg-gray-200 dark:bg-neutral-950/20">
+                        <div className="relative text-center py-12 px-4 min-h-[50vh] rounded-xl border custom-border dark:border-gray-700 bg-gray-200 dark:bg-neutral-950/20">
                             <BackgroundPattern />
                             <div className="relative">
                                 <FileText className="mx-auto h-15 w-15 text-gray-400 dark:text-gray-500 mb-4" />
