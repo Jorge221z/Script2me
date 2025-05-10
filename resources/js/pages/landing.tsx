@@ -577,6 +577,18 @@ const LandingPage: React.FC = () => {
                               </span>
                             ))}
                           </div>
+                          {/* AI powered by Gemini - inline, bigger icon */}
+                          <div className="flex items-center justify-center md:justify-start mt-6 gap-2">
+                            <span className="font-medium text-emerald-700 dark:text-emerald-300 text-base mr-0">
+                              AI powered by
+                            </span>
+                            <img
+                              src="/images/gemini.svg"
+                              alt="Gemini"
+                              className="h-8 w-auto align-middle"
+                              style={{ display: "inline-block" }}
+                            />
+                          </div>
                         </div>
                       </div>
 
