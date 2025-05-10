@@ -128,11 +128,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     // Botones de footer (antes en sidebar)
     const footerNavItems = [
         {
-            title: t('T&C'),
-            href: '/terms',
-            icon: BookType,
-        },
-        {
+            key: 'theme',
             title: theme === 'light' ? 'Dark' : 'Light',
             href: '#',
             icon: theme === 'light' ? Moon : Sun,
@@ -142,6 +138,13 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
             },
         },
         {
+            key: 'terms',
+            title: '',
+            href: '/terms',
+            icon: BookType,
+        },
+        {
+            key: 'github',
             title: '',
             href: 'https://github.com/Jorge221z/script2me.git',
             icon: Github,
@@ -201,7 +204,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                             {footerNavItems.map((item) =>
                                                 item.href === '#' ? (
                                                     <a
-                                                        key={item.title}
+                                                        key={item.key}
                                                         href={item.href}
                                                         onClick={item.onClick}
                                                         className="flex items-center space-x-2 font-medium py-2 px-3 rounded-md hover:bg-neutral-800 transition-colors"
@@ -224,7 +227,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                         </a>
                                                     ) : (
                                                         <a
-                                                            key={item.title}
+                                                            key={item.key}
                                                             href={item.href}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -236,7 +239,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                     )
                                                 ) : (
                                                     <Link
-                                                        key={item.title}
+                                                        key={item.key}
                                                         href={item.href}
                                                         className={cn(
                                                             "flex items-center space-x-2 font-medium py-2 px-3 rounded-md transition-colors",
@@ -305,7 +308,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 if (item.href === '#') {
                                     return (
                                         <a
-                                            key={item.title}
+                                            key={item.key}
                                             href={item.href}
                                             onClick={item.onClick}
                                             className={className + (item.title === '' ? ' flex items-center justify-center px-2 py-2' : '')}
@@ -317,7 +320,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 } else if (item.href.startsWith('http')) {
                                     return (
                                         <a
-                                            key={item.title}
+                                            key={item.key}
                                             href={item.href}
                                             target="_blank"
                                             rel="noopener noreferrer"
@@ -330,7 +333,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 } else {
                                     return (
                                         <Link
-                                            key={item.title}
+                                            key={item.key}
                                             href={item.href}
                                             className={className}
                                             prefetch
@@ -360,7 +363,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 if (item.href === '#') {
                                     return (
                                         <a
-                                            key={item.title}
+                                            key={item.key}
                                             href={item.href}
                                             onClick={item.onClick}
                                             className={className}
@@ -372,7 +375,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 } else if (item.href.startsWith('http')) {
                                     return (
                                         <a
-                                            key={item.title}
+                                            key={item.key}
                                             href={item.href}
                                             target="_blank"
                                             rel="noopener noreferrer"
@@ -385,7 +388,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 } else {
                                     return (
                                         <Link
-                                            key={item.title}
+                                            key={item.key}
                                             href={item.href}
                                             className={className}
                                             style={{ minWidth: 0 }}
