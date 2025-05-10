@@ -13,7 +13,6 @@ import {
   ArrowRight,
   MenuIcon,
   XIcon,
-  Sparkles,
   Rocket,
   ChevronDown,
   Github,
@@ -38,7 +37,7 @@ const LandingPage: React.FC = () => {
 
   const sections: SectionInfo[] = [
     { id: "hero", titleKey: "Home", icon: Home },
-    { id: "features", titleKey: "Toolkit", icon: Sparkles },
+    { id: "features", titleKey: "Toolkit", icon: Pickaxe },
     { id: "our-story", titleKey: "Our Story", icon: Rocket },
     { id: "contact", titleKey: "Contact", icon: Mail },
   ]
@@ -167,9 +166,23 @@ const LandingPage: React.FC = () => {
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-400 to-sky-400 blur-xl opacity-70 animate-pulse" />
-                  <div className="relative bg-gradient-to-r from-emerald-500 to-teal-500 p-5 rounded-full">
-                    <Sparkles className="h-12 w-12 text-white" />
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-400 via-sky-400 to-purple-400 blur-xl opacity-70 animate-pulse" />
+                  <div className="relative bg-gradient-to-r from-white via-slate-50 to-white dark:from-white dark:via-slate-100 dark:to-white p-0 rounded-full shadow-xl ring-4 ring-white/50 backdrop-blur-sm">
+                    <motion.img 
+                      src="/images/logo.png" 
+                      alt="Script2me Logo" 
+                      className="h-24 w-24 object-contain drop-shadow-md"
+                      animate={{ 
+                        scale: [1, 1.05, 1],
+                        rotate: [0, 2, 0]
+                      }}
+                      transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        repeatDelay: 0.5
+                      }}
+                    />
                   </div>
                 </motion.div>
               </div>
