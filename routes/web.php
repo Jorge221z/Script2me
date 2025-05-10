@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 // Mostrar el mismo contenido en la ruta principal y en dashboard
-Route::get('/', [UploadController::class, 'index'])->name('home');
+Route::get('/', [LandingController::class, 'index'])->name('landing.index');
 Route::get('/dashboard', [UploadController::class, 'index'])->name('dashboard');
 Route::get('/refactor-dashboard', [RefactorController::class, 'index'])->name('refactor.index');
 Route::get('/security-dashboard', [SecurityController::class, 'index'])->name('security.index');
