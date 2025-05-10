@@ -20,7 +20,9 @@ Route::post('/clear-session', [UploadController::class, 'clearSession'])->name('
 Route::post('/clear-api-session', [RefactorController::class, 'clearApiSession'])->name('clear.apisession');
 Route::post('/clear-sec-session', [SecurityController ::class, 'clearSecSession'])->name('clear.secsession');
 
-Route::get('lang/{lang}', [App\Http\Controllers\LanguageController::class, 'switchLang'])->name('lang.switch');
+// Language Routes
+Route::get('/lang/{lang}', 'App\Http\Controllers\LanguageController@switchLang')->name('lang.switch');
+Route::get('/api/current-language', 'App\Http\Controllers\LanguageController@getCurrentLanguage')->name('lang.current');
 
 Route::get('/terms', function () {
     return Inertia::render('TAndC');

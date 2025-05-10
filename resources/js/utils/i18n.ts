@@ -110,6 +110,10 @@ const resources = {
       'securityDashboard.fileSecure': 'This file is secure! No vulnerabilities detected.',
       'securityDashboard.notScriptFile': 'Not a script file. No security scan needed.',
       'securityDashboard.viewDetails': 'View Details',
+      // Language Selector
+      'language.select': 'Select language',
+      'language.changeError': 'Error changing language. Please try again.',
+      'language.syncing': 'Syncing language preferences...',
     }
   },
   es: {
@@ -149,7 +153,6 @@ const resources = {
       'refactorDashboard.processing': 'Procesando...',
       'refactorDashboard.introLine1': 'Aprovecha Gemini para transformar y mejorar tu código.',
       'refactorDashboard.introLine2': 'Mejora el rendimiento, la estructura y el mantenimiento—fácil, con un solo clic.',
-
       // Términos y Condiciones
       'terms.title': 'Términos y Condiciones',
       'terms.lastUpdated': 'Última actualización: 3 de abril de 2025',
@@ -221,6 +224,10 @@ const resources = {
       'securityDashboard.fileSecure': '¡Este archivo es seguro! No se detectaron vulnerabilidades.',
       'securityDashboard.notScriptFile': 'No es un archivo de código (script). No necesita escaneo de seguridad.',
       'securityDashboard.viewDetails': 'Ver detalles',
+      // Language Selector
+      'language.select': 'Seleccionar idioma',
+      'language.changeError': 'Error al cambiar el idioma. Inténtalo de nuevo.',
+      'language.syncing': 'Sincronizando preferencias de idioma...',
     }
   },
 };

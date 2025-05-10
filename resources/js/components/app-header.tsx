@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { UserMenuContent } from '@/components/user-menu-content';
 import { useInitials } from '@/hooks/use-initials';
 import { cn } from '@/lib/utils';
@@ -21,20 +21,20 @@ import { useLanguage } from '@/contexts/language-context';
 
 const activeItemStyles = 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
 
-// Selector de idioma mejorado
+// Selector de idioma simplificado
 function LanguageSelector() {
-    const { currentLanguage, changeLanguage } = useLanguage();
-    const [isChanging, setIsChanging] = useState(false);
+    const { currentLanguage, changeLanguage, isChangingLanguage } = useLanguage();
+    const { t } = useTranslation();
 
     const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newLang = e.target.value;
-        if (newLang === currentLanguage) return;
+        if (newLang === currentLanguage || isChangingLanguage) return;
         
-        setIsChanging(true);
         try {
             await changeLanguage(newLang);
-        } finally {
-            setIsChanging(false);
+        } catch (error) {
+            console.error("Error al cambiar el idioma:", error);
+            // Error silencioso para el usuario
         }
     };
 
@@ -47,27 +47,32 @@ function LanguageSelector() {
         <div className="relative flex items-center ml-2">
             <span
                 className={cn(
-                    "inline-flex items-center justify-center rounded-full bg-gray-100 p-1 mr-1 border border-emerald-200/40 shadow-sm",
-                    isChanging && "animate-pulse"
+                    "inline-flex items-center justify-center rounded-full p-1 mr-1 border shadow-sm",
+                    isChangingLanguage 
+                        ? "animate-pulse bg-amber-100 border-amber-300" 
+                        : "bg-gray-100 border-emerald-200/40"
                 )}
                 style={{ boxShadow: '0 1px 6px 0 rgba(16,185,129,0.06)' }}
             >
-                <Globe className="h-4 w-4 text-gray-950" aria-hidden="true" />
+                <Globe 
+                    className="h-4 w-4 text-gray-950" 
+                    aria-hidden="true" 
+                />
             </span>
             <select
                 value={currentLanguage}
                 onChange={handleChange}
-                disabled={isChanging}
+                disabled={isChangingLanguage}
                 className={cn(
                     "appearance-none rounded-md px-3 py-1 pr-7 font-semibold transition-all cursor-pointer",
                     "bg-neutral-800 text-neutral-100 border border-neutral-700",
                     "focus:outline-none focus:ring-2 focus:ring-emerald-400",
                     "hover:border-emerald-400",
                     "shadow-sm",
-                    isChanging && "opacity-70"
+                    isChangingLanguage && "opacity-70"
                 )}
                 style={{ minWidth: 90 }}
-                aria-label="Seleccionar idioma"
+                aria-label={t('language.select')}
             >
                 {languages.map((l) => (
                     <option
