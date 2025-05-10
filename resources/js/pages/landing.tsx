@@ -38,7 +38,7 @@ const LandingPage: React.FC = () => {
 
   const sections: SectionInfo[] = [
     { id: "hero", titleKey: "Home", icon: Home },
-    { id: "features", titleKey: "Features", icon: Sparkles },
+    { id: "features", titleKey: "Toolkit", icon: Sparkles },
     { id: "our-story", titleKey: "Our Story", icon: Rocket },
     { id: "contact", titleKey: "Contact", icon: Mail },
   ]
@@ -92,7 +92,7 @@ const LandingPage: React.FC = () => {
       icon: Pickaxe,
       titleKey: "Prompt Builder",
       descriptionKey:
-        "Transform your code files into optimized prompts for AI assistants. Upload, process, and enhance your scripts with a single click—completely free & open-source.",
+        "Analiza y transforma tu código en prompts listos para LLMs. Carga scripts, genera entradas estructuradas para asistentes inteligentes en un solo clic. Open source, gratis y sin registro.",
       href: "/dashboard",
       ctaKey: "Try Prompt Builder",
       color: "emerald",
@@ -102,7 +102,7 @@ const LandingPage: React.FC = () => {
       icon: BrainCircuit,
       titleKey: "AI Refactor",
       descriptionKey:
-        "Leverage Gemini's advanced AI to transform and enhance your code. Improve performance, structure, and maintainability with machine learning—effortlessly, with just one click.",
+        "Analiza y transforma automáticamente tus scripts para mejorar su rendimiento, estructura y mantenibilidad. Refactorización inteligente con comprensión contextual, con un solo clic. Ideal para flujos de trabajo modernos y desarrollo escalable. Todo gracias a Google Gemini.",
       href: "/refactor-dashboard",
       ctaKey: "Try it Now",
       color: "cyan",
@@ -112,9 +112,9 @@ const LandingPage: React.FC = () => {
       icon: Radar,
       titleKey: "AI Security Scanner",
       descriptionKey:
-        "Scan your code for vulnerabilities and security issues using the Google Gemini API. Get targeted recommendations to fix weak points and strengthen your overall security posture.",
+        "Analiza tu código en profundidad con la API de Google Gemini. Busqueda de vulnerabilidades y de patrones inseguros. Recibe recomendaciones precisas para fortalecer la seguridad y mitigar riesgos potenciales.",
       href: "/security-dashboard",
-      ctaKey: "Scan your code now",
+      ctaKey: "Scan your code Now",
       color: "amber",
     },
   ]
@@ -191,7 +191,7 @@ const LandingPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
-                Build, refactor, and secure your code with Script2me's AI-powered tools.
+                Build, refactor, and secure your code using <br/> Script2me’s modular AI toolkit.
               </motion.p>
 
               <motion.div
@@ -206,7 +206,7 @@ const LandingPage: React.FC = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  Explore Features
+                  Explore Toolkit
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
                 <motion.button
@@ -320,7 +320,7 @@ const LandingPage: React.FC = () => {
               transition={{ duration: 0.6 }}
             >
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 text-neutral-900 dark:text-white">
-                Our Features
+                Our Toolkit
               </h2>
               <p className="text-center text-neutral-600 dark:text-neutral-400 mb-12 md:mb-16 max-w-2xl mx-auto text-lg">
                 Discover how Script2me can transform your development workflow <br /> with AI-powered tools.
@@ -454,7 +454,26 @@ const LandingPage: React.FC = () => {
                             : "text-neutral-600 dark:text-neutral-300 mb-4"
                     }
                   >
-                    {feature.descriptionKey}
+                    {feature.id === "prompt-builder" ? (
+                      <>
+                        Convierte tus archivos de código en prompts listos para LLMs, con salidas estructuradas para chatbots.
+                        <br/> Carga tus scripts y obtén resultados en un clic.
+                        <br /> 100% open source, gratuito y sin registro.
+                        <br /> La función estrella de Script2me.
+                      </>
+                    ) : feature.id === "ai-refactor" ? (
+                      <>
+                        Analiza y transforma automáticamente tu código para mejorar su rendimiento, estructura y mantenibilidad. Refactorización inteligente con comprensión contextual, con un solo clic.
+                        <br /> Ideal para flujos de trabajo modernos y desarrollo escalable.
+                      </>
+                    ) : feature.id === "ai-scanner" ? (
+                      <>
+                        Analiza tu código en profundidad con la API de Google Gemini. 
+                        <br />Búsqueda de vulnerabilidades y de patrones inseguros en entornos backend principalmente. <br /> Recibe recomendaciones precisas para fortalecer la seguridad y mitigar riesgos potenciales.
+                      </>
+                    ) : (
+                      feature.descriptionKey
+                    )}
                   </p>
                   <Link
                     href={feature.href}
@@ -501,22 +520,23 @@ const LandingPage: React.FC = () => {
                         <Rocket className="h-6 w-6" />
                       </div>
                       <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-neutral-900 dark:text-white">
-                        Nuestra Historia
+                        ¿Porqué Script2me?
                       </h2>
                       <div className="space-y-4 text-neutral-700 dark:text-neutral-300">
                         <p>
-                          Script2me nació de una pasión por simplificar el proceso de desarrollo. Frustrado por las
-                          tareas que consumían tiempo, como la optimización de código y las verificaciones de seguridad,
-                          imaginé una plataforma que aprovechara la IA para empoderar a los desarrolladores.
+                          Script2me nace fruto de las limitatciones impuestas por los chatbots de IA, que permiten
+                          un bajo numero de archivos adjuntos. <br/> Tareas que se quedaban a medias por no poder adjuntar todos los
+                          archivos necesarios para una correcta comprensión del contexto.
                         </p>
                         <p>
-                          Comenzando como un pequeño proyecto personal, Script2me ha crecido hasta convertirse en un
-                          conjunto de herramientas integral que ayuda a los desarrolladores a construir, refactorizar y
-                          asegurar su código con facilidad.
+                          'Prompt Builder' viene a cubrir este problema. Con esta herramienta, puedes subir tus archivos de código y
+                          convertirlos en un único prompt con salida optimizada para ser procesado por un asistente de IA. Esto te permite
+                          obtener respuestas más precisas y relevantes, mejorando así tu productividad y eficiencia.
                         </p>
                         <p>
-                          Hoy, estoy comprometido a evolucionar continuamente Script2me y ofrecer soluciones innovadoras
-                          que satisfagan las necesidades de los desarrolladores en todo el mundo.
+                          Tras desarrollar esta herramienta, decidí expandir mis horizontes y crear otras herramientas que también
+                          están relacionadas con la IA.<br/> Así nacieron 'AI Refactor' y 'AI Security Scanner', que utilizan
+                          la API de Google Gemini para ofrecerte una experiencia de desarrollo aún más enriquecedora.
                         </p>
                       </div>
                     </div>
@@ -552,13 +572,13 @@ const LandingPage: React.FC = () => {
 
                       <div className="space-y-4 text-neutral-700 dark:text-neutral-300">
                         <p className="leading-relaxed">
-                          Script2me es un proyecto independiente creado y mantenido por mí, un desarrollador Full Stack
-                          junior apasionado por la tecnología y la innovación.
+                          Script2me es un proyecto independiente creado y mantenido enteramente por mí, un desarrollador Full Stack
+                          junior apasionado por la tecnología y sobretodo por la IA.
                         </p>
 
                         <p className="leading-relaxed">
                           Mi misión es simplificar y potenciar el día a día de los desarrolladores utilizando la
-                          inteligencia artificial como herramienta clave para resolver problemas complejos de manera
+                          inteligencia artificial como herramienta clave para resolver problemas complejos en su codigo de manera
                           eficiente.
                         </p>
 
