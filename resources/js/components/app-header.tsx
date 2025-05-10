@@ -104,6 +104,11 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     // Botones principales (antes en sidebar)
     const mainNavItems = [
         {
+            title: 'Home',
+            href: '/landing',
+            icon: Home,
+        },
+        {
             title: 'Prompt Builder',
             href: '/dashboard',
             icon: Pickaxe,

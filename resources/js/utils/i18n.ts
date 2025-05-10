@@ -121,7 +121,7 @@ const resources = {
       'Terms and Conditions': 'Términos y Condiciones',
       // Traducciones del dashboard
       'dashboard.description': 'Convierte código en prompts para la IA. Sube, procesa y mejora tus scripts—gratis y open-source.',
-      'dashboard.headTitle': 'Construye tus prompts para la IA',
+      'dashboard.headTitle': 'Crea tus prompts para la IA',
       'dashboard.uploadButton': 'Subir',
       'dashboard.uploadedFiles': 'Archivos subidos',
       'dashboard.clearHistory': 'Limpiar historial',
@@ -137,7 +137,7 @@ const resources = {
       'dashboard.introLine2': 'Sube y mejora la salida de tus scripts con un solo clic—completamente gratis y open-source.',
       // Traducciones del dashboard de refactorización
       'refactorDashboard.description': 'Usa la API de Google Gemini para refactorizar y optimizar tu código.',
-      'refactorDashboard.headTitle': 'Optimización de código con IA',
+      'refactorDashboard.headTitle': 'Optimiza tu código con IA',
       'refactorDashboard.uploadButton': 'Subir',
       'refactorDashboard.uploadedFiles': 'Archivos subidos',
       'refactorDashboard.clearHistory': 'Limpiar historial',
