@@ -249,7 +249,7 @@ export default function Security() {
                                                 </>
                                             ) : (
                                                 <div className="flex items-center gap-2 py-2">
-                                                    {item.result.summary && item.result.summary.includes('Not a source code file') ? (
+                                                        {item.result.summary && (item.result.summary.includes('Not a source code file') || item.result.summary.includes('No es un archivo de código fuente') ) ? (
                                                         <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                                                             <FileText className="h-5 w-5" />
                                                             <p className="font-medium">{t('securityDashboard.notScriptFile')}</p>

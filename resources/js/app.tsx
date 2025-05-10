@@ -7,7 +7,7 @@ import './utils/i18n'; // Importar la configuración de traducción
 import { LanguageProvider } from './contexts/language-context';
 
 createInertiaApp({
-    title: (title) => `Script2me - ${title}`,
+    title: (title) => `${title} - Script2me`,
     resolve: (name) => {
         const pages = import.meta.glob('./pages/**/*.tsx', { eager: true });
         return pages[`./pages/${name}.tsx`];
