@@ -158,6 +158,27 @@
 .animate-gradient-x {
     animation: gradient-x 4s ease-in-out infinite;
 }
+
+@layer utilities {
+    .animate-gradient-x {
+        background-size: 200% 200%;
+        animation: gradient-x 8s ease infinite;
+    }
+
+    @keyframes gradient-x {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    } }
+        
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
