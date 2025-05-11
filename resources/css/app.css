@@ -223,6 +223,60 @@
   transition: opacity 0.3s;
 }
 
+/* Estilos para el sistema de navegación */
+@keyframes gradient-x {
+
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+.animate-gradient-x {
+    animation: gradient-x 4s ease-in-out infinite;
+    background-size: 200% 200%;
+}
+
+.nav-indicator {
+    box-shadow: 0 2px 8px rgba(0, 187, 137, 0.1);
+}
+
+.nav-underline {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* Añadir estos estilos a tu archivo CSS existente */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.nav-underline {
+    background-size: 200% 100%;
+    animation: shimmer 3s infinite linear;
+}
+
 @layer base {
     *,
     ::after,
