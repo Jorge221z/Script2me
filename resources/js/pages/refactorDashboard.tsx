@@ -43,23 +43,21 @@ export default function Refactor() {
         }
         setLocalContents(ApiContents);
 
-        // Variable to track if we've shown a toast from sessionStorage
-        let toastShown = false;
-
-        //para el flash de limpieza de sesión
+        // Handle toast messages
         const successMessage = sessionStorage.getItem('flash.success');
+        
         if (successMessage) {
+            // Show the message from sessionStorage and remove it
             setTimeout(() => {
                 toast.success(successMessage);
-                sessionStorage.removeItem('flash.success'); // Limpiar el mensaje después de mostrarlo
-                toastShown = true;
+                sessionStorage.removeItem('flash.success');
             }, 300);
-        }
-        
-        //para flash de otra procedencia - solo mostrar si no hemos mostrado ya uno desde sessionStorage
-        if (flash && flash.success && !toastShown) {
+        } else if (flash && flash.success) {
+            // Only show flash success if there was no sessionStorage message
             toast.success(flash.success);
         }
+        
+        // Always show error messages
         if (flash && flash.error) {
             toast.error(flash.error);
         }
