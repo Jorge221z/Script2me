@@ -105,7 +105,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     const mainNavItems = [
         {
             title: 'Home',
-            href: '/landing',
+            href: '/home',
             icon: Home,
         },
         {
@@ -139,7 +139,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
         },
         {
             key: 'terms',
-            title: '',
+            title: t('T&C'),
             href: '/terms',
             icon: BookType,
         },
@@ -158,7 +158,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                     {/* Mobile: Logo a la izquierda, menú hamburguesa a la derecha */}
                     <div className="flex md:hidden w-full items-center justify-between">
                         {/* Logo visible en móvil, alineado a la izquierda, con margen izquierdo */}
-                        <Link href="/dashboard" prefetch className="flex items-center gap-0 group flex-shrink-0 ml-2">
+                        <Link href="/home" prefetch className="flex items-center gap-0 group flex-shrink-0 ml-2">
                             <AppLogo className="h-12 w-12 bg-transparent p-0 m-0" />
                             <span className="text-xl font-bold tracking-tight group-hover:text-emerald-400 transition-colors -ml-1">Script2me</span>
                         </Link>
@@ -171,7 +171,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                     aria-label="Abrir menú de navegación principal"
                                 >
                                     <Menu className="h-5 w-5" />
-                                    <span className="text-sm font-medium">Menú</span>
+                                    <span className="text-sm font-medium">{t('header.menu')}</span>
                                 </Button>
                             </SheetTrigger>
                             <SheetContent side="right" className="bg-neutral-900 text-neutral-100 flex h-full w-72 flex-col items-stretch justify-between border-l border-neutral-700">
@@ -184,7 +184,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 <div className="flex h-full flex-1 flex-col space-y-6 p-4 pt-6 overflow-y-auto">
                                     <div className="flex h-full flex-col justify-between text-sm">
                                         <div className="flex flex-col space-y-2">
-                                            <h3 className="text-xs uppercase text-neutral-500 font-semibold mb-2">Navegación</h3>
+                                            <h3 className="text-xs uppercase text-neutral-500 font-semibold mb-2">{t('header.navigation')}</h3>
                                             {mainNavItems.map((item) => (
                                                 <Link
                                                     key={item.title}
@@ -200,7 +200,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                             ))}
                                         </div>
                                         <div className="flex flex-col space-y-2 mt-8">
-                                            <h3 className="text-xs uppercase text-neutral-500 font-semibold mb-2">Enlaces</h3>
+                                            <h3 className="text-xs uppercase text-neutral-500 font-semibold mb-2">{t('header.links')}</h3>
                                             {footerNavItems.map((item) =>
                                                 item.href === '#' ? (
                                                     <a
@@ -223,7 +223,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                             className="flex items-center space-x-2 font-medium py-2 px-3 rounded-md hover:bg-neutral-800 transition-colors"
                                                         >
                                                             <Icon iconNode={item.icon} className="h-5 w-5" />
-                                                            <span>GitHub</span>
+                                                            <span>{t('header.github')}</span>
                                                         </a>
                                                     ) : (
                                                         <a
@@ -260,7 +260,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                     </div>
 
                     {/* Logo y título en md+ */}
-                    <Link href="/dashboard" prefetch className="flex items-center gap-0 mr-2 sm:mr-4 group flex-shrink-0 hidden md:flex">
+                    <Link href="/home" prefetch className="flex items-center gap-0 mr-2 sm:mr-4 group flex-shrink-0 hidden md:flex">
                         <AppLogo className="h-12 w-12 bg-transparent p-0 m-0" />
                         <span className="text-xl sm:text-2xl font-bold tracking-tight group-hover:text-emerald-400 transition-colors -ml-1">Script2me</span>
                     </Link>

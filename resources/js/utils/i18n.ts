@@ -5,6 +5,7 @@ const resources = {
   en: {
     translation: {
       'Terms and Conditions': 'Terms & Conditions',
+      'T&C': 'T&C',
       // Dashboard translations
       'dashboard.description': 'Turn code into optimized AI prompts. Upload, process, and enhance scripts—free & open-source.',
       'dashboard.headTitle': 'Code to AI prompts',
@@ -110,6 +111,11 @@ const resources = {
       'securityDashboard.fileSecure': 'This file is secure! No vulnerabilities detected.',
       'securityDashboard.notScriptFile': 'Not a script file. No security scan needed.',
       'securityDashboard.viewDetails': 'View Details',
+      // App Header translations
+      'header.menu': 'Menu',
+      'header.navigation': 'Navigation',
+      'header.links': 'Links',
+      'header.github': 'GitHub',
       // Language Selector
       'language.select': 'Select language',
       'language.changeError': 'Error changing language. Please try again.',
@@ -158,6 +164,7 @@ const resources = {
   es: {
     translation: {
       'Terms and Conditions': 'Términos y Condiciones',
+      'T&C': 'T&C',
       // Traducciones del dashboard
       'dashboard.description': 'Convierte código en prompts para la IA. Sube, procesa y mejora tus scripts—gratis y open-source.',
       'dashboard.headTitle': 'Crea tus prompts para la IA',
@@ -263,6 +270,11 @@ const resources = {
       'securityDashboard.fileSecure': '¡Este archivo es seguro! No se detectaron vulnerabilidades.',
       'securityDashboard.notScriptFile': 'No es un archivo de código (script). No necesita escaneo de seguridad.',
       'securityDashboard.viewDetails': 'Ver detalles',
+      // Traducciones del encabezado
+      'header.menu': 'Menú',
+      'header.navigation': 'Navegación',
+      'header.links': 'Enlaces',
+      'header.github': 'GitHub',
       // Language Selector
       'language.select': 'Seleccionar idioma',
       'language.changeError': 'Error al cambiar el idioma. Inténtalo de nuevo.',

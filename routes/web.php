@@ -9,12 +9,12 @@ use Inertia\Inertia;
 
 // Redirect root URL to landing page
 Route::get('/', function() {
-    return redirect('/landing');
+    return redirect('/home');
 });
 Route::get('/dashboard', [UploadController::class, 'index'])->name('dashboard');
 Route::get('/refactor-dashboard', [RefactorController::class, 'index'])->name('refactor.index');
 Route::get('/security-dashboard', [SecurityController::class, 'index'])->name('security.index');
-Route::get('/landing', [LandingController::class, 'index'])->name('landing.index');
+Route::get('/home', [LandingController::class, 'index'])->name('landing.index');
 
 Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
 Route::post('/process', [RefactorController::class, 'process'])->name('refactor.process');
