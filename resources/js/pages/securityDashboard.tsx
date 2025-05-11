@@ -47,15 +47,21 @@ export default function Security() {
         const combined = SecContents.map((result, idx) => ({ filename: SecNames[idx] || `File ${idx + 1}`, result }));
         setLocalResults(combined);
 
+        // Variable to track if we've shown a toast from sessionStorage
+        let toastShown = false;
+
         // flash messages
         const successMessage = sessionStorage.getItem('flash.success');
         if (successMessage) {
             setTimeout(() => {
                 toast.success(successMessage);
                 sessionStorage.removeItem('flash.success');
+                toastShown = true;
             }, 300);
         }
-        if (flash.success) toast.success(flash.success);
+        
+        // Only show flash success if we haven't already shown a toast from sessionStorage
+        if (flash.success && !toastShown) toast.success(flash.success);
         if (flash.error) toast.error(flash.error);
     }, [SecContents, SecNames, flash, t]);
 

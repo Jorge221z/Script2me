@@ -43,18 +43,21 @@ export default function Dashboard() {
         }
         setLocalContents(contents);
 
+        // Variable to track if we've shown a toast from sessionStorage
+        let toastShown = false;
+        
         //para el flash de limpieza de sesión
         const successMessage = sessionStorage.getItem('flash.success');
         if (successMessage) {
             setTimeout(() => {
                 toast.success(successMessage);
                 sessionStorage.removeItem('flash.success'); // Limpiar el mensaje después de mostrarlo
-            }
-                , 300);
+                toastShown = true;
+            }, 300);
         }
-        //para flash de otra procedencia
-
-        if (flash && flash.success) {
+        
+        //para flash de otra procedencia - solo mostrar si no hemos mostrado ya uno desde sessionStorage
+        if (flash && flash.success && !toastShown) {
             toast.success(flash.success);
         }
         if (flash && flash.error) {
