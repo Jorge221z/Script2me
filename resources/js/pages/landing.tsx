@@ -342,7 +342,7 @@ const LandingPage: React.FC = () => {
 
             <div
               className="
-                grid grid-cols-1 md:grid-cols-3
+                grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3
                 gap-4 md:gap-6 lg:gap-8 xl:gap-10 2xl:gap-12
                 max-w-5xl md:max-w-6xl lg:max-w-7xl xl:max-w-[1600px] 2xl:max-w-[1800px] mx-auto
               "
@@ -364,8 +364,7 @@ const LandingPage: React.FC = () => {
                           : "bg-neutral-50 dark:bg-neutral-800 px-6 py-12 min-h-[340px] rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                   }
                   style={{
-                    minWidth: "340px",
-                    maxWidth: "480px",
+                    maxWidth: "100%",
                     margin: "0 auto",
                   }}
                 >
