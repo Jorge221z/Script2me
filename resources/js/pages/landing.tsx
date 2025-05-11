@@ -354,15 +354,16 @@ const LandingPage: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className={
-                    feature.id === "prompt-builder"
+                  className={`
+                    ${index === 2 ? "md:col-span-2 lg:col-span-1 md:max-w-md md:mx-auto" : ""}
+                    ${feature.id === "prompt-builder"
                       ? "relative overflow-hidden px-6 py-12 min-h-[340px] rounded-2xl shadow-xl border border-[#00bb89]/30 dark:border-[#00bb89]/40 bg-gradient-to-br from-[#d1fff7] via-[#aaf4de] to-[#8eeecb] dark:from-[#013a2c] dark:via-[#015e46] dark:to-[#00bb89]/50 backdrop-blur-md transition-all duration-300 hover:shadow-2xl hover:border-[#00bb89]/60 hover:scale-[1.03] group"
                       : feature.id === "ai-refactor"
                         ? "relative overflow-hidden px-6 py-12 min-h-[340px] rounded-2xl shadow-xl border border-cyan-300/30 dark:border-cyan-700/40 bg-gradient-to-br from-cyan-100 via-sky-100 to-blue-100 dark:from-[#0c4a6e] dark:via-[#0c2d4d] dark:to-[#0f172a] backdrop-blur-md transition-all duration-300 hover:shadow-2xl hover:border-cyan-400/60 hover:scale-[1.03] group"
                         : feature.id === "ai-scanner"
                           ? "relative overflow-hidden px-6 py-12 min-h-[340px] rounded-2xl shadow-xl border border-amber-200/30 dark:border-amber-800/40 bg-gradient-to-br from-amber-100 via-orange-100 to-pink-100 dark:from-amber-900 dark:via-orange-950 dark:to-pink-900 backdrop-blur-md transition-all duration-300 hover:shadow-2xl hover:border-amber-400/60 hover:scale-[1.03] group"
-                          : "bg-neutral-50 dark:bg-neutral-800 px-6 py-12 min-h-[340px] rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-                  }
+                          : "bg-neutral-50 dark:bg-neutral-800 px-6 py-12 min-h-[340px] rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"}
+                  `}
                   style={{
                     maxWidth: "100%",
                     margin: "0 auto",
