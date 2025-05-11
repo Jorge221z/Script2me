@@ -130,7 +130,7 @@ const LandingPage: React.FC = () => {
           {/* Animated background elements */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute w-full h-full">
-              {Array.from({ length: 20 }).map((_, i) => (
+              {Array.from({ length: 2 }).map((_, i) => (
                 <motion.div
                   key={i}
                   className="absolute rounded-full bg-white/10 backdrop-blur-3xl"
@@ -328,8 +328,7 @@ const LandingPage: React.FC = () => {
             <motion.div
               className="text-center mb-12"
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 text-neutral-900 dark:text-white">
@@ -351,9 +350,11 @@ const LandingPage: React.FC = () => {
                 <motion.div
                   key={feature.id}
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ 
+                    duration: 0.5, 
+                    delay: 0.3 + index * 0.1,
+                  }}
                   className={`
                     ${index === 2 ? "md:col-span-2 lg:col-span-1 md:max-w-md md:mx-auto" : ""}
                     ${feature.id === "prompt-builder"
@@ -367,6 +368,8 @@ const LandingPage: React.FC = () => {
                   style={{
                     maxWidth: "100%",
                     margin: "0 auto",
+                    minHeight: "340px",
+                    overflow: "hidden"
                   }}
                 >
                   {/* Fondo animado sutil para Prompt Builder */}
@@ -499,9 +502,8 @@ const LandingPage: React.FC = () => {
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
               >
                 <div className="relative">
                   <div className="absolute -inset-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl blur-xl opacity-30" />
@@ -534,9 +536,8 @@ const LandingPage: React.FC = () => {
 
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
                 className="relative"
               >
                 <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 shadow-2xl">
@@ -625,9 +626,8 @@ const LandingPage: React.FC = () => {
             <motion.div
               className="max-w-3xl mx-auto text-center text-white"
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
             >
               <div className="inline-flex items-center justify-center p-3 rounded-full bg-emerald-600/20 backdrop-blur-md mb-6">
                 <Mail className="h-6 w-6 text-emerald-400" />

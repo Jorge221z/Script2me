@@ -139,7 +139,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
         },
         {
             key: 'terms',
-            title: t('T&C'),
+            title: '',
             href: '/terms',
             icon: BookType,
         },
