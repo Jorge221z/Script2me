@@ -7,8 +7,10 @@ use App\Http\Controllers\UploadController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-// Mostrar el mismo contenido en la ruta principal y en dashboard
-Route::get('/', [LandingController::class, 'index'])->name('landing.index');
+// Redirect root URL to landing page
+Route::get('/', function() {
+    return redirect('/landing');
+});
 Route::get('/dashboard', [UploadController::class, 'index'])->name('dashboard');
 Route::get('/refactor-dashboard', [RefactorController::class, 'index'])->name('refactor.index');
 Route::get('/security-dashboard', [SecurityController::class, 'index'])->name('security.index');

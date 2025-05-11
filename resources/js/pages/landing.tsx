@@ -17,8 +17,10 @@ import {
   ChevronDown,
   Github,
   User,
+  Wrench,
 } from "lucide-react"
 import { motion } from "framer-motion"
+import { useTranslation } from "react-i18next"
 
 interface SectionInfo {
   id: string
@@ -32,14 +34,15 @@ const LandingPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>("hero")
   const [isPageNavSticky, setIsPageNavSticky] = useState<boolean>(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false)
+  const { t } = useTranslation()
 
   const pageNavRef = useRef<HTMLElement>(null)
 
   const sections: SectionInfo[] = [
-    { id: "hero", titleKey: "Home", icon: Home },
-    { id: "features", titleKey: "Toolkit", icon: Pickaxe },
-    { id: "our-story", titleKey: "Our Story", icon: Rocket },
-    { id: "contact", titleKey: "Contact", icon: Mail },
+    { id: "hero", titleKey: t('landing.home'), icon: Home },
+    { id: "features", titleKey: t('landing.toolkit'), icon: Wrench },
+    { id: "our-story", titleKey: t('landing.ourStory'), icon: Rocket },
+    { id: "contact", titleKey: t('landing.contact'), icon: Mail },
   ]
 
   useEffect(() => {
@@ -89,38 +92,35 @@ const LandingPage: React.FC = () => {
     {
       id: "prompt-builder",
       icon: Pickaxe,
-      titleKey: "Prompt Builder",
-      descriptionKey:
-        "Analiza y transforma tu código en prompts listos para LLMs. Carga scripts, genera entradas estructuradas para asistentes inteligentes en un solo clic. Open source, gratis y sin registro.",
+      titleKey: t('landing.features.promptBuilder.title'),
+      descriptionKey: t('landing.features.promptBuilder.description'),
       href: "/dashboard",
-      ctaKey: "Try Prompt Builder",
+      ctaKey: t('landing.features.promptBuilder.cta'),
       color: "emerald",
     },
     {
       id: "ai-refactor",
       icon: BrainCircuit,
-      titleKey: "AI Refactor",
-      descriptionKey:
-        "Analiza y transforma automáticamente tus scripts para mejorar su rendimiento, estructura y mantenibilidad. Refactorización inteligente con comprensión contextual, con un solo clic. Ideal para flujos de trabajo modernos y desarrollo escalable. Todo gracias a Google Gemini.",
+      titleKey: t('landing.features.aiRefactor.title'),
+      descriptionKey: t('landing.features.aiRefactor.description'),
       href: "/refactor-dashboard",
-      ctaKey: "Try it Now",
+      ctaKey: t('landing.features.aiRefactor.cta'),
       color: "cyan",
     },
     {
       id: "ai-scanner",
       icon: Radar,
-      titleKey: "AI Security Scanner",
-      descriptionKey:
-        "Analiza tu código en profundidad con la API de Google Gemini. Busqueda de vulnerabilidades y de patrones inseguros. Recibe recomendaciones precisas para fortalecer la seguridad y mitigar riesgos potenciales.",
+      titleKey: t('landing.features.aiScanner.title'),
+      descriptionKey: t('landing.features.aiScanner.description'),
       href: "/security-dashboard",
-      ctaKey: "Scan your code Now",
+      ctaKey: t('landing.features.aiScanner.cta'),
       color: "amber",
     },
   ]
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Script2me - AI Tools for Developers" />
+      <Head title={t('landing.pageTitle')} />
 
       <main className="bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200">
         <section
@@ -170,7 +170,7 @@ const LandingPage: React.FC = () => {
                   <div className="relative bg-gradient-to-r from-white via-slate-50 to-white dark:from-white dark:via-slate-100 dark:to-white p-0 rounded-full shadow-xl ring-4 ring-white/50 backdrop-blur-sm">
                     <motion.img 
                       src="/images/logo.png" 
-                      alt="Script2me Logo" 
+                      alt={t('landing.logoAlt')}
                       className="h-24 w-24 object-contain drop-shadow-md"
                       animate={{ 
                         scale: [1, 1.05, 1],
@@ -194,17 +194,17 @@ const LandingPage: React.FC = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-amber-300 to-white animate-gradient-x">
-                  Supercharge your development with AI
+                  {t('landing.hero.title')}
                 </span>
               </motion.h1>
 
               <motion.p
-                className="text-lg sm:text-xl md:text-2xl mb-10 max-w-3xl mx-auto text-emerald-100 dark:text-sky-100"
+                className="text-lg sm:text-xl md:text-2xl mb-10 max-w-3xl mx-auto text-emerald-100 dark:text-sky-100 whitespace-pre-line"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
-                Build, refactor, and secure your code using <br/> Script2me’s modular AI toolkit.
+                {t('landing.hero.subtitle')}
               </motion.p>
 
               <motion.div
@@ -219,7 +219,7 @@ const LandingPage: React.FC = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  Explore Toolkit
+                  {t('landing.hero.exploreButton')}
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
                 <motion.button
@@ -228,7 +228,7 @@ const LandingPage: React.FC = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  Contact Us
+                  {t('landing.hero.contactButton')}
                 </motion.button>
               </motion.div>
 
@@ -245,9 +245,9 @@ const LandingPage: React.FC = () => {
                 <button
                   onClick={() => scrollToSection("features")}
                   className="flex flex-col items-center"
-                  aria-label="Scroll to features"
+                  aria-label={t('landing.hero.scrollAriaLabel')}
                 >
-                  <span className="text-sm font-medium mb-2">Scroll Down</span>
+                  <span className="text-sm font-medium mb-2">{t('landing.hero.scrollDown')}</span>
                   <ChevronDown className="h-6 w-6 animate-bounce" />
                 </button>
               </motion.div>
@@ -333,10 +333,10 @@ const LandingPage: React.FC = () => {
               transition={{ duration: 0.6 }}
             >
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 text-neutral-900 dark:text-white">
-                Our Toolkit
+                {t('landing.features.title')}
               </h2>
               <p className="text-center text-neutral-600 dark:text-neutral-400 mb-12 md:mb-16 max-w-2xl mx-auto text-lg">
-                Discover how Script2me can transform your development workflow <br /> with AI-powered tools.
+                {t('landing.features.subtitle')}
               </p>
             </motion.div>
 
@@ -459,34 +459,15 @@ const LandingPage: React.FC = () => {
                   <p
                     className={
                       feature.id === "prompt-builder"
-                        ? "mb-4 text-neutral-700 dark:text-neutral-200 font-medium"
+                        ? "mb-4 text-neutral-700 dark:text-neutral-200 font-medium whitespace-pre-line"
                         : feature.id === "ai-refactor"
-                          ? "mb-4 text-neutral-700 dark:text-neutral-200 font-medium"
+                          ? "mb-4 text-neutral-700 dark:text-neutral-200 font-medium whitespace-pre-line"
                           : feature.id === "ai-scanner"
-                            ? "mb-4 text-neutral-700 dark:text-neutral-200 font-medium"
+                            ? "mb-4 text-neutral-700 dark:text-neutral-200 font-medium whitespace-pre-line"
                             : "text-neutral-600 dark:text-neutral-300 mb-4"
                     }
                   >
-                    {feature.id === "prompt-builder" ? (
-                      <>
-                        Convierte tus archivos de código en prompts listos para LLMs, con salidas estructuradas para chatbots.
-                        <br/> Carga tus scripts y obtén resultados en un clic.
-                        <br /> 100% open source, gratuito y sin registro.
-                        <br /> La función estrella de Script2me.
-                      </>
-                    ) : feature.id === "ai-refactor" ? (
-                      <>
-                        Analiza y transforma automáticamente tu código para mejorar su rendimiento, estructura y mantenibilidad. Refactorización inteligente con comprensión contextual, con un solo clic.
-                        <br /> Ideal para flujos de trabajo modernos y desarrollo escalable.
-                      </>
-                    ) : feature.id === "ai-scanner" ? (
-                      <>
-                        Analiza tu código en profundidad con la API de Google Gemini. 
-                        <br />Búsqueda de vulnerabilidades y de patrones inseguros en entornos backend principalmente. <br /> Recibe recomendaciones precisas para fortalecer la seguridad y mitigar riesgos potenciales.
-                      </>
-                    ) : (
-                      feature.descriptionKey
-                    )}
+                    {feature.descriptionKey}
                   </p>
                   <Link
                     href={feature.href}
@@ -533,23 +514,17 @@ const LandingPage: React.FC = () => {
                         <Rocket className="h-6 w-6" />
                       </div>
                       <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-neutral-900 dark:text-white">
-                        ¿Porqué Script2me?
+                        {t('landing.story.title')}
                       </h2>
                       <div className="space-y-4 text-neutral-700 dark:text-neutral-300">
                         <p>
-                          Script2me nace fruto de las limitatciones impuestas por los chatbots de IA, que permiten
-                          un bajo numero de archivos adjuntos. <br/> Tareas que se quedaban a medias por no poder adjuntar todos los
-                          archivos necesarios para una correcta comprensión del contexto.
+                          {t('landing.story.paragraph1')}
                         </p>
                         <p>
-                          'Prompt Builder' viene a cubrir este problema. Con esta herramienta, puedes subir tus archivos de código y
-                          convertirlos en un único prompt con salida optimizada para ser procesado por un asistente de IA. Esto te permite
-                          obtener respuestas más precisas y relevantes, mejorando así tu productividad y eficiencia.
+                          {t('landing.story.paragraph2')}
                         </p>
                         <p>
-                          Tras desarrollar esta herramienta, decidí expandir mis horizontes y crear otras herramientas que también
-                          están relacionadas con la IA.<br/> Así nacieron 'AI Refactor' y 'AI Security Scanner', que utilizan
-                          la API de Google Gemini para ofrecerte una experiencia de desarrollo aún más enriquecedora.
+                          {t('landing.story.paragraph3')}
                         </p>
                       </div>
                     </div>
@@ -580,26 +555,23 @@ const LandingPage: React.FC = () => {
                       </div>
 
                       <h3 className="text-2xl font-bold mb-4 text-neutral-900 dark:text-white">
-                        Detrás de Script2me
+                        {t('landing.behindProject.title')}
                       </h3>
 
                       <div className="space-y-4 text-neutral-700 dark:text-neutral-300">
                         <p className="leading-relaxed">
-                          Script2me es un proyecto independiente creado y mantenido enteramente por mí, un desarrollador Full Stack
-                          junior apasionado por la tecnología y sobretodo por la IA.
+                          {t('landing.behindProject.paragraph1')}
                         </p>
 
                         <p className="leading-relaxed">
-                          Mi misión es simplificar y potenciar el día a día de los desarrolladores utilizando la
-                          inteligencia artificial como herramienta clave para resolver problemas complejos en su codigo de manera
-                          eficiente.
+                          {t('landing.behindProject.paragraph2')}
                         </p>
 
                         <div className="mt-6">
                           <h4 className="text-lg font-semibold mb-3 text-emerald-700 dark:text-emerald-400">
-                            Stack Tecnológico
+                            {t('landing.behindProject.techStack')}
                           </h4>
-                          <p className="mb-3">Script2me ha sido desarrollado enteramente con:</p>
+                          <p className="mb-3">{t('landing.behindProject.developedWith')}</p>
                           <div className="flex flex-wrap justify-center md:justify-start gap-2">
                             {["Laravel", "React", "Tailwind CSS", "Inertia.js", "MySQL"].map((tech) => (
                               <span
@@ -613,7 +585,7 @@ const LandingPage: React.FC = () => {
                           {/* AI powered by Gemini - inline, bigger icon */}
                           <div className="flex items-center justify-center md:justify-start mt-6 gap-2">
                             <span className="font-medium text-emerald-700 dark:text-emerald-300 text-base mr-0">
-                              AI powered by
+                              {t('landing.behindProject.poweredBy')}
                             </span>
                             <img
                               src="/images/gemini.svg"
@@ -633,7 +605,7 @@ const LandingPage: React.FC = () => {
                           className="inline-flex items-center text-emerald-700 dark:text-emerald-300 hover:text-emerald-500 dark:hover:text-emerald-200 font-medium transition-colors"
                         >
                           <Github className="h-5 w-5 mr-2" />
-                          Ver código en GitHub
+                          {t('landing.behindProject.viewOnGithub')}
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </a>
                       </div>
@@ -660,16 +632,16 @@ const LandingPage: React.FC = () => {
               <div className="inline-flex items-center justify-center p-3 rounded-full bg-emerald-600/20 backdrop-blur-md mb-6">
                 <Mail className="h-6 w-6 text-emerald-400" />
               </div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">Contact Us</h2>
-              <p className="text-xl mb-10 text-neutral-300">Have questions or feedback? Reach out to us via email.</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">{t('landing.contact.title')}</h2>
+              <p className="text-xl mb-10 text-neutral-300">{t('landing.contact.subtitle')}</p>
 
               <motion.a
-                href="mailto:tuemail@example.com"
+                href="mailto:jorgemunozcast12@gmail.com"
                 className="inline-flex items-center justify-center bg-emerald-600 text-white hover:bg-emerald-700 font-semibold py-4 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 text-lg"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Send Email
+                {t('landing.contact.buttonText')}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </motion.a>
             </motion.div>
@@ -679,7 +651,7 @@ const LandingPage: React.FC = () => {
 
       <footer className="bg-neutral-800 dark:bg-neutral-950 text-neutral-400 dark:text-neutral-500 py-12 m-0">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p>© {new Date().getFullYear()} Script2me. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Script2me. {t('landing.footer.rights')}</p>
         </div>
       </footer>
     </AppLayout>
