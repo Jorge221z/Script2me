@@ -11,7 +11,7 @@ const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
             className={`mb-2 flex flex-col max-w-2xl rounded-lg 
                 ${isInvalid 
                 ? 'border border-red-300 bg-red-200 dark:border-red-200 dark:bg-red-100 hover:bg-red-300 dark:hover:bg-red-200' 
-                : 'bg-gray-50 dark:bg-neutral-950'} 
+                : 'bg-gray-50 dark:bg-[#1f1f1f]'} 
                 p-2 transition-colors hover:bg-gray-300 dark:hover:bg-neutral-900`}
         >
             <div className="flex items-center justify-between">
@@ -29,7 +29,7 @@ const FilePreview = ({ file, onRemove, isInvalid, errorMessage }) => {
                     type="button"
                     onClick={() => onRemove(file)}
                     title="Remove file"
-                    className="flex items-center justify-center rounded-full bg-gray-200 p-1.5 text-gray-500 transition-all duration-200 hover:bg-red-100 hover:text-red-600 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-400 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-red-900 dark:hover:text-red-400 dark:focus:ring-red-700"
+                    className="flex items-center justify-center rounded-full bg-gray-200 p-1.5 text-gray-500 transition-all duration-200 hover:bg-red-100 hover:text-red-600 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-400 dark:bg-neutral-700 dark:text-gray-200 dark:hover:bg-red-900 dark:hover:text-red-400 dark:focus:ring-red-700"
                 >
                     <FiX className="h-4 w-4" />
                 </button>
