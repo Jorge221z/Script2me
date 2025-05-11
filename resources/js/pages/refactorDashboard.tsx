@@ -65,14 +65,6 @@ export default function Refactor() {
         }
     }, [ApiContents, flash]);
 
-    useEffect(() => {
-        const refreshData = async () => {
-            await router.reload({ only: ['ApiContents', 'ApiNames'] });
-        };
-
-        // Solo ejecutar al montar el componente
-        refreshData();
-    }, []); // Array de dependencias vacío
 
     return (
         <AppLayout breadcrumbs={[

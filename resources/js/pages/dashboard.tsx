@@ -66,14 +66,7 @@ export default function Dashboard() {
 
     }, [contents, flash]);
 
-    useEffect(() => {
-        const refreshData = async () => {
-            await router.reload({ only: ['contents', 'names'] });
-        };
-
-        // Solo ejecutar al montar el componente
-        refreshData();
-    }, []); // Array de dependencias vacío
+    
 
     return (
         <AppLayout breadcrumbs={[

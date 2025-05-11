@@ -65,10 +65,6 @@ export default function Security() {
         if (flash.error) toast.error(flash.error);
     }, [SecContents, SecNames, flash, t]);
 
-    useEffect(() => {
-        // refresh data once
-        router.reload({ only: ['SecContents', 'SecNames'] });
-    }, []);
 
     return (
         <AppLayout
