@@ -178,15 +178,51 @@
             background-position: 0% 50%;
         }
     } }
-        
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
 
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
+@keyframes logo-gradient-move {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-logo-gradient {
+  background: radial-gradient(circle at 60% 40%, #00bb89 0%, #00e0c6 40%, #5eead4 80%, #38bdf8 100%, transparent 100%);
+  opacity: 1;
+  filter: blur(24px);
+  animation: logo-gradient-move 7s ease-in-out infinite;
+  background-size: 200% 200%;
+  transition: opacity 0.3s;
+}
+
+@keyframes logo-conic-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-logo-conic-gradient {
+  background: conic-gradient(
+    from 0deg,
+    #00bb89 0deg 54deg,
+    #00e0c6 54deg 108deg,
+    #ffe066 108deg 162deg,      /* dorado claro */
+    #5eead4 162deg 216deg,
+    #38bdf8 216deg 288deg,
+    #00bb89 288deg 360deg
+  );
+  opacity: 0.9;
+  filter: blur(18px);
+  border-radius: 9999px;
+  animation: logo-conic-rotate 6s linear infinite;
+  transition: opacity 0.3s;
+}
+
 @layer base {
     *,
     ::after,

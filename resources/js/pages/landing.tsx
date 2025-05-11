@@ -127,47 +127,30 @@ const LandingPage: React.FC = () => {
           id="hero"
           className="relative bg-gradient-to-br from-emerald-600 via-teal-600 to-sky-700 dark:from-emerald-700 dark:via-teal-700 dark:to-sky-800 text-white py-28 md:py-40 flex items-center justify-center text-center overflow-hidden min-h-[calc(100vh-var(--app-header-height,64px)-var(--page-nav-height,56px))]"
         >
-          {/* Animated background elements */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute w-full h-full">
-              {Array.from({ length: 2 }).map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute rounded-full bg-white/10 backdrop-blur-3xl"
-                  style={{
-                    width: Math.random() * 300 + 50,
-                    height: Math.random() * 300 + 50,
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                  }}
-                  initial={{ opacity: 0.1, scale: 0.8 }}
-                  animate={{
-                    opacity: [0.1, 0.2, 0.1],
-                    scale: [0.8, 1.2, 0.8],
-                    x: [0, Math.random() * 50 - 25, 0],
-                    y: [0, Math.random() * 50 - 25, 0],
-                  }}
-                  transition={{
-                    duration: Math.random() * 10 + 15,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
-                  }}
-                />
-              ))}
-            </div>
-          </div>
 
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <div className="flex justify-center mb-8">
                 <motion.div
-                  className="relative"
+                  className="relative flex items-center justify-center"
                   initial={{ scale: 0.8 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.5 }}
+                  style={{ width: 140, height: 140 }}
                 >
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-400 via-sky-400 to-purple-400 blur-xl opacity-70 animate-pulse" />
-                  <div className="relative bg-gradient-to-r from-white via-slate-50 to-white dark:from-white dark:via-slate-100 dark:to-white p-0 rounded-full shadow-xl ring-4 ring-white/50 backdrop-blur-sm">
+                  {/* Fondo animado gradiente tipo reloj girando */}
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-logo-conic-gradient"
+                    style={{
+                      width: 180,
+                      height: 180,
+                      zIndex: 0,
+                      borderRadius: "9999px",
+                      pointerEvents: "none"
+                    }}
+                  />
+                  <div className="relative bg-gradient-to-r from-white via-slate-50 to-white dark:from-white dark:via-slate-100 dark:to-white p-0 rounded-full shadow-xl ring-4 ring-white/50 backdrop-blur-sm z-10 flex items-center justify-center"
+                    style={{ width: 120, height: 120 }}
+                  >
                     <motion.img 
                       src="/images/logo.png" 
                       alt={t('landing.logoAlt')}
