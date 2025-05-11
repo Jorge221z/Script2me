@@ -101,7 +101,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     // Botones principales (antes en sidebar)
     const mainNavItems = [
         {
-            title: "Home",
+            title: t("landing.home"),
             href: "/home",
             icon: Home,
         },
@@ -126,7 +126,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     const footerNavItems = [
         {
             key: "theme",
-            title: theme === "light" ? "Dark" : "Light",
+            title: theme === "light" ? t("theme.dark") : t("theme.light"),
             href: "#",
             icon: theme === "light" ? Moon : Sun,
             onClick: (e: React.MouseEvent<HTMLAnchorElement>) => {
