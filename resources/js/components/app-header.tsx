@@ -223,13 +223,13 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                             <h3 className="text-xs uppercase text-neutral-500 font-semibold mb-2">
                                                 {t("header.navigation")}
                                             </h3>
-                                            <div className="relative">
+                                            <div className="relative flex flex-col space-y-3">
                                                 {mainNavItems.map((item) => (
                                                     <Link
                                                         key={item.title}
                                                         href={item.href}
                                                         className={cn(
-                                                            "flex items-center space-x-2 font-medium py-2 px-3 rounded-md transition-colors z-10 relative",
+                                                            "flex items-center justify-start space-x-2 font-medium py-3 px-3 rounded-md transition-colors z-10 relative",
                                                             selectedItem === item.href ? "text-emerald-400" : "hover:text-emerald-300",
                                                         )}
                                                         onClick={() => handleNavItemClick(item.href)}
@@ -240,13 +240,13 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                 ))}
                                                 {selectedItem && (
                                                     <motion.div
-                                                        className="absolute inset-0 rounded-md z-[-1]"
+                                                        className="absolute left-0 right-0 rounded-md z-[-1]"
                                                         layoutId="mobile-nav-indicator"
                                                         initial={false}
                                                         animate={{
-                                                            height: "40px",
+                                                            height: "48px",
                                                             width: "100%",
-                                                            y: mainNavItems.findIndex((item) => item.href === selectedItem) * 40,
+                                                            y: mainNavItems.findIndex((item) => item.href === selectedItem) * 56,
                                                             opacity: 1,
                                                         }}
                                                         transition={{
@@ -301,6 +301,19 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                             {item.title && <span>{item.title}</span>}
                                                         </a>
                                                     )
+                                                ) : item.icon === BookType ? (
+                                                    // BookType: icono a la izquierda, texto "T&C" a la derecha SOLO en sidebar móvil
+                                                    <Link
+                                                        key={item.key}
+                                                        href={item.href}
+                                                        className={cn(
+                                                            "flex items-center space-x-2 font-medium py-2 px-3 rounded-md hover:bg-neutral-800 transition-colors",
+                                                            page.url === item.href ? "bg-neutral-800 text-emerald-400" : ""
+                                                        )}
+                                                    >
+                                                        <Icon iconNode={item.icon} className="h-5 w-5" />
+                                                        <span>T&C</span>
+                                                    </Link>
                                                 ) : (
                                                     <Link
                                                         key={item.key}
@@ -311,7 +324,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                         )}
                                                     >
                                                         {item.icon && <Icon iconNode={item.icon} className="h-5 w-5" />}
-                                                        <span>{item.title}</span>
+                                                        {item.title && <span>{item.title}</span>}
                                                     </Link>
                                                 ),
                                             )}
