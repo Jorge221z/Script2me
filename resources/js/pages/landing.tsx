@@ -34,6 +34,7 @@ const LandingPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>("hero")
   const [isPageNavSticky, setIsPageNavSticky] = useState<boolean>(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false)
+  const [isContactHovered, setIsContactHovered] = useState(false)
   const { t } = useTranslation()
 
   const pageNavRef = useRef<HTMLElement>(null)
@@ -299,11 +300,37 @@ const LandingPage: React.FC = () => {
                 </motion.button>
                 <motion.button
                   onClick={() => scrollToSection("contact")}
-                  className="bg-transparent hover:bg-white/20 border-2 border-white text-white font-semibold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 text-lg"
-                  whileHover={{ scale: 1.05 }}
+                  className="bg-transparent border-2 border-white text-white font-semibold py-2 px-6 rounded-full shadow-lg transform transition-all text-base
+                    hover:bg-white/20 hover:backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-emerald-400/60 flex items-center justify-center relative overflow-hidden"
+                  style={{
+                    paddingRight: isContactHovered ? 25 : 24, // 25px ≈ pr-[6.25], 24px ≈ px-6
+                    transition: "padding-right 0.45s cubic-bezier(0.4,0,0.2,1)",
+                  }}
+                  whileHover={{ scale: 1.07 }}
                   whileTap={{ scale: 0.95 }}
+                  onMouseEnter={() => setIsContactHovered(true)}
+                  onMouseLeave={() => setIsContactHovered(false)}
                 >
-                  {t("landing.hero.contactButton")}
+                  <span className="relative flex items-center w-full justify-center">
+                    <motion.span
+                      animate={isContactHovered ? { x: -8 } : { x: 0 }}
+                      transition={{ type: "tween", duration: 0.45, ease: "easeInOut" }}
+                      className="block"
+                    >
+                      {t("landing.hero.contactButton")}
+                    </motion.span>
+                    {isContactHovered && (
+                      <motion.span
+                        initial={{ opacity: 0, x: 16 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 16 }}
+                        transition={{ type: "tween", duration: 0.45, ease: "easeInOut" }}
+                        className="flex items-center pointer-events-none ml-2"
+                      >
+                        <Mail className="h-5 w-5 text-emerald-200" />
+                      </motion.span>
+                    )}
+                  </span>
                 </motion.button>
               </motion.div>
 
