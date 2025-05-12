@@ -151,11 +151,11 @@ const LandingPage: React.FC = () => {
                   <div className="relative bg-gradient-to-r from-white via-slate-50 to-white dark:from-white dark:via-slate-100 dark:to-white p-0 rounded-full shadow-xl ring-4 ring-white/50 backdrop-blur-sm z-10 flex items-center justify-center"
                     style={{ width: 120, height: 120 }}
                   >
-                    <motion.img 
-                      src="/images/logo.png" 
+                    <motion.img
+                      src="/images/logo.png"
                       alt={t('landing.logoAlt')}
                       className="h-24 w-24 object-contain drop-shadow-md"
-                      animate={{ 
+                      animate={{
                         scale: [1, 1.05, 1],
                         rotate: [0, 2, 0]
                       }}
@@ -334,8 +334,8 @@ const LandingPage: React.FC = () => {
                   key={feature.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ 
-                    duration: 0.5, 
+                  transition={{
+                    duration: 0.5,
                     delay: 0.3 + index * 0.1,
                   }}
                   className={`
@@ -632,7 +632,7 @@ const LandingPage: React.FC = () => {
         </section>
       </main>
 
-      <footer className="bg-neutral-800 dark:bg-neutral-950 text-neutral-400 dark:text-neutral-500 py-12 m-0">
+      <footer className="bg-gray-300 dark:bg-neutral-950 text-neutral-800 dark:text-neutral-400 py-12 m-0">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p>© {new Date().getFullYear()} Script2me. {t('landing.footer.rights')}</p>
         </div>
