@@ -204,7 +204,7 @@ const LandingPage: React.FC = () => {
                   whileTap={{ scale: 0.97 }}
                 >
                   {/* Wider animated border */}
-                  <div className="absolute inset-[-16px] rounded-full overflow-hidden z-0">
+                  <div className="absolute inset-[-16px] rounded-full overflow-hidden z-0 pointer-events-none">
                     <div
                       className="absolute left-1/2 top-1/2"
                       style={{
@@ -215,60 +215,42 @@ const LandingPage: React.FC = () => {
                         background: "conic-gradient(from 0deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6)",
                         animation: "spin 8s linear infinite",
                         opacity: 1,
+                        display: "none",
                       }}
                     />
                   </div>
 
-                  {/* Smoother animated background with fluid transitions */}
-                  <div className="absolute inset-0 rounded-full overflow-hidden">
+                  {/* Smoother animated background with fluid transitions (solo en hover) */}
+                  <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
                     <div
-                      className="absolute inset-0 animate-fluid-gradient opacity-100"
+                      className="absolute inset-0 opacity-100 group-hover:block hidden animate-fluid-gradient"
                       style={{
                         background:
-                          "linear-gradient(90deg, rgba(59, 130, 246, 0.8), rgba(139, 92, 246, 0.8), rgba(236, 72, 153, 0.8), rgba(59, 130, 246, 0.8))",
-                        backgroundSize: "300% 100%",
-                        animation: "fluidGradient 6s ease-in-out infinite",
+                          "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 25%, #ec4899 50%, #22d3ee 75%, #f59e42 100%)",
+                        backgroundSize: "400% 400%",
+                        animation: "fluidGradient 8s ease-in-out infinite",
                       }}
                     />
                   </div>
 
-                  {/* Moving particles */}
-                  <div className="absolute inset-0 overflow-hidden rounded-full">
-                    {[...Array(15)].map((_, i) => (
-                      <div
-                        key={i}
-                        className="absolute rounded-full bg-white"
-                        style={{
-                          width: `${Math.random() * 6 + 2}px`,
-                          height: `${Math.random() * 6 + 2}px`,
-                          top: `${Math.random() * 100}%`,
-                          left: `${Math.random() * 100}%`,
-                          opacity: Math.random() * 0.5 + 0.3,
-                          animation: `moveParticle ${Math.random() * 4 + 3}s linear infinite`,
-                          animationDelay: `${Math.random() * 2}s`,
-                        }}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Pulsing rings */}
-                  <div className="absolute inset-0 flex items-center justify-center">
+                  {/* Pulsing rings solo en hover */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <div
-                      className="absolute w-full h-full rounded-full bg-white/30"
+                      className="absolute w-full h-full rounded-full bg-white/30 group-hover:block hidden"
                       style={{ animation: "pulseRing 2.5s ease-in-out infinite" }}
                     />
                     <div
-                      className="absolute w-full h-full rounded-full bg-white/20"
+                      className="absolute w-full h-full rounded-full bg-white/20 group-hover:block hidden"
                       style={{ animation: "pulseRing 2.5s ease-in-out infinite 0.6s" }}
                     />
                     <div
-                      className="absolute w-full h-full rounded-full bg-white/10"
+                      className="absolute w-full h-full rounded-full bg-white/10 group-hover:block hidden"
                       style={{ animation: "pulseRing 2.5s ease-in-out infinite 1.2s" }}
                     />
                   </div>
 
                   {/* Overlay for text contrast */}
-                  <div className="absolute inset-[4px] bg-white/90 rounded-full z-10"></div>
+                  <div className="absolute inset-[5px] bg-white/60 rounded-full z-10"></div>
 
                   <style>{`
                     @keyframes spin {
@@ -277,9 +259,11 @@ const LandingPage: React.FC = () => {
                     }
 
                     @keyframes fluidGradient {
-                      0% { background-position: 0% 50%; }
-                      50% { background-position: 100% 50%; }
-                      100% { background-position: 0% 50%; }
+                      0% { background-position: 0% 0%; }
+                      25% { background-position: 100% 0%; }
+                      50% { background-position: 100% 100%; }
+                      75% { background-position: 0% 100%; }
+                      100% { background-position: 0% 0%; }
                     }
 
                     @keyframes moveParticle {
@@ -301,7 +285,7 @@ const LandingPage: React.FC = () => {
                     }
 
                     .animate-fluid-gradient {
-                      animation: fluidGradient 6s ease-in-out infinite;
+                      animation: fluidGradient 8s ease-in-out infinite;
                     }
                   `}</style>
 
