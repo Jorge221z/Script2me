@@ -39,10 +39,10 @@ const LandingPage: React.FC = () => {
   const pageNavRef = useRef<HTMLElement>(null)
 
   const sections: SectionInfo[] = [
-    { id: "hero", titleKey: t('landing.home'), icon: Home },
-    { id: "features", titleKey: t('landing.toolkit'), icon: Wrench },
-    { id: "our-story", titleKey: t('landing.ourStory'), icon: Rocket },
-    { id: "contact", titleKey: t('landing.contact'), icon: Mail },
+    { id: "hero", titleKey: t("landing.home"), icon: Home },
+    { id: "features", titleKey: t("landing.toolkit"), icon: Wrench },
+    { id: "our-story", titleKey: t("landing.ourStory"), icon: Rocket },
+    { id: "contact", titleKey: t("landing.contact"), icon: Mail },
   ]
 
   useEffect(() => {
@@ -92,42 +92,41 @@ const LandingPage: React.FC = () => {
     {
       id: "prompt-builder",
       icon: Pickaxe,
-      titleKey: t('landing.features.promptBuilder.title'),
-      descriptionKey: t('landing.features.promptBuilder.description'),
+      titleKey: t("landing.features.promptBuilder.title"),
+      descriptionKey: t("landing.features.promptBuilder.description"),
       href: "/dashboard",
-      ctaKey: t('landing.features.promptBuilder.cta'),
+      ctaKey: t("landing.features.promptBuilder.cta"),
       color: "emerald",
     },
     {
       id: "ai-refactor",
       icon: BrainCircuit,
-      titleKey: t('landing.features.aiRefactor.title'),
-      descriptionKey: t('landing.features.aiRefactor.description'),
+      titleKey: t("landing.features.aiRefactor.title"),
+      descriptionKey: t("landing.features.aiRefactor.description"),
       href: "/refactor-dashboard",
-      ctaKey: t('landing.features.aiRefactor.cta'),
+      ctaKey: t("landing.features.aiRefactor.cta"),
       color: "cyan",
     },
     {
       id: "ai-scanner",
       icon: Radar,
-      titleKey: t('landing.features.aiScanner.title'),
-      descriptionKey: t('landing.features.aiScanner.description'),
+      titleKey: t("landing.features.aiScanner.title"),
+      descriptionKey: t("landing.features.aiScanner.description"),
       href: "/security-dashboard",
-      ctaKey: t('landing.features.aiScanner.cta'),
+      ctaKey: t("landing.features.aiScanner.cta"),
       color: "amber",
     },
   ]
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title={t('landing.pageTitle')} />
+      <Head title={t("landing.pageTitle")} />
 
       <main className="bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200">
         <section
           id="hero"
           className="relative bg-gradient-to-br from-emerald-600 via-teal-600 to-sky-700 dark:from-emerald-700 dark:via-teal-700 dark:to-sky-800 text-white py-28 md:py-40 flex items-center justify-center text-center overflow-hidden min-h-[calc(100vh-var(--app-header-height,64px)-var(--page-nav-height,56px))]"
         >
-
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <div className="flex justify-center mb-8">
@@ -139,31 +138,33 @@ const LandingPage: React.FC = () => {
                   style={{ width: 140, height: 140 }}
                 >
                   {/* Fondo animado gradiente tipo reloj girando */}
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-logo-conic-gradient"
+                  <div
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-logo-conic-gradient"
                     style={{
                       width: 180,
                       height: 180,
                       zIndex: 0,
                       borderRadius: "9999px",
-                      pointerEvents: "none"
+                      pointerEvents: "none",
                     }}
                   />
-                  <div className="relative bg-gradient-to-r from-white via-slate-50 to-white dark:from-white dark:via-slate-100 dark:to-white p-0 rounded-full shadow-xl ring-4 ring-white/50 backdrop-blur-sm z-10 flex items-center justify-center"
+                  <div
+                    className="relative bg-gradient-to-r from-white via-slate-50 to-white dark:from-white dark:via-slate-100 dark:to-white p-0 rounded-full shadow-xl ring-4 ring-white/50 backdrop-blur-sm z-10 flex items-center justify-center"
                     style={{ width: 120, height: 120 }}
                   >
                     <motion.img
                       src="/images/logo.png"
-                      alt={t('landing.logoAlt')}
+                      alt={t("landing.logoAlt")}
                       className="h-24 w-24 object-contain drop-shadow-md"
                       animate={{
                         scale: [1, 1.05, 1],
-                        rotate: [0, 2, 0]
+                        rotate: [0, 2, 0],
                       }}
                       transition={{
                         duration: 4,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "easeInOut",
-                        repeatDelay: 0.5
+                        repeatDelay: 0.5,
                       }}
                     />
                   </div>
@@ -177,7 +178,7 @@ const LandingPage: React.FC = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-amber-300 to-white animate-gradient-x">
-                  {t('landing.hero.title')}
+                  {t("landing.hero.title")}
                 </span>
               </motion.h1>
 
@@ -187,7 +188,7 @@ const LandingPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
-                {t('landing.hero.subtitle')}
+                {t("landing.hero.subtitle")}
               </motion.p>
 
               <motion.div
@@ -198,12 +199,119 @@ const LandingPage: React.FC = () => {
               >
                 <motion.button
                   onClick={() => scrollToSection("features")}
-                  className="bg-white text-emerald-700 hover:bg-emerald-50 dark:bg-white dark:text-emerald-700 dark:hover:bg-emerald-50 font-semibold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 text-lg inline-flex items-center group"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  className="relative bg-white text-neutral-800 dark:bg-white dark:text-neutral-800 font-semibold py-4 px-12 rounded-full shadow-lg text-xl inline-flex items-center group overflow-hidden isolate"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                 >
-                  {t('landing.hero.exploreButton')}
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  {/* Wider animated border */}
+                  <div className="absolute inset-[-16px] rounded-full overflow-hidden z-0">
+                    <div
+                      className="absolute left-1/2 top-1/2"
+                      style={{
+                        width: "calc(100% + 32px)",
+                        height: "calc(100% + 32px)",
+                        transform: "translate(-50%, -50%)",
+                        borderRadius: "9999px",
+                        background: "conic-gradient(from 0deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6)",
+                        animation: "spin 8s linear infinite",
+                        opacity: 1,
+                      }}
+                    />
+                  </div>
+
+                  {/* Smoother animated background with fluid transitions */}
+                  <div className="absolute inset-0 rounded-full overflow-hidden">
+                    <div
+                      className="absolute inset-0 animate-fluid-gradient opacity-100"
+                      style={{
+                        background:
+                          "linear-gradient(90deg, rgba(59, 130, 246, 0.8), rgba(139, 92, 246, 0.8), rgba(236, 72, 153, 0.8), rgba(59, 130, 246, 0.8))",
+                        backgroundSize: "300% 100%",
+                        animation: "fluidGradient 6s ease-in-out infinite",
+                      }}
+                    />
+                  </div>
+
+                  {/* Moving particles */}
+                  <div className="absolute inset-0 overflow-hidden rounded-full">
+                    {[...Array(15)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="absolute rounded-full bg-white"
+                        style={{
+                          width: `${Math.random() * 6 + 2}px`,
+                          height: `${Math.random() * 6 + 2}px`,
+                          top: `${Math.random() * 100}%`,
+                          left: `${Math.random() * 100}%`,
+                          opacity: Math.random() * 0.5 + 0.3,
+                          animation: `moveParticle ${Math.random() * 4 + 3}s linear infinite`,
+                          animationDelay: `${Math.random() * 2}s`,
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Pulsing rings */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div
+                      className="absolute w-full h-full rounded-full bg-white/30"
+                      style={{ animation: "pulseRing 2.5s ease-in-out infinite" }}
+                    />
+                    <div
+                      className="absolute w-full h-full rounded-full bg-white/20"
+                      style={{ animation: "pulseRing 2.5s ease-in-out infinite 0.6s" }}
+                    />
+                    <div
+                      className="absolute w-full h-full rounded-full bg-white/10"
+                      style={{ animation: "pulseRing 2.5s ease-in-out infinite 1.2s" }}
+                    />
+                  </div>
+
+                  {/* Overlay for text contrast */}
+                  <div className="absolute inset-[4px] bg-white/90 rounded-full z-10"></div>
+
+                  <style>{`
+                    @keyframes spin {
+                      0% { transform: rotate(0deg); }
+                      100% { transform: rotate(360deg); }
+                    }
+
+                    @keyframes fluidGradient {
+                      0% { background-position: 0% 50%; }
+                      50% { background-position: 100% 50%; }
+                      100% { background-position: 0% 50%; }
+                    }
+
+                    @keyframes moveParticle {
+                      0% { transform: translateY(0) translateX(0); }
+                      25% { transform: translateY(-10px) translateX(10px); }
+                      50% { transform: translateY(-15px) translateX(-5px); }
+                      75% { transform: translateY(-5px) translateX(-15px); }
+                      100% { transform: translateY(0) translateX(0); }
+                    }
+
+                    @keyframes pulseRing {
+                      0% { transform: scale(0.7); opacity: 0.3; }
+                      50% { transform: scale(1); opacity: 0.1; }
+                      100% { transform: scale(1.3); opacity: 0; }
+                    }
+
+                    .animate-spin-slow {
+                      animation: spin 8s linear infinite;
+                    }
+
+                    .animate-fluid-gradient {
+                      animation: fluidGradient 6s ease-in-out infinite;
+                    }
+                  `}</style>
+
+                  {/* Button content with high contrast for readability */}
+                  <span className="relative z-20 flex items-center transition-all duration-300">
+                    <span className="group-hover:scale-105 transition-transform duration-300 bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-[#7928CA] group-hover:to-[#FF0080]">
+                      {t("landing.hero.exploreButton")}
+                    </span>
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 group-hover:text-[#FF0080] transition-all duration-300" />
+                  </span>
                 </motion.button>
                 <motion.button
                   onClick={() => scrollToSection("contact")}
@@ -211,7 +319,7 @@ const LandingPage: React.FC = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {t('landing.hero.contactButton')}
+                  {t("landing.hero.contactButton")}
                 </motion.button>
               </motion.div>
 
@@ -228,9 +336,9 @@ const LandingPage: React.FC = () => {
                 <button
                   onClick={() => scrollToSection("features")}
                   className="flex flex-col items-center"
-                  aria-label={t('landing.hero.scrollAriaLabel')}
+                  aria-label={t("landing.hero.scrollAriaLabel")}
                 >
-                  <span className="text-sm font-medium mb-2">{t('landing.hero.scrollDown')}</span>
+                  <span className="text-sm font-medium mb-2">{t("landing.hero.scrollDown")}</span>
                   <ChevronDown className="h-6 w-6 animate-bounce" />
                 </button>
               </motion.div>
@@ -249,10 +357,11 @@ const LandingPage: React.FC = () => {
                   <li key={section.id}>
                     <button
                       onClick={() => scrollToSection(section.id)}
-                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ease-in-out group relative ${activeSection === section.id
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ease-in-out group relative ${
+                        activeSection === section.id
                           ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20"
                           : "text-neutral-700 dark:text-neutral-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/10"
-                        }`}
+                      }`}
                     >
                       <span className="flex items-center">
                         <section.icon className="h-4 w-4 mr-1.5" />
@@ -286,10 +395,11 @@ const LandingPage: React.FC = () => {
                   <li key={section.id}>
                     <button
                       onClick={() => scrollToSection(section.id)}
-                      className={`flex items-center w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors duration-150 ${activeSection === section.id
+                      className={`flex items-center w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors duration-150 ${
+                        activeSection === section.id
                           ? "bg-emerald-500 text-white dark:bg-emerald-600"
                           : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700"
-                        }`}
+                      }`}
                     >
                       <section.icon className="h-5 w-5 mr-2" />
                       {section.titleKey}
@@ -315,10 +425,10 @@ const LandingPage: React.FC = () => {
               transition={{ duration: 0.6 }}
             >
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 text-neutral-900 dark:text-white">
-                {t('landing.features.title')}
+                {t("landing.features.title")}
               </h2>
               <p className="text-center text-neutral-600 dark:text-neutral-400 mb-12 md:mb-16 max-w-2xl mx-auto text-lg">
-                {t('landing.features.subtitle')}
+                {t("landing.features.subtitle")}
               </p>
             </motion.div>
 
@@ -340,19 +450,21 @@ const LandingPage: React.FC = () => {
                   }}
                   className={`
                     ${index === 2 ? "md:col-span-2 lg:col-span-1 md:max-w-md md:mx-auto" : ""}
-                    ${feature.id === "prompt-builder"
-                      ? "relative overflow-hidden px-6 py-12 min-h-[340px] rounded-2xl shadow-xl border border-[#00bb89]/30 dark:border-[#00bb89]/40 bg-gradient-to-br from-[#d1fff7] via-[#aaf4de] to-[#8eeecb] dark:from-[#013a2c] dark:via-[#015e46] dark:to-[#00bb89]/50 backdrop-blur-md transition-all duration-300 hover:shadow-2xl hover:border-[#00bb89]/60 hover:scale-[1.03] group"
-                      : feature.id === "ai-refactor"
-                        ? "relative overflow-hidden px-6 py-12 min-h-[340px] rounded-2xl shadow-xl border border-cyan-300/30 dark:border-cyan-700/40 bg-gradient-to-br from-cyan-100 via-sky-100 to-blue-100 dark:from-[#0c4a6e] dark:via-[#0c2d4d] dark:to-[#0f172a] backdrop-blur-md transition-all duration-300 hover:shadow-2xl hover:border-cyan-400/60 hover:scale-[1.03] group"
-                        : feature.id === "ai-scanner"
-                          ? "relative overflow-hidden px-6 py-12 min-h-[340px] rounded-2xl shadow-xl border border-amber-200/30 dark:border-amber-800/40 bg-gradient-to-br from-amber-100 via-orange-100 to-pink-100 dark:from-amber-900 dark:via-orange-950 dark:to-pink-900 backdrop-blur-md transition-all duration-300 hover:shadow-2xl hover:border-amber-400/60 hover:scale-[1.03] group"
-                          : "bg-neutral-50 dark:bg-neutral-800 px-6 py-12 min-h-[340px] rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"}
+                    ${
+                      feature.id === "prompt-builder"
+                        ? "relative overflow-hidden px-6 py-12 min-h-[340px] rounded-2xl shadow-xl border border-[#00bb89]/30 dark:border-[#00bb89]/40 bg-gradient-to-br from-[#d1fff7] via-[#aaf4de] to-[#8eeecb] dark:from-[#013a2c] dark:via-[#015e46] dark:to-[#00bb89]/50 backdrop-blur-md transition-all duration-300 hover:shadow-2xl hover:border-[#00bb89]/60 hover:scale-[1.03] group"
+                        : feature.id === "ai-refactor"
+                          ? "relative overflow-hidden px-6 py-12 min-h-[340px] rounded-2xl shadow-xl border border-cyan-300/30 dark:border-cyan-700/40 bg-gradient-to-br from-cyan-100 via-sky-100 to-blue-100 dark:from-[#0c4a6e] dark:via-[#0c2d4d] dark:to-[#0f172a] backdrop-blur-md transition-all duration-300 hover:shadow-2xl hover:border-cyan-400/60 hover:scale-[1.03] group"
+                          : feature.id === "ai-scanner"
+                            ? "relative overflow-hidden px-6 py-12 min-h-[340px] rounded-2xl shadow-xl border border-amber-200/30 dark:border-amber-800/40 bg-gradient-to-br from-amber-100 via-orange-100 to-pink-100 dark:from-amber-900 dark:via-orange-950 dark:to-pink-900 backdrop-blur-md transition-all duration-300 hover:shadow-2xl hover:border-amber-400/60 hover:scale-[1.03] group"
+                            : "bg-neutral-50 dark:bg-neutral-800 px-6 py-12 min-h-[340px] rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                    }
                   `}
                   style={{
                     maxWidth: "100%",
                     margin: "0 auto",
                     minHeight: "340px",
-                    overflow: "hidden"
+                    overflow: "hidden",
                   }}
                 >
                   {/* Fondo animado sutil para Prompt Builder */}
@@ -499,18 +611,12 @@ const LandingPage: React.FC = () => {
                         <Rocket className="h-6 w-6" />
                       </div>
                       <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-neutral-900 dark:text-white">
-                        {t('landing.story.title')}
+                        {t("landing.story.title")}
                       </h2>
                       <div className="space-y-4 text-neutral-700 dark:text-neutral-300">
-                        <p>
-                          {t('landing.story.paragraph1')}
-                        </p>
-                        <p>
-                          {t('landing.story.paragraph2')}
-                        </p>
-                        <p>
-                          {t('landing.story.paragraph3')}
-                        </p>
+                        <p>{t("landing.story.paragraph1")}</p>
+                        <p>{t("landing.story.paragraph2")}</p>
+                        <p>{t("landing.story.paragraph3")}</p>
                       </div>
                     </div>
                   </div>
@@ -539,23 +645,19 @@ const LandingPage: React.FC = () => {
                       </div>
 
                       <h3 className="text-2xl font-bold mb-4 text-neutral-900 dark:text-white">
-                        {t('landing.behindProject.title')}
+                        {t("landing.behindProject.title")}
                       </h3>
 
                       <div className="space-y-4 text-neutral-700 dark:text-neutral-300">
-                        <p className="leading-relaxed">
-                          {t('landing.behindProject.paragraph1')}
-                        </p>
+                        <p className="leading-relaxed">{t("landing.behindProject.paragraph1")}</p>
 
-                        <p className="leading-relaxed">
-                          {t('landing.behindProject.paragraph2')}
-                        </p>
+                        <p className="leading-relaxed">{t("landing.behindProject.paragraph2")}</p>
 
                         <div className="mt-6">
                           <h4 className="text-lg font-semibold mb-3 text-emerald-700 dark:text-emerald-400">
-                            {t('landing.behindProject.techStack')}
+                            {t("landing.behindProject.techStack")}
                           </h4>
-                          <p className="mb-3">{t('landing.behindProject.developedWith')}</p>
+                          <p className="mb-3">{t("landing.behindProject.developedWith")}</p>
                           <div className="flex flex-wrap justify-center md:justify-start gap-2">
                             {["Laravel", "React", "Tailwind CSS", "Inertia.js", "MySQL"].map((tech) => (
                               <span
@@ -569,7 +671,7 @@ const LandingPage: React.FC = () => {
                           {/* AI powered by Gemini - inline, bigger icon */}
                           <div className="flex items-center justify-center md:justify-start mt-6 gap-2">
                             <span className="font-medium text-emerald-700 dark:text-emerald-300 text-base mr-0">
-                              {t('landing.behindProject.poweredBy')}
+                              {t("landing.behindProject.poweredBy")}
                             </span>
                             <img
                               src="/images/gemini.svg"
@@ -589,7 +691,7 @@ const LandingPage: React.FC = () => {
                           className="inline-flex items-center text-emerald-700 dark:text-emerald-300 hover:text-emerald-500 dark:hover:text-emerald-200 font-medium transition-colors"
                         >
                           <Github className="h-5 w-5 mr-2" />
-                          {t('landing.behindProject.viewOnGithub')}
+                          {t("landing.behindProject.viewOnGithub")}
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </a>
                       </div>
@@ -615,8 +717,8 @@ const LandingPage: React.FC = () => {
               <div className="inline-flex items-center justify-center p-3 rounded-full bg-emerald-600/20 backdrop-blur-md mb-6">
                 <Mail className="h-6 w-6 text-emerald-400" />
               </div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">{t('landing.contact.title')}</h2>
-              <p className="text-xl mb-10 text-neutral-300">{t('landing.contact.subtitle')}</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">{t("landing.contact.title")}</h2>
+              <p className="text-xl mb-10 text-neutral-300">{t("landing.contact.subtitle")}</p>
 
               <motion.a
                 href="mailto:jorgemunozcast12@gmail.com"
@@ -624,7 +726,7 @@ const LandingPage: React.FC = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {t('landing.contact.buttonText')}
+                {t("landing.contact.buttonText")}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </motion.a>
             </motion.div>
@@ -634,7 +736,9 @@ const LandingPage: React.FC = () => {
 
       <footer className="bg-gray-300 dark:bg-neutral-950 text-neutral-800 dark:text-neutral-400 py-12 m-0">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p>© {new Date().getFullYear()} Script2me. {t('landing.footer.rights')}</p>
+          <p>
+            © {new Date().getFullYear()} Script2me. {t("landing.footer.rights")}
+          </p>
         </div>
       </footer>
     </AppLayout>
@@ -642,6 +746,5 @@ const LandingPage: React.FC = () => {
 }
 
 export default LandingPage
-
 
 
