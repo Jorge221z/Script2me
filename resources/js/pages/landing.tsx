@@ -486,6 +486,7 @@ const LandingPage: React.FC = () => {
                         className="absolute inset-0 pointer-events-none opacity-30 animate-pulse dark:hidden"
                         style={{
                           background: "radial-gradient(circle at 70% 30%, #00bb89 0%, #d1fff7 60%, transparent 90%)",
+                          animationDuration: "6s", // Más lento que el valor por defecto (~1.5s)
                         }}
                       />
                       {/* Dark mode background - new darker version */}
@@ -493,6 +494,7 @@ const LandingPage: React.FC = () => {
                         className="absolute inset-0 pointer-events-none opacity-30 animate-pulse hidden dark:block"
                         style={{
                           background: "radial-gradient(circle at 70% 30%, #00bb89 0%, #015e46 60%, transparent 90%)",
+                          animationDuration: "4s", // Más lento que el valor por defecto
                         }}
                       />
                     </>
@@ -506,7 +508,7 @@ const LandingPage: React.FC = () => {
                         className="absolute inset-0 pointer-events-none opacity-20 animate-pulse dark:hidden"
                         style={{
                           background: "radial-gradient(circle at 70% 30%, #0284c7 0%, #e0f7ff 60%, transparent 90%)",
-                          animationDuration: "4.5s",
+                          animationDuration: "7s", // Más lento que antes (antes 4.5s)
                           animationDelay: "0s",
                         }}
                       />
@@ -515,7 +517,7 @@ const LandingPage: React.FC = () => {
                         className="absolute inset-0 pointer-events-none opacity-15 animate-pulse hidden dark:block"
                         style={{
                           background: "radial-gradient(circle at 70% 30%, #0284c7 0%, #051e2d 60%, transparent 90%)",
-                          animationDuration: "4.5s",
+                          animationDuration: "7s", // Más lento que antes
                           animationDelay: "0s",
                         }}
                       />
@@ -539,7 +541,7 @@ const LandingPage: React.FC = () => {
                         className="absolute inset-0 pointer-events-none opacity-15 animate-pulse hidden dark:block"
                         style={{
                           background: "radial-gradient(circle at 70% 30%, #fbbf24 0%, #7c3f00 60%, transparent 90%)",
-                          animationDuration: "7.2s",
+                          animationDuration: "9.2s",
                           animationDelay: "1.8s",
                         }}
                       />
