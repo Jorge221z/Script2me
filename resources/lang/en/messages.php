@@ -26,4 +26,5 @@ return [
     'files_max_count' => 'You cannot upload more than :count files.',
     'empty_file' => 'Empty file is not allowed',
     'security_url_not_allowed' => 'The requested URL is not allowed for security reasons',
+    'language_changed' => 'Language changed successfully',
 ];

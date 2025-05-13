@@ -16,6 +16,8 @@ use App\Services\GeminiService;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Http;
 use finfo;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 
 class RefactorController extends Controller
 {
@@ -301,6 +303,9 @@ EOD;
             }
         }
 
+        // Asegurarse de usar el idioma de la sesión para los mensajes flash
+        $locale = Session::get('locale', config('app.locale'));
+        App::setLocale($locale);
 
         // Actualizamos arrays de sesion
         $request->session()->put('ApiContents', array_merge(
@@ -321,6 +326,10 @@ EOD;
 
     public function clearApiSession(Request $request)
     {
+        // Asegurarse de usar el idioma de la sesión para los mensajes flash
+        $locale = Session::get('locale', config('app.locale'));
+        App::setLocale($locale);
+
         $request->session()->forget(['ApiContents', 'ApiNames']);
         $request->session()->save(); //guardamos la sesion de forma explicita //
         return redirect()->back()->with([

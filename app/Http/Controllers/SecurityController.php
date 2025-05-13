@@ -10,6 +10,8 @@ use App\Services\GeminiService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\Element\Text;
 use PhpOffice\PhpWord\Element\TextRun;
@@ -234,6 +236,10 @@ class SecurityController extends Controller
             }
         }
 
+        // Asegurarse de usar el idioma de la sesión para los mensajes flash
+        $locale = Session::get('locale', config('app.locale'));
+        App::setLocale($locale);
+
         $request->session()->put('SecContents', array_merge(
             $request->session()->get('SecContents', []),
             $SecContents
@@ -337,14 +343,14 @@ class SecurityController extends Controller
     protected function BuildSecurityPrompt(string $code)
     {
         $locale = app()->getLocale();
-        
+
         if ($locale === 'es') {
             return $this->BuildSecurityPromptSpanish($code);
         } else {
             return $this->BuildSecurityPromptEnglish($code);
         }
     }
-    
+
     protected function BuildSecurityPromptEnglish(string $code)
     {
         return <<<EOT
@@ -378,7 +384,7 @@ Your task is to analyze the following content and determine whether it is actual
 
 4. Respond using **only** a valid JSON object with these exact fields:
    - `score`: integer from 0 to 100 (100 means no issues, 0 means critically vulnerable)
-   - `summary`: short factual description (max 2 sentences).  
+   - `summary`: short factual description (max 2 sentences).
      - If no issues, use `"No issues found."`
    - `critical_lines`: array of integers indicating risky lines
    - `vulnerabilities`: array of objects with:
@@ -434,7 +440,7 @@ Tu tarea es analizar el siguiente contenido y determinar si es **código fuente*
 
 4. Responde usando **únicamente** un objeto JSON válido con estos campos exactos:
    - `score`: entero de 0 a 100 (100 significa sin problemas, 0 significa críticamente vulnerable)
-   - `summary`: descripción factual breve (máx. 2 frases).  
+   - `summary`: descripción factual breve (máx. 2 frases).
      - Si no hay problemas, usa `"No se encontraron problemas."`
    - `critical_lines`: array de enteros indicando líneas riesgosas
    - `vulnerabilities`: array de objetos con:
@@ -459,6 +465,10 @@ EOT;
 
     public function clearSecSession(Request $request)
     {
+        // Asegurarse de usar el idioma de la sesión para los mensajes flash
+        $locale = Session::get('locale', config('app.locale'));
+        App::setLocale($locale);
+
         $request->session()->forget(['SecContents', 'SecNames']);
         $request->session()->save(); //guardamos la sesion de forma explicita //
         return redirect()->back()->with([

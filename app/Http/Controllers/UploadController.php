@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 use function Laravel\Prompts\clear;
 use function PHPUnit\Framework\throwException;
 use PhpOffice\PhpWord\IOFactory;
@@ -201,6 +203,10 @@ class UploadController extends Controller
             }
         }
 
+        // Asegurarse de usar el idioma de la sesión para los mensajes flash
+        $locale = Session::get('locale', config('app.locale'));
+        App::setLocale($locale);
+
         // Actualizar sesión
         $request->session()->put('contents', array_merge(
             $request->session()->get('contents', []),
@@ -222,6 +228,10 @@ class UploadController extends Controller
 
     public function clearSession(Request $request)
     {
+        // Asegurarse de usar el idioma de la sesión para los mensajes flash
+        $locale = Session::get('locale', config('app.locale'));
+        App::setLocale($locale);
+
         $request->session()->forget(['contents', 'names']);
         $request->session()->save(); //guardamos la sesion de forma explicita //
         return redirect()->back()->with([
