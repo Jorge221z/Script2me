@@ -200,7 +200,7 @@ const LandingPage: React.FC = () => {
               >
                 <motion.button
                   onClick={() => scrollToSection("features")}
-                  className="relative bg-white text-neutral-800 dark:bg-white dark:text-neutral-800 font-semibold py-4 px-12 rounded-full shadow-lg text-xl inline-flex items-center group overflow-hidden isolate"
+                  className="cursor-pointer relative bg-white text-neutral-800 dark:bg-white dark:text-neutral-800 font-semibold py-4 px-12 rounded-full shadow-lg text-xl inline-flex items-center group overflow-hidden isolate"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                 >
@@ -300,7 +300,7 @@ const LandingPage: React.FC = () => {
                 </motion.button>
                 <motion.button
                   onClick={() => scrollToSection("contact")}
-                  className="bg-transparent border-2 border-white text-white font-semibold py-4 px-6 rounded-full shadow-lg transform transition-all text-base
+                  className="cursor-pointer bg-transparent border-2 border-white text-white font-semibold py-4 px-6 rounded-full shadow-lg transform transition-all text-base
                     hover:bg-white/20 hover:backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-emerald-400/60 flex items-center justify-center relative overflow-hidden"
                   style={{
                     paddingRight: isContactHovered ? 25 : 24, // 25px ≈ pr-[6.25], 24px ≈ px-6
