@@ -480,12 +480,22 @@ const LandingPage: React.FC = () => {
                 >
                   {/* Fondo animado sutil para Prompt Builder */}
                   {feature.id === "prompt-builder" && (
-                    <div
-                      className="absolute inset-0 pointer-events-none opacity-30 animate-pulse"
-                      style={{
-                        background: "radial-gradient(circle at 70% 30%, #00bb89 0%, #d1fff7 60%, transparent 90%)",
-                      }}
-                    />
+                    <>
+                      {/* Light mode background - keep original */}
+                      <div
+                        className="absolute inset-0 pointer-events-none opacity-30 animate-pulse dark:hidden"
+                        style={{
+                          background: "radial-gradient(circle at 70% 30%, #00bb89 0%, #d1fff7 60%, transparent 90%)",
+                        }}
+                      />
+                      {/* Dark mode background - new darker version */}
+                      <div
+                        className="absolute inset-0 pointer-events-none opacity-30 animate-pulse hidden dark:block"
+                        style={{
+                          background: "radial-gradient(circle at 70% 30%, #00bb89 0%, #015e46 60%, transparent 90%)",
+                        }}
+                      />
+                    </>
                   )}
 
                   {/* Fondo animado sutil para AI Refactor */}
