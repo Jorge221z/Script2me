@@ -209,12 +209,11 @@
 .animate-logo-conic-gradient {
   background: conic-gradient(
     from 0deg,
-    #00bb89 0deg 54deg,
-    #00e0c6 54deg 108deg,
-    #ffe066 108deg 162deg,      /* dorado claro */
-    #5eead4 162deg 216deg,
-    #38bdf8 216deg 288deg,
-    #00bb89 288deg 360deg
+    #7ffbe2cc 0deg 90deg,    /* verde claro más luminoso */
+    #2dcca2cc 90deg 180deg,  /* verde más saturado */
+    #7ffbe2cc 180deg 270deg, /* verde claro simétrico */
+    #2dcca2cc 270deg 360deg, /* verde más saturado simétrico */
+    #7ffbe2cc 360deg         /* cierre suave */
   );
   opacity: 0.9;
   filter: blur(18px);
