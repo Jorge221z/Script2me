@@ -9,23 +9,23 @@ export default function BackgroundPattern() {
   useEffect(() => {
     // Generar puntos para el patrón
     const colors = [
-      'bg-emerald-600/40', 'bg-blue-600/40', 'bg-cyan-600/40',
-      'bg-indigo-600/40', 'bg-violet-600/40'
+      'bg-emerald-400/30', 'bg-blue-400/30', 'bg-cyan-400/30',
+      'bg-indigo-400/30', 'bg-violet-400/30'
     ];
 
     // Crear las partículas
     const newParticles = [];
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 100; i++) {
       newParticles.push({
         id: i,
         x: Math.random() * 100,
         y: Math.random() * 100,
-        size: Math.floor(Math.random() * 6) + 2,
-        velocityX: (Math.random() - 0.5) * 0.008, // Velocidad reducida significativamente
-        velocityY: (Math.random() - 0.5) * 0.008, // Velocidad reducida significativamente
-        opacity: Math.random() * 0.4 + 0.2,
+        size: Math.floor(Math.random() * 5) + 2, // Tamaño aumentado (2-6px)
+        velocityX: (Math.random() - 0.5) * 0.005,
+        velocityY: (Math.random() - 0.5) * 0.005,
+        opacity: Math.random() * 0.3 + 0.2, // Opacidad aumentada (0.2-0.5)
         color: colors[Math.floor(Math.random() * colors.length)],
-        pulseSpeed: 0.2 + Math.random() * 0.8, // Pulso más lento
+        pulseSpeed: 0.1 + Math.random() * 0.4,
       });
     }
 
@@ -35,38 +35,33 @@ export default function BackgroundPattern() {
     let lastTimestamp = 0;
 
     const animate = (timestamp) => {
-      // Reducir la frecuencia de actualización para movimiento más lento
-      if (lastTimestamp && timestamp - lastTimestamp < 40) { // ~25 FPS en lugar de 60 FPS
+      if (lastTimestamp && timestamp - lastTimestamp < 60) {
         animationRef.current = requestAnimationFrame(animate);
         return;
       }
 
-      // Calcular delta time para movimiento suave
-      const deltaTime = lastTimestamp ? Math.min((timestamp - lastTimestamp) / 25, 2) : 1;
+      const deltaTime = lastTimestamp ? Math.min((timestamp - lastTimestamp) / 30, 2) : 1;
       lastTimestamp = timestamp;
 
       setParticles(currentParticles =>
         currentParticles.map(particle => {
-          // Calcular nueva posición
           let newX = particle.x + particle.velocityX * deltaTime;
           let newY = particle.y + particle.velocityY * deltaTime;
 
-          // Añadir un pequeño movimiento ondulatorio (reducido)
-          const time = timestamp / 2000; // Más lento
-          const wobbleX = Math.sin(time * particle.pulseSpeed + particle.id) * 0.015; // Reducido
-          const wobbleY = Math.cos(time * particle.pulseSpeed + particle.id) * 0.015; // Reducido
+          const time = timestamp / 3000;
+          const wobbleX = Math.sin(time * particle.pulseSpeed + particle.id) * 0.01;
+          const wobbleY = Math.cos(time * particle.pulseSpeed + particle.id) * 0.01;
 
           newX += wobbleX;
           newY += wobbleY;
 
-          // Rebote en los bordes
           if (newX <= 0 || newX >= 100) {
-            particle.velocityX *= -0.9; // Más amortiguación en los rebotes
+            particle.velocityX *= -0.8;
             newX = Math.max(0, Math.min(100, newX));
           }
 
           if (newY <= 0 || newY >= 100) {
-            particle.velocityY *= -0.9; // Más amortiguación en los rebotes
+            particle.velocityY *= -0.8;
             newY = Math.max(0, Math.min(100, newY));
           }
 
@@ -74,7 +69,7 @@ export default function BackgroundPattern() {
             ...particle,
             x: newX,
             y: newY,
-            scale: 1 + Math.sin(time * particle.pulseSpeed) * 0.05 // Pulso reducido
+            scale: 1 + Math.sin(time * particle.pulseSpeed) * 0.03
           };
         })
       );
@@ -82,10 +77,8 @@ export default function BackgroundPattern() {
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    // Iniciar animación
     animationRef.current = requestAnimationFrame(animate);
 
-    // Limpiar al desmontar
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
@@ -96,20 +89,20 @@ export default function BackgroundPattern() {
   return (
     <div
       ref={containerRef}
-      className="hidden dark:block absolute inset-0 overflow-hidden pointer-events-none"
+      className="block absolute inset-0 overflow-hidden pointer-events-none"
     >
       {particles.map((particle) => (
         <div
           key={particle.id}
-          className={`absolute rounded-full ${particle.color || 'bg-gray-700'} will-change-transform`}
+          className={`absolute rounded-full ${particle.color || 'bg-gray-500'} will-change-transform`}
           style={{
             width: `${particle.size}px`,
             height: `${particle.size}px`,
             opacity: particle.opacity,
-            boxShadow: `0 0 ${particle.size * 1.5}px ${particle.size / 2}px rgba(156, 226, 235, 0.25)`,
+            boxShadow: particle.size > 2 ? `0 0 ${particle.size}px ${particle.size / 2}px rgba(156, 226, 235, 0.2)` : 'none',
             transform: `translate(${particle.x}vw, ${particle.y}vh) scale(${particle.scale || 1})`,
-            filter: particle.size > 4 ? `blur(${particle.size > 5 ? 1 : 0.5}px)` : 'none',
-            transition: 'transform 0.3s ease-out' // Transición más lenta y suave
+            filter: particle.size > 3 ? `blur(0.5px)` : 'none',
+            transition: 'transform 0.5s ease-out'
           }}
         />
       ))}
