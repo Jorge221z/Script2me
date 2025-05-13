@@ -9,8 +9,8 @@ export default function BackgroundPattern() {
   useEffect(() => {
     // Generar puntos para el patrón
     const colors = [
-      'bg-emerald-400/30', 'bg-blue-400/30', 'bg-cyan-400/30',
-      'bg-indigo-400/30', 'bg-violet-400/30'
+      'bg-emerald-400/40', 'bg-blue-400/40', 'bg-cyan-400/40',
+      'bg-indigo-400/40', 'bg-violet-400/40'
     ];
 
     // Crear las partículas
@@ -20,10 +20,10 @@ export default function BackgroundPattern() {
         id: i,
         x: Math.random() * 100,
         y: Math.random() * 100,
-        size: Math.floor(Math.random() * 5) + 2, // Tamaño aumentado (2-6px)
+        size: Math.floor(Math.random() * 4) + 3, // Tamaño aumentado (3-7px)
         velocityX: (Math.random() - 0.5) * 0.005,
         velocityY: (Math.random() - 0.5) * 0.005,
-        opacity: Math.random() * 0.3 + 0.2, // Opacidad aumentada (0.2-0.5)
+        opacity: Math.random() * 0.3 + 0.3, // Opacidad aumentada (0.3-0.6)
         color: colors[Math.floor(Math.random() * colors.length)],
         pulseSpeed: 0.1 + Math.random() * 0.4,
       });
@@ -99,9 +99,9 @@ export default function BackgroundPattern() {
             width: `${particle.size}px`,
             height: `${particle.size}px`,
             opacity: particle.opacity,
-            boxShadow: particle.size > 2 ? `0 0 ${particle.size}px ${particle.size / 2}px rgba(156, 226, 235, 0.2)` : 'none',
+            boxShadow: `0 0 ${particle.size * 1.2}px ${particle.size / 2}px rgba(156, 226, 235, 0.3)`,
             transform: `translate(${particle.x}vw, ${particle.y}vh) scale(${particle.scale || 1})`,
-            filter: particle.size > 3 ? `blur(0.5px)` : 'none',
+            filter: 'none', // Eliminar el desenfoque para mayor nitidez
             transition: 'transform 0.5s ease-out'
           }}
         />
