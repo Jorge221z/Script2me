@@ -438,7 +438,7 @@ const LandingPage: React.FC = () => {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 text-neutral-900 dark:text-white">
                 {t("landing.features.title")}
               </h2>
-              <p className="text-center text-neutral-600 dark:text-neutral-400 mb-12 md:mb-16 max-w-2xl mx-auto text-lg">
+              <p className="text-center text-neutral-600 dark:text-neutral-400 mb-12 md:mb-16 max-w-2xl mx-auto text-lg whitespace-pre-line">
                 {t("landing.features.subtitle")}
               </p>
             </motion.div>
