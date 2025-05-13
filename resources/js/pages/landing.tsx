@@ -193,7 +193,7 @@ const LandingPage: React.FC = () => {
               </motion.p>
 
               <motion.div
-                className="space-y-4 sm:space-y-0 sm:flex sm:justify-center sm:space-x-4 mb-16"
+                className="flex flex-col items-center space-y-4 sm:space-y-0 sm:flex-row sm:justify-center sm:space-x-4 mb-16"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
@@ -300,7 +300,7 @@ const LandingPage: React.FC = () => {
                 </motion.button>
                 <motion.button
                   onClick={() => scrollToSection("contact")}
-                  className="bg-transparent border-2 border-white text-white font-semibold py-2 px-6 rounded-full shadow-lg transform transition-all text-base
+                  className="bg-transparent border-2 border-white text-white font-semibold py-4 px-6 rounded-full shadow-lg transform transition-all text-base
                     hover:bg-white/20 hover:backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-emerald-400/60 flex items-center justify-center relative overflow-hidden"
                   style={{
                     paddingRight: isContactHovered ? 25 : 24, // 25px ≈ pr-[6.25], 24px ≈ px-6
