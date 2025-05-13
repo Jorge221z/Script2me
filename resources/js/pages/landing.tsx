@@ -368,7 +368,7 @@ const LandingPage: React.FC = () => {
                   <li key={section.id}>
                     <button
                       onClick={() => scrollToSection(section.id)}
-                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ease-in-out group relative ${
+                      className={`cursor-pointer px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ease-in-out group relative ${
                         activeSection === section.id
                           ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20"
                           : "text-neutral-700 dark:text-neutral-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/10"
@@ -406,7 +406,7 @@ const LandingPage: React.FC = () => {
                   <li key={section.id}>
                     <button
                       onClick={() => scrollToSection(section.id)}
-                      className={`flex items-center w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors duration-150 ${
+                      className={`cursor-pointer flex items-center w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors duration-150 ${
                         activeSection === section.id
                           ? "bg-emerald-500 text-white dark:bg-emerald-600"
                           : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700"
