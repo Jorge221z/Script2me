@@ -529,7 +529,7 @@ const LandingPage: React.FC = () => {
                       <div
                         className="absolute inset-0 pointer-events-none opacity-20 animate-pulse dark:hidden"
                         style={{
-                          background: "radial-gradient(circle at 70% 30%, #f59e0b 0%, #fff7ed 60%, transparent 90%)",
+                          background: "radial-gradient(circle at 70% 30%, #fbbf24 0%, #fff3e0 60%, transparent 90%)",
                           animationDuration: "7.2s",
                           animationDelay: "1.8s",
                         }}
@@ -538,7 +538,7 @@ const LandingPage: React.FC = () => {
                       <div
                         className="absolute inset-0 pointer-events-none opacity-15 animate-pulse hidden dark:block"
                         style={{
-                          background: "radial-gradient(circle at 70% 30%, #f59e0b 0%, #451a03 60%, transparent 90%)",
+                          background: "radial-gradient(circle at 70% 30%, #fbbf24 0%, #7c3f00 60%, transparent 90%)",
                           animationDuration: "7.2s",
                           animationDelay: "1.8s",
                         }}
@@ -549,7 +549,7 @@ const LandingPage: React.FC = () => {
                   <div
                     className={
                       feature.id === "prompt-builder"
-                        ? "relative z-10 inline-flex items-center justify-center p-4 rounded-full shadow-lg ring-2 ring-[#00bb89]/30 dark:ring-[#00bb89]/40 mb-4 group bg-white/80 dark:bg-[linear-gradient(135deg,#015e46_0%,#013a2c_100%)]"
+                        ? "relative z-10 inline-flex items-center justify-center p-4 rounded-full shadow-lg ring-2 ring-[#00bb89]/30 dark:ring-[#00bb89]/40 mb-4 group bg-white/80 dark:bg-[linear-gradient(135deg,#015e46_0%,#013a2c_100%)] group-hover:ring-4 transition-all"
                         : feature.id === "ai-refactor"
                           ? "relative z-10 inline-flex items-center justify-center p-4 rounded-full bg-white/80 dark:bg-[linear-gradient(135deg,#0c2d4d_0%,#0c4a6e_100%)] shadow-lg ring-2 ring-cyan-300/30 dark:ring-cyan-700/40 mb-4 group-hover:ring-4 transition-all"
                           : feature.id === "ai-scanner"
