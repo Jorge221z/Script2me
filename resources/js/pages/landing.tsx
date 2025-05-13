@@ -680,16 +680,30 @@ const LandingPage: React.FC = () => {
                             ))}
                           </div>
                           {/* AI powered by Gemini - inline, bigger icon */}
-                          <div className="flex items-center justify-center md:justify-start mt-6 gap-2">
-                            <span className="font-medium text-emerald-700 dark:text-emerald-300 text-base mr-0">
-                              {t("landing.behindProject.poweredBy")}
-                            </span>
-                            <img
-                              src="/images/gemini.svg"
-                              alt="Gemini"
-                              className="h-8 w-auto align-middle"
-                              style={{ display: "inline-block" }}
-                            />
+                          <div className="flex flex-wrap items-center justify-center md:justify-start mt-6 gap-6">
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium text-emerald-700 dark:text-emerald-300 text-base mr-0">
+                                {t("landing.behindProject.poweredBy")}
+                              </span>
+                              <img
+                                src="/images/gemini.svg"
+                                alt="Gemini"
+                                className="h-8 w-auto align-middle mb-1.5"
+                                style={{ display: "inline-block" }}
+                              />
+                            </div>
+                            
+                            <div className="flex items-center gap-2 ml-6">
+                              <span className="font-medium text-emerald-700 dark:text-emerald-300 text-base mr-0">
+                                {t("landing.behindProject.deployedOn")}
+                              </span>
+                              <img
+                                src="/images/digitalocean.svg"
+                                alt="Digital Ocean"
+                                className="h-8 w-auto align-middle"
+                                style={{ display: "inline-block" }}
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
