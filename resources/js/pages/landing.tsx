@@ -573,7 +573,7 @@ const LandingPage: React.FC = () => {
                   <h3
                     className={
                       feature.id === "prompt-builder"
-                        ? "text-2xl md:text-3xl font-extrabold mb-2 text-[#007f5f] dark:text-emerald-200 drop-shadow dark:drop-shadow-lg"
+                        ? "text-2xl md:text-3xl font-extrabold mb-2 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-300 dark:from-emerald-200 dark:via-teal-400 dark:to-emerald-400 bg-clip-text text-transparent drop-shadow dark:drop-shadow-lg animate-gradient-x"
                         : feature.id === "ai-refactor"
                           ? "text-2xl md:text-3xl font-extrabold mb-2 bg-gradient-to-r from-cyan-500 via-blue-400 to-fuchsia-400 dark:from-cyan-300 dark:via-blue-400 dark:to-fuchsia-400 bg-clip-text text-transparent drop-shadow dark:drop-shadow-lg animate-gradient-x"
                           : feature.id === "ai-scanner"
