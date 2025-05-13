@@ -42,10 +42,10 @@ export default function Dashboard() {
             sessionStorage.removeItem('selectedLang');
         }
         setLocalContents(contents);
-        
+
         // Handle toast messages
         const successMessage = sessionStorage.getItem('flash.success');
-        
+
         if (successMessage) {
             // Show the message from sessionStorage and remove it
             setTimeout(() => {
@@ -56,7 +56,7 @@ export default function Dashboard() {
             // Only show flash success if there was no sessionStorage message
             toast.success(flash.success);
         }
-        
+
         // Always show error messages
         if (flash && flash.error) {
             toast.error(flash.error);
@@ -99,7 +99,7 @@ export default function Dashboard() {
                     />
                 </div>
                 {/* Zona de vista previa */}
-                <div className="border-sidebar-border dark:border-sidebar-border relative min-h-[100vh] flex-1 rounded-xl border md:min-h-min p-4 overflow-y-auto ml-6 mr-6">
+                <div className="border-sidebar-border dark:border-sidebar-border relative flex-1 rounded-xl border p-4 overflow-y-auto ml-6 mr-6">
                     {/* Botones de acción */}
                     <div className="flex justify-between mb-4 items-center">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
