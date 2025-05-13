@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { type BreadcrumbItem, Vulnerability, SecurityResult, SecResponse } from '@/types';
 import { usePage, router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +19,7 @@ export default function Security() {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalVulns, setModalVulns] = useState<Vulnerability[]>([]);
     const [modalFile, setModalFile] = useState<string>('');
+    const toastShownRef = useRef(false);
 
     // Clear session handler
     const handleClearSession = () => {
@@ -47,23 +48,31 @@ export default function Security() {
         const combined = SecContents.map((result, idx) => ({ filename: SecNames[idx] || `File ${idx + 1}`, result }));
         setLocalResults(combined);
 
+        // Evitar mostrar toast si ya se mostró anteriormente
+        if (toastShownRef.current) return;
+
         // Handle toast messages
         const successMessage = sessionStorage.getItem('flash.success');
-        
+
         if (successMessage) {
             // Show the message from sessionStorage and remove it
             setTimeout(() => {
                 toast.success(successMessage);
                 sessionStorage.removeItem('flash.success');
+                toastShownRef.current = true;
             }, 300);
-        } else if (flash.success) {
+        } else if (flash && flash.success) {
             // Only show flash success if there was no sessionStorage message
             toast.success(flash.success);
+            toastShownRef.current = true;
         }
-        
+
         // Always show error messages
-        if (flash.error) toast.error(flash.error);
-    }, [SecContents, SecNames, flash, t]);
+        if (flash && flash.error) {
+            toast.error(flash.error);
+            toastShownRef.current = true;
+        }
+    }, [SecContents, SecNames, flash]);
 
     return (
         <AppLayout
@@ -213,7 +222,7 @@ export default function Security() {
                                                 </div>
                                             </div>
                                         )}
-                                        
+
                                         {/* Critical issues preview or secure message */}
                                         <div className="px-4 py-3">
                                             {item.result.vulnerabilities && item.result.vulnerabilities.length > 0 ? (
@@ -240,8 +249,8 @@ export default function Security() {
                                                     >
                                                         <span className="inline-flex items-center gap-1">
                                                             <span className="drop-shadow-sm">
-                                                                {item.result.vulnerabilities.length > 3 
-                                                                    ? t('securityDashboard.showAll') 
+                                                                {item.result.vulnerabilities.length > 3
+                                                                    ? t('securityDashboard.showAll')
                                                                     : t('securityDashboard.viewDetails', 'View Details')}
                                                             </span>
                                                             <Expand className="w-4 h-4 text-white group-hover:scale-110 transition-transform duration-200" />
