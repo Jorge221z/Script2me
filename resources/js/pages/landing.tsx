@@ -506,6 +506,8 @@ const LandingPage: React.FC = () => {
                         className="absolute inset-0 pointer-events-none opacity-20 animate-pulse dark:hidden"
                         style={{
                           background: "radial-gradient(circle at 70% 30%, #0284c7 0%, #e0f7ff 60%, transparent 90%)",
+                          animationDuration: "4.5s",
+                          animationDelay: "0s",
                         }}
                       />
                       {/* Dark mode background */}
@@ -513,6 +515,8 @@ const LandingPage: React.FC = () => {
                         className="absolute inset-0 pointer-events-none opacity-15 animate-pulse hidden dark:block"
                         style={{
                           background: "radial-gradient(circle at 70% 30%, #0284c7 0%, #051e2d 60%, transparent 90%)",
+                          animationDuration: "4.5s",
+                          animationDelay: "0s",
                         }}
                       />
                     </>
@@ -526,6 +530,8 @@ const LandingPage: React.FC = () => {
                         className="absolute inset-0 pointer-events-none opacity-20 animate-pulse dark:hidden"
                         style={{
                           background: "radial-gradient(circle at 70% 30%, #f59e0b 0%, #fff7ed 60%, transparent 90%)",
+                          animationDuration: "7.2s",
+                          animationDelay: "1.8s",
                         }}
                       />
                       {/* Dark mode background */}
@@ -533,6 +539,8 @@ const LandingPage: React.FC = () => {
                         className="absolute inset-0 pointer-events-none opacity-15 animate-pulse hidden dark:block"
                         style={{
                           background: "radial-gradient(circle at 70% 30%, #f59e0b 0%, #451a03 60%, transparent 90%)",
+                          animationDuration: "7.2s",
+                          animationDelay: "1.8s",
                         }}
                       />
                     </>
