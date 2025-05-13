@@ -31,7 +31,8 @@ function LanguageSelector() {
             await changeLanguage(newLang)
         } catch (error) {
             console.error("Error al cambiar el idioma:", error)
-            // Error silencioso para el usuario
+            // Implementar un manejo de errores más silencioso para el usuario
+            // pero mostrar en consola para diagnóstico
         }
     }
 
@@ -39,6 +40,11 @@ function LanguageSelector() {
         { code: "en", label: "English" },
         { code: "es", label: "Español" },
     ]
+
+    // Asegurarse de que currentLanguage siempre tenga un valor válido
+    const safeLanguage = languages.some(l => l.code === currentLanguage)
+        ? currentLanguage
+        : "en" // fallback default
 
     return (
         <div className="relative flex items-center ml-2">
@@ -52,7 +58,7 @@ function LanguageSelector() {
                 <Globe className="h-4 w-4 text-gray-950" aria-hidden="true" />
             </span>
             <select
-                value={currentLanguage}
+                value={safeLanguage}
                 onChange={handleChange}
                 disabled={isChangingLanguage}
                 className={cn(

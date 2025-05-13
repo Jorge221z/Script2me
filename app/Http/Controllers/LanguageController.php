@@ -24,8 +24,16 @@ class LanguageController extends Controller
     public function switchLang($lang)
     {
         try {
+            // Validar el idioma solicitado
             if (!in_array($lang, $this->supportedLanguages)) {
-                return $this->errorResponse('Idioma no soportado: ' . $lang);
+                if (request()->ajax() || request()->wantsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Unsupported language: ' . $lang,
+                        'locale' => App::getLocale() // Devolver el idioma actual como fallback
+                    ], 400);
+                }
+                return redirect()->back()->with('error', 'Idioma no soportado: ' . $lang);
             }
 
             // 1. Guardar en sesión
@@ -56,8 +64,13 @@ class LanguageController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
 
+            // Asegurarse de devolver una respuesta consistente incluso en caso de error
             if (request()->ajax() || request()->wantsJson()) {
-                return $this->errorResponse('Error al cambiar el idioma');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error changing language: ' . $e->getMessage(),
+                    'locale' => App::getLocale() // Devolver el idioma actual como fallback
+                ], 500);
             }
 
             return redirect()->back()->with('error', 'Error al cambiar el idioma');
@@ -71,12 +84,30 @@ class LanguageController extends Controller
      */
     public function getCurrentLanguage()
     {
-        $locale = Session::get('locale', config('app.locale'));
+        try {
+            $locale = Session::get('locale', config('app.locale'));
 
-        return response()->json([
-            'success' => true,
-            'locale' => $locale
-        ]);
+            // Validamos que sea un idioma soportado
+            if (!in_array($locale, $this->supportedLanguages)) {
+                $locale = config('app.locale');
+                Session::put('locale', $locale);
+                Session::save();
+            }
+
+            return response()->json([
+                'success' => true,
+                'locale' => $locale
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error getting current language: ' . $e->getMessage());
+
+            // Siempre devolver una respuesta válida
+            return response()->json([
+                'success' => false,
+                'message' => 'Error getting language settings',
+                'locale' => config('app.locale') // Usar el valor por defecto en caso de error
+            ]);
+        }
     }
 
     /**
@@ -90,7 +121,8 @@ class LanguageController extends Controller
     {
         return response()->json([
             'success' => false,
-            'message' => $message
+            'message' => $message,
+            'locale' => App::getLocale() // Siempre incluir el idioma actual
         ], $code);
     }
 }

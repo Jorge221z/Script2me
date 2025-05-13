@@ -24,9 +24,9 @@ Route::post('/clear-session', [UploadController::class, 'clearSession'])->name('
 Route::post('/clear-api-session', [RefactorController::class, 'clearApiSession'])->name('clear.apisession');
 Route::post('/clear-sec-session', [SecurityController ::class, 'clearSecSession'])->name('clear.secsession');
 
-// Language Routes
-Route::get('/lang/{lang}', 'App\Http\Controllers\LanguageController@switchLang')->name('lang.switch');
-Route::get('/api/current-language', 'App\Http\Controllers\LanguageController@getCurrentLanguage')->name('lang.current');
+// Language Routes - Usar definiciones explícitas para evitar problemas
+Route::get('/lang/{lang}', [\App\Http\Controllers\LanguageController::class, 'switchLang'])->name('lang.switch');
+Route::get('/api/current-language', [\App\Http\Controllers\LanguageController::class, 'getCurrentLanguage'])->name('lang.current');
 
 Route::get('/terms', function () {
     return Inertia::render('TAndC');
