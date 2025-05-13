@@ -545,7 +545,7 @@ const LandingPage: React.FC = () => {
                         : feature.id === "ai-refactor"
                           ? "relative z-10 inline-flex items-center justify-center p-4 rounded-full bg-white/80 dark:bg-[linear-gradient(135deg,#0c2d4d_0%,#0c4a6e_100%)] shadow-lg ring-2 ring-cyan-300/30 dark:ring-cyan-700/40 mb-4 group-hover:ring-4 transition-all"
                           : feature.id === "ai-scanner"
-                            ? "relative z-10 inline-flex items-center justify-center p-4 rounded-full bg-white/80 dark:bg-[linear-gradient(135deg,#451a03_0%,#f59e0b_60%)] shadow-lg ring-2 ring-amber-300/30 dark:ring-amber-700/40 mb-4 group-hover:ring-4 transition-all"
+                            ? "relative z-10 inline-flex items-center justify-center p-4 rounded-full bg-gradient-to-br from-amber-100 via-orange-100 to-pink-100 dark:from-amber-900 dark:via-orange-950 dark:to-pink-900 shadow-lg ring-2 ring-amber-300/30 dark:ring-amber-700/40 mb-4 group-hover:ring-4 transition-all"
                             : `inline-flex items-center justify-center p-3 rounded-full bg-emerald-100 dark:bg-emerald-900/50 mb-4`
                     }
                   >
@@ -702,7 +702,7 @@ const LandingPage: React.FC = () => {
                                 style={{ display: "inline-block" }}
                               />
                             </div>
-                            
+
                             <div className="flex items-center gap-2 ml-6">
                               <span className="font-medium text-emerald-700 dark:text-emerald-300 text-base mr-0">
                                 {t("landing.behindProject.deployedOn")}
