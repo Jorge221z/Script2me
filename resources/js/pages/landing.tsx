@@ -551,11 +551,11 @@ const LandingPage: React.FC = () => {
                   <div
                     className={
                       feature.id === "prompt-builder"
-                        ? "relative z-10 inline-flex items-center justify-center p-4 rounded-full shadow-lg ring-2 ring-[#00bb89]/30 dark:ring-[#00bb89]/40 mb-4 group bg-white/80 dark:bg-[linear-gradient(135deg,#015e46_0%,#013a2c_100%)] group-hover:ring-4 transition-all"
+                        ? "relative z-10 inline-flex items-center justify-center p-4 rounded-full shadow-lg ring-2 ring-[#00bb89]/30 dark:ring-[#00bb89]/40 mb-4 group bg-gradient-to-br from-emerald-50 via-green-100 to-teal-200 dark:bg-gradient-to-br dark:from-[#00bb89] dark:via-[#015e46] dark:to-[#013a2c] group-hover:ring-4 transition-all"
                         : feature.id === "ai-refactor"
-                          ? "relative z-10 inline-flex items-center justify-center p-4 rounded-full bg-white/80 dark:bg-[linear-gradient(135deg,#0c2d4d_0%,#0c4a6e_100%)] shadow-lg ring-2 ring-cyan-300/30 dark:ring-cyan-700/40 mb-4 group-hover:ring-4 transition-all"
+                          ? "relative z-10 inline-flex items-center justify-center p-4 rounded-full bg-gradient-to-br from-sky-50 via-blue-100 to-cyan-200 dark:bg-gradient-to-br dark:from-[#0284c7] dark:via-[#0c2d4d] dark:to-[#0c4a6e] shadow-lg ring-2 ring-cyan-300/30 dark:ring-cyan-700/40 mb-4 group-hover:ring-4 transition-all"
                           : feature.id === "ai-scanner"
-                            ? "relative z-10 inline-flex items-center justify-center p-4 rounded-full bg-gradient-to-br from-amber-100 via-orange-100 to-pink-100 dark:from-amber-900 dark:via-orange-950 dark:to-pink-900 shadow-lg ring-2 ring-amber-300/30 dark:ring-amber-700/40 mb-4 group-hover:ring-4 transition-all"
+                            ? "relative z-10 inline-flex items-center justify-center p-4 rounded-full bg-gradient-to-br from-amber-50 via-orange-100 to-rose-200 dark:from-amber-900 dark:via-orange-950 dark:to-pink-900 shadow-lg ring-2 ring-amber-300/30 dark:ring-amber-700/40 mb-4 group-hover:ring-4 transition-all"
                             : `inline-flex items-center justify-center p-3 rounded-full bg-emerald-100 dark:bg-emerald-900/50 mb-4`
                     }
                   >
