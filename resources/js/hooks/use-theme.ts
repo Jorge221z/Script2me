@@ -4,7 +4,7 @@ type Theme = 'light' | 'dark';
 
 // Función para obtener el tema inicial
 function getInitialTheme(): Theme {
-  if (typeof window === 'undefined') return 'light';
+  if (typeof window === 'undefined') return 'dark'; // Cambiado a dark
 
   // Primero intenta obtener desde localStorage
   const savedTheme = localStorage.getItem('theme') as Theme | null;
@@ -17,7 +17,7 @@ function getInitialTheme(): Theme {
     return 'dark';
   }
 
-  return 'light';
+  return 'dark'; // Cambiado a dark como valor predeterminado
 }
 
 // Función para aplicar el tema al DOM
@@ -43,8 +43,8 @@ function applyTheme(theme: Theme) {
 }
 
 export function useTheme() {
-  // No inicializar el estado directamente con getInitialTheme para SSR
-  const [theme, setTheme] = useState<Theme>('light');
+  // Inicializar con dark como tema predeterminado
+  const [theme, setTheme] = useState<Theme>('dark');
 
   // Detectar cambios en el tema (desde cualquier fuente)
   useEffect(() => {
