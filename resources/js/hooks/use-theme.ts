@@ -35,6 +35,9 @@ function applyTheme(theme: Theme) {
     body.classList.add('light');
   }
 
+  // Disparar un evento personalizado para notificar cambios de tema
+  window.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+
   // Guardar en localStorage
   localStorage.setItem('theme', theme);
 }
@@ -43,11 +46,52 @@ export function useTheme() {
   // No inicializar el estado directamente con getInitialTheme para SSR
   const [theme, setTheme] = useState<Theme>('light');
 
-  // Inicializar el tema en el primer render del cliente
+  // Detectar cambios en el tema (desde cualquier fuente)
   useEffect(() => {
     const initialTheme = getInitialTheme();
     setTheme(initialTheme);
     applyTheme(initialTheme);
+
+    // Verificar cambios en las clases del documento
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains('dark');
+      const currentTheme = isDark ? 'dark' : 'light';
+      if (currentTheme !== theme) {
+        setTheme(currentTheme);
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    // Escuchar cambios en la preferencia del sistema
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleMediaChange = (e: MediaQueryListEvent) => {
+      // Solo cambiar automáticamente si no hay preferencia guardada
+      if (!localStorage.getItem('theme')) {
+        const newTheme = e.matches ? 'dark' : 'light';
+        setTheme(newTheme);
+        applyTheme(newTheme);
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleMediaChange);
+
+    // Escuchar cambios de tema desde otros componentes
+    const handleThemeChange = (e: Event) => {
+      const customEvent = e as CustomEvent<{theme: Theme}>;
+      setTheme(customEvent.detail.theme);
+    };
+
+    window.addEventListener('themechange', handleThemeChange);
+
+    return () => {
+      observer.disconnect();
+      mediaQuery.removeEventListener('change', handleMediaChange);
+      window.removeEventListener('themechange', handleThemeChange);
+    };
   }, []);
 
   // Función para cambiar el tema
@@ -57,7 +101,10 @@ export function useTheme() {
     applyTheme(newTheme);
   };
 
-  return { theme, toggleTheme };
+  // Exponer también isDarkMode para facilitar su uso
+  const isDarkMode = theme === 'dark';
+
+  return { theme, isDarkMode, toggleTheme };
 }
 
 // Inicializar el tema al cargar la página

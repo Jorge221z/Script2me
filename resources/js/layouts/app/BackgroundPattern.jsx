@@ -1,12 +1,24 @@
 //será jsx este archivo porque no necesitamos tipar este componente //
 import { useState, useEffect, useRef } from 'react';
+import { useTheme } from '@/hooks/use-theme';
 
 export default function BackgroundPattern() {
   const [particles, setParticles] = useState([]);
   const animationRef = useRef(null);
   const containerRef = useRef(null);
+  const { isDarkMode } = useTheme(); // Usar el hook existente en lugar de detectar manualmente
 
   useEffect(() => {
+    // Solo generar partículas si estamos en modo oscuro
+    if (!isDarkMode) {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+      setParticles([]);
+      return;
+    }
+
     // Generar puntos para el patrón
     const colors = [
       'bg-emerald-400/40', 'bg-blue-400/40', 'bg-cyan-400/40',
@@ -35,11 +47,6 @@ export default function BackgroundPattern() {
     let lastTimestamp = 0;
 
     const animate = (timestamp) => {
-      if (lastTimestamp && timestamp - lastTimestamp < 60) {
-        animationRef.current = requestAnimationFrame(animate);
-        return;
-      }
-
       const deltaTime = lastTimestamp ? Math.min((timestamp - lastTimestamp) / 30, 2) : 1;
       lastTimestamp = timestamp;
 
@@ -84,7 +91,12 @@ export default function BackgroundPattern() {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, []);
+  }, [isDarkMode]);
+
+  // Si no estamos en modo oscuro, no renderizar nada
+  if (!isDarkMode) {
+    return null;
+  }
 
   return (
     <div
