@@ -59,4 +59,4 @@ Script2me is licensed under the MIT License. ⚠️ Information on this license 
 **How to Get Involved**
 -----------------------
 
-If you're interested in contributing to Script2me, please get in touch with the project owner, Jorge221z, at [jorge221z@email.com](mailto:jorgemunozcast12@gmail.com). 📧
+If you're interested in contributing to Script2me, please get in touch with the project owner, Jorge221z, at [jorgemunozcast12@gmail.com@gmail.com](mailto:jorgemunozcast12@gmail.com). 📧
