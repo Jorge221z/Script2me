@@ -1,6 +1,9 @@
 **Script2me**
 ================
 
+![Collage](public/images/collage.jpg)
+![Formulario](public/images/form.jpg)
+
 **What is Script2me?**
 -------------------
 
