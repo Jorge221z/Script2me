@@ -1,8 +1,9 @@
 **Script2me**
 ================
 
-![Collage](public/images/collage.jpg)
-![Form](public/images/form.png)
+<img src="public/images/collage.jpg" alt="Collage" width="400"/>
+<br><br><br>
+<img src="public/images/form.png" alt="Formulario" width="400"/>
 
 **What is Script2me?**
 -------------------
