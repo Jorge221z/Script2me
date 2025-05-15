@@ -2,7 +2,7 @@
 ================
 
 ![Collage](public/images/collage.jpg)
-![Formulario](public/images/form.jpg)
+![Form](public/images/form.jpg)
 
 **What is Script2me?**
 -------------------
