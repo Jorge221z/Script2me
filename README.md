@@ -1,9 +1,9 @@
 **Script2me**
 ================
 
-<img src="public/images/collage.jpg" alt="Collage" width="400"/>
+<img src="public/images/collage.jpg" alt="Collage" width="100%"/>
 <br><br><br>
-<img src="public/images/form.png" alt="Formulario" width="400"/>
+<img src="public/images/form.png" alt="Formulario" width="100%"/>
 
 **What is Script2me?**
 -------------------
