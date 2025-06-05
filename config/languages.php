@@ -20,5 +20,5 @@ return [
     | o cuando se especifique un idioma no soportado.
     |
     */
-    'default' => env('APP_LOCALE', 'en'),
+    'default' => env('APP_LOCALE', 'es'),
 ];

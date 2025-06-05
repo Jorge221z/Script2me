@@ -297,7 +297,7 @@ const resources = {
       'landing.toolkit': 'Herramientas',
       'landing.ourStory': 'Historia',
       'landing.contact': 'Contacto',
-      'landing.hero.title': 'AI tools built for devs, by devs',
+      'landing.hero.title': 'Potencia tu desarrollo con IA',
       'landing.hero.subtitle': 'Construye, refactoriza y protege tu código utilizando  \nlas herramientas de Script2me. \n\n100% open source, gratuito y sin registro.',
       'landing.hero.exploreButton': 'Explorar Herramientas',
       'landing.hero.contactButton': 'Contáctanos',
