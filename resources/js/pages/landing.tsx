@@ -21,6 +21,8 @@ import {
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { useTranslation } from "react-i18next"
+import { useSEO } from "@/hooks/use-seo"
+import { getPageSEO } from "@/utils/seo"
 
 interface SectionInfo {
   id: string
@@ -36,6 +38,13 @@ const LandingPage: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false)
   const [isContactHovered, setIsContactHovered] = useState(false)
   const { t } = useTranslation()
+
+  // SEO Configuration
+  const seoConfig = getPageSEO('landing')
+  const { SEOHead } = useSEO({
+    ...seoConfig,
+    pageName: 'landing'
+  })
 
   const pageNavRef = useRef<HTMLElement>(null)
 
@@ -121,12 +130,16 @@ const LandingPage: React.FC = () => {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title={t("landing.pageTitle")} />
+      <SEOHead />
 
-      <main className="bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200">
+      <main className="bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200"
+            role="main"
+            itemScope
+            itemType="https://schema.org/WebApplication">
         <section
           id="hero"
           className="relative bg-gradient-to-br from-emerald-600 via-teal-600 to-sky-700 dark:from-emerald-700 dark:via-teal-700 dark:to-sky-800 text-white py-28 md:py-40 flex items-center justify-center text-center overflow-hidden min-h-[calc(100vh-var(--app-header-height,64px)-var(--page-nav-height,56px))]"
+          aria-labelledby="hero-title"
         >
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -173,10 +186,12 @@ const LandingPage: React.FC = () => {
               </div>
 
               <motion.h1
+                id="hero-title"
                 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
+                itemProp="name"
               >
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-amber-300 to-white animate-gradient-x">
                   {t("landing.hero.title")}
@@ -422,7 +437,8 @@ const LandingPage: React.FC = () => {
           )}
         </nav>
 
-        <section id="features" className="py-16 md:py-24 bg-[#d1d1d1] dark:bg-neutral-900">
+        <section id="features" className="py-16 md:py-24 bg-[#d1d1d1] dark:bg-neutral-900"
+                 aria-labelledby="features-title">
           <div
             className="
               container mx-auto px-4 sm:px-6 lg:px-8
@@ -435,7 +451,7 @@ const LandingPage: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 text-neutral-900 dark:text-white">
+              <h2 id="features-title" className="text-3xl sm:text-4xl font-bold text-center mb-4 text-neutral-900 dark:text-white">
                 {t("landing.features.title")}
               </h2>
               <p className="text-center text-neutral-600 dark:text-neutral-400 mb-12 md:mb-16 max-w-2xl mx-auto text-lg whitespace-pre-line">

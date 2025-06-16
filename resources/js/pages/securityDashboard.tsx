@@ -11,10 +11,20 @@ import { Head } from '@inertiajs/react';
 import BackgroundPattern from '@/layouts/app/BackgroundPattern';
 import { FileText, Expand, ShieldCheck } from 'lucide-react';
 import CustomToast from '../components/CustomToast';
+import { useSEO } from '@/hooks/use-seo';
+import { getPageSEO } from '@/utils/seo';
 
 export default function Security() {
     const { SecContents = [], SecNames = [], flash } = usePage<SecResponse>().props;
     const { t } = useTranslation();
+
+    // SEO Configuration
+    const seoConfig = getPageSEO('security')
+    const { SEOHead } = useSEO({
+        ...seoConfig,
+        pageName: 'security'
+    })
+
     const [localResults, setLocalResults] = useState<Array<{ filename: string; result: SecurityResult }>>([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [modalVulns, setModalVulns] = useState<Vulnerability[]>([]);
@@ -83,6 +93,7 @@ export default function Security() {
                 },
             ]}
         >
+            <SEOHead />
             <CustomToast />
             {/* Modal for vulnerabilities */}
             {modalOpen && (

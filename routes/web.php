@@ -3,9 +3,14 @@
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\RefactorController;
 use App\Http\Controllers\SecurityController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\UploadController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+// SEO Routes
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
 
 // Redirect root URL to landing page
 Route::get('/', function() {
@@ -15,6 +20,7 @@ Route::get('/dashboard', [UploadController::class, 'index'])->name('dashboard');
 Route::get('/refactor-dashboard', [RefactorController::class, 'index'])->name('refactor.index');
 Route::get('/security-dashboard', [SecurityController::class, 'index'])->name('security.index');
 Route::get('/home', [LandingController::class, 'index'])->name('landing.index');
+Route::get('/landing', [LandingController::class, 'index'])->name('landing.alt');
 
 Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
 Route::post('/process', [RefactorController::class, 'process'])->name('refactor.process');

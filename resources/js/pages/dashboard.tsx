@@ -11,6 +11,8 @@ import { FileText, File } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import i18n from '../utils/i18n';
 import CustomToast from '../components/CustomToast';
+import { useSEO } from '@/hooks/use-seo';
+import { getPageSEO } from '@/utils/seo';
 
 export default function Dashboard() {
     const { contents = [], names = [], flash } = usePage<{
@@ -20,6 +22,13 @@ export default function Dashboard() {
     }>().props;
 
     const { t } = useTranslation();
+
+    // SEO Configuration
+    const seoConfig = getPageSEO('dashboard')
+    const { SEOHead } = useSEO({
+        ...seoConfig,
+        pageName: 'dashboard'
+    })
 
     const handleClearSession = () => {
         // Guardar el idioma actual antes de recargar
@@ -71,7 +80,7 @@ export default function Dashboard() {
             },
         ]}>
             <CustomToast />
-            <Head title={t('dashboard.headTitle')} />
+            <SEOHead />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
 
                 {/* Frase introductoria */}
