@@ -10,7 +10,7 @@ import { useInitials } from "@/hooks/use-initials"
 import { cn } from "@/lib/utils"
 import type { BreadcrumbItem, SharedData } from "@/types"
 import { Link, usePage } from "@inertiajs/react"
-import { Menu, BookType, Github, Home, BrainCircuit, Moon, Sun, Globe, Pickaxe, Radar } from "lucide-react"
+import { Menu, BookType, SquareArrowOutUpRight, Home, BrainCircuit, Moon, Sun, Globe, Pickaxe, Radar } from "lucide-react"
 import { useTheme } from "@/hooks/use-theme"
 import { useTranslation } from "react-i18next"
 import { useState, useRef, useEffect } from "react"
@@ -147,10 +147,10 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
             icon: BookType,
         },
         {
-            key: "github",
+            key: "portfolio",
             title: "",
-            href: "https://github.com/Jorge221z/script2me.git",
-            icon: Github,
+            href: "https://jorgemunoz.pro",
+            icon: SquareArrowOutUpRight,
         },
     ]
 
@@ -278,21 +278,21 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                     >
                                                         <Icon iconNode={item.icon} className={item.title === "" ? "h-5 w-5 mx-auto" : "h-5 w-5"} />
                                                         {item.title && <span>{item.title}</span>}
-                                                    </a>
-                                                ) : item.href.startsWith("http") ? (
-                                                    item.icon === Github ? (
-                                                        // GitHub: icono a la izquierda, texto "Repositorio" a la derecha SOLO en sidebar móvil
-                                                        <a
-                                                            key="github"
-                                                            href={item.href}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="flex items-center space-x-2 font-medium py-2 px-3 rounded-md hover:bg-neutral-800 transition-colors"
-                                                        >
-                                                            <Icon iconNode={item.icon} className="h-5 w-5" />
-                                                            <span>{t("header.github")}</span>
-                                                        </a>
-                                                    ) : (
+                                                    </a>                                ) : item.href.startsWith("http") ? (
+                                    item.icon === SquareArrowOutUpRight ? (
+                                        // SquareArrowOutUpRight: icono a la izquierda, texto "Portfolio" a la derecha SOLO en sidebar móvil
+                                        <a
+                                            key="portfolio"
+                                            href={item.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            title="Mi Portfolio"
+                                            className="flex items-center space-x-2 font-medium py-2 px-3 rounded-md hover:bg-neutral-800 transition-colors"
+                                        >
+                                            <Icon iconNode={item.icon} className="h-5 w-5" />
+                                            <span>{t("header.portfolio")}</span>
+                                        </a>
+                                    ) : (
                                                         <a
                                                             key={item.key}
                                                             href={item.href}
@@ -471,6 +471,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                             href={item.href}
                                             target="_blank"
                                             rel="noopener noreferrer"
+                                            title={item.key === "portfolio" ? "Mi Portfolio" : ""}
                                             className={className + (item.title === "" ? " flex items-center justify-center px-2 py-2" : "")}
                                         >
                                             <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
@@ -520,6 +521,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                             href={item.href}
                                             target="_blank"
                                             rel="noopener noreferrer"
+                                            title={item.key === "portfolio" ? "Mi Portfolio" : ""}
                                             className={className}
                                             style={{ minWidth: 0 }}
                                         >
